@@ -1,0 +1,23 @@
+package com.solomate.shopping.service;
+
+import com.solomate.main.dao.DAO;
+import com.solomate.main.service.Service;
+import com.solomate.shopping.dao.ShoppingDAO;
+import com.solomate.shopping.vo.ShoppingVO;
+
+public class ShoppingWriteService implements Service {
+
+	private ShoppingDAO dao = null;
+
+	@Override
+	public void setDAO(DAO dao) {
+		this.dao = (ShoppingDAO) dao;
+		System.out.println("🔥 ShoppingWriteService.setDAO() - dao 주입됨 : " + this.dao);
+	}
+
+	@Override
+	public Integer service(Object obj) throws Exception {
+		ShoppingVO vo = (ShoppingVO) obj;
+		return dao.write(vo);
+	}
+}
