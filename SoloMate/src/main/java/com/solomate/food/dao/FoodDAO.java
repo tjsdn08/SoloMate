@@ -115,6 +115,56 @@ public class FoodDAO extends DAO{
 	    }
 	}
 	
-	
+	// 2. 식품 상세 보기 (폴더 포함)
+	public FoodVO view(Long no) throws Exception {
+
+	    FoodVO vo = null;
+	    List<String> folderList = new ArrayList<>();
+
+	    con = DB.getConnection();
+
+	    String sql = "SELECT "
+	            + " f.no, f.name, TO_CHAR(f.expiryDate, 'yyyy-mm-dd') expiryDate, "
+	            + " f.quantity, f.storageType, f.memo, "
+	            + " fo.name AS folderName "
+	            + "FROM food f "
+	            + "LEFT JOIN folder_food ff ON f.no = ff.foodNo "
+	            + "LEFT JOIN folder fo ON ff.folderNo = fo.no "
+	            + "WHERE f.no = ?";
+
+	    pstmt = con.prepareStatement(sql);
+	    pstmt.setLong(1, no);
+
+	    rs = pstmt.executeQuery();
+
+	    while (rs.next()) {
+
+	        // 최초 1번만 FoodVO 생성
+	        if (vo == null) {
+	            vo = new FoodVO();
+	            vo.setNo(rs.getLong("no"));
+	            vo.setName(rs.getString("name"));
+	            vo.setExpiryDate(rs.getString("expiryDate"));
+	            vo.setQuantity(rs.getLong("quantity"));
+	            vo.setStorageType(rs.getString("storageType"));
+	            vo.setMemo(rs.getString("memo"));
+	        }
+
+	        // 폴더는 여러 개일 수 있음 → 리스트에 추가
+	        String folderName = rs.getString("folderName");
+	        if (folderName != null) {
+	            folderList.add(folderName);
+	        }
+	    }
+
+	    // 폴더 리스트 세팅
+	    if (vo != null) {
+	        vo.setFolders(folderList);;
+	    }
+
+	    DB.close(con, pstmt, rs);
+
+	    return vo;
+	}
 
 }

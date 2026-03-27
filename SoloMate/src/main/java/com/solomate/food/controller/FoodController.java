@@ -32,6 +32,14 @@ public class FoodController implements Controller {
 				
 				return "food/list";
 				
+			case "/food/view.do":
+				
+				no = Long.parseLong(request.getParameter("no"));
+				
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), no));
+				
+				return "board/view";
+				
 			default:
 				// /WEB-INF/views + error/noPage + .jsp
 				return "error/noPage";

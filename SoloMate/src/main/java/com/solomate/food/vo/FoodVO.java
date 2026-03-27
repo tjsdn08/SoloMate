@@ -16,7 +16,8 @@ public class FoodVO {
 	private String createdAt;
 	private String updatedAt;
 	private String dDay;
-	private List<FolderVO> folders;
+	private List<String> folders;
+	
 	public long getNo() {
 		return no;
 	}
@@ -77,10 +78,10 @@ public class FoodVO {
 	public void setdDay(String dDay) {
 		this.dDay = dDay;
 	}
-	public List<FolderVO> getFolders() {
+	public List<String> getFolders() {
 		return folders;
 	}
-	public void setFolders(List<FolderVO> folders) {
+	public void setFolders(List<String> folders) {
 		this.folders = folders;
 	}
 	@Override
