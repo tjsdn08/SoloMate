@@ -29,17 +29,17 @@ public class FoodDAO extends DAO{
 		// 순서번호
 		sql = "select rownum rnum, no, memberId, name, expiryDate, quantity, storageType from(" + sql + ")";
 		// page에 맞는 데이터만 가져온다.
-		sql = "select rnum, no, name, memberId, expiryDate, quantity, storageType from(" + sql + ") where rnum between ? and ?";
+		sql = "select rnum, no, memberId, name, expiryDate, quantity, storageType from(" + sql + ") where rnum between ? and ?";
 		
 		pstmt = con.prepareStatement(sql);
 		
-//		int idx = 1; 검색 처리
+		int idx = 1; //검색 처리
 		
 //		idx = searchDataSet(pstmt, idx, pageObject); 검색 처리
 		// 아이디 하드코딩함. LoginVO loginvo를 받아야함. 
-		pstmt.setString(1, "test");
-		pstmt.setLong(2, pageObject.getStartRow()); // 검색처리시 수정해야댐
-		pstmt.setLong(3, pageObject.getEndRow()); // 검색처리시 수정해야댐
+		pstmt.setString(idx++, "test");
+		pstmt.setLong(idx++, pageObject.getStartRow()); // 검색처리시 수정해야댐
+		pstmt.setLong(idx++, pageObject.getEndRow()); // 검색처리시 수정해야댐
 		
 		rs = pstmt.executeQuery();
 		
