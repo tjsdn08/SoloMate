@@ -20,7 +20,7 @@ public class FoodDAO extends DAO{
 		
 		con = DB.getConnection();
 		
-		String sql = "select no, memberId, name, to_char(expiryDate, 'yyyy-mm-dd') expiryDate, quantity, storageType from board"
+		String sql = "select no, memberId, name, to_char(expiryDate, 'yyyy-mm-dd') expiryDate, quantity, storageType from food"
 				+ " where memberId = ? ";
 		
 //		sql += search(pageObject);  검색처리
