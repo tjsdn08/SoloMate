@@ -9,7 +9,7 @@ public class DB {
 
 	// DB 연결 정보
 	private static final String DRIVER = "oracle.jdbc.OracleDriver";
-	private static final String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+	private static final String URL = "jdbc:oracle:thin:@10.15.21.205:1521:xe";
 	// 쌤 DB 사용
 	// private static final String URL = "jdbc:oracle:thin:@10.15.21.178:1521:xe";
 	// 1팀 DB 사용
@@ -18,8 +18,8 @@ public class DB {
 	// private static final String URL = "jdbc:oracle:thin:@10.15.21.232:1521:xe";
 	// 3팀 DB 사용
 	// private static final String URL = "jdbc:oracle:thin:@10.15.21.205:1521:xe";
-	private static final String UID = "java";
-	private static final String UPW = "java";
+	private static final String UID = "solomate";
+	private static final String UPW = "solomate";
 
 	static {
 		// 1. 드라이버 확인
