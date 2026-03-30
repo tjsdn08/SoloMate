@@ -7,8 +7,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 $(function(){
-    let pwCheck = false; // 새 비밀번호 유효성 체크
-    
+    let pwCheck = false;
+
+    // 폼 전송 시 최종 체크
     $("#changePwForm").submit(function(){
         if($("#newPw").val() !== $("#newPw2").val()){
             alert("새 비밀번호와 확인이 일치하지 않습니다.");
@@ -25,43 +26,50 @@ $(function(){
 
     $(".cancelBtn").click(function(){ history.back(); });
 
-    $("#pw, #newPw, #newPw2").on("keyup", function(){
-        let pw = $("#pw").val();
-        let newPw = $("#newPw").val();
-        let newPw2 = $("#newPw2").val();
+    $("#newPw, #newPw2").on("keyup", function(){
+        let pw = $("#pw").val(); // 현재 비밀번호
+        let newPw = $("#newPw").val(); // 새 비밀번호
+        let newPw2 = $("#newPw2").val(); // 새 비밀번호 확인
 
-        if(pw.length < 4) {
-            $("#pwMsg").text("현재 비밀번호는 4자 이상입니다.").addClass("text-danger").removeClass("text-success");
-        } else {
-            $("#pwMsg").text("입력 완료").addClass("text-success").removeClass("text-danger");
-        }
-
+        // 1. 새 비밀번호 유효성 및 중복 체크 (AJAX)
         if(newPw.length < 4) {
-            $("#newPwMsg").text("새 비밀번호는 4자 이상이어야 합니다.").addClass("text-danger").removeClass("text-success");
+            $("#newPwMsg").text("새 비밀번호는 4자 이상이어야 합니다.")
+                         .addClass("text-danger").removeClass("text-success");
             pwCheck = false;
-        } else if(newPw === pw) {
-            $("#newPwMsg").text("현재 비밀번호와 동일합니다. 다른 비밀번호를 쓰세요.").addClass("text-danger").removeClass("text-success");
+        } else if(newPw === pw) { // 현재 비번과 같은지 체크
+            $("#newPwMsg").text("현재 비밀번호와 동일합니다. 다른 비밀번호를 쓰세요.")
+                         .addClass("text-danger").removeClass("text-success");
             pwCheck = false;
         } else {
+            // 새 비밀번호가 4자 이상이고 현재 비번과 다를 때만 AJAX 호출
             $.ajax({
                 url: "checkpw.do",
                 data: { pw: newPw },
                 success: function(isDuplicate){ 
                     if(isDuplicate === "true"){
-                        $("#newPwMsg").text("이전에 사용한 비밀번호입니다.").addClass("text-danger").removeClass("text-success");
+                        $("#newPwMsg").text("이전에 사용한 비밀번호입니다.")
+                                     .addClass("text-danger").removeClass("text-success");
                         pwCheck = false;
                     } else {
-                        $("#newPwMsg").text("사용 가능한 비밀번호입니다.").addClass("text-success").removeClass("text-danger");
+                        $("#newPwMsg").text("사용 가능한 비밀번호입니다.")
+                                     .addClass("text-success").removeClass("text-danger");
                         pwCheck = true;
                     }
                 }
             });
         }
 
-        if(newPw2.length > 0 && newPw !== newPw2) {
-            $("#newPw2Msg").text("비밀번호가 일치하지 않습니다.").addClass("text-danger").removeClass("text-success");
-        } else if(newPw2.length > 0 && newPw === newPw2) {
-            $("#newPw2Msg").text("비밀번호가 일치합니다.").addClass("text-success").removeClass("text-danger");
+        // 2. 비밀번호 일치 여부 실시간 체크
+        if(newPw2.length > 0) {
+            if(newPw !== newPw2) {
+                $("#newPw2Msg").text("비밀번호가 일치하지 않습니다.")
+                             .addClass("text-danger").removeClass("text-success");
+            } else {
+                $("#newPw2Msg").text("비밀번호가 일치합니다.")
+                             .addClass("text-success").removeClass("text-danger");
+            }
+        } else {
+            $("#newPw2Msg").text(""); // 확인란이 비어있으면 메시지 삭제
         }
     });
 });

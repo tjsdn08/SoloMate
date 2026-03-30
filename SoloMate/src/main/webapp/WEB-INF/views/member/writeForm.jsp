@@ -106,7 +106,6 @@
 	  
 	  <div class="mb-3 mt-3">
 	    <label for="tel" class="form-label">연락처</label>
-	    <!-- 숫자나 날짜 같은 크기를 나타내는 데이터인 경우 min 과 max를 선언할 수 있다. -->
 	    <input type="tel" class="form-control" id="tel" placeholder="연락처를 입력하세요."
 	     title="02-xxx-xxxx 또는 010-xxxx-xxxx 형식으로 입력하세요."
 	     name="tel" pattern="0\d{1,2}-\d{3,4}-\d{4}">

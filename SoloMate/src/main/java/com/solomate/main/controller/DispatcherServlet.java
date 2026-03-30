@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Servlet implementation class DispatcherServlet
@@ -95,7 +96,23 @@ public class DispatcherServlet extends HttpServlet {
 			// 앞에 붙은 redirect: 은 제거하고 나머지 데이터로 리다렉트시킨다.
 			response.sendRedirect(jsp.substring("redirect:".length()));
 			return;
-		} else {
+		}// AJAX 직접 응답 처리
+		// 리턴 문자열이 "ajax:"로 시작하면 JSP로 안 가고 바로 데이터를 브라우저에 보냄
+		if (jsp.startsWith("ajax:")) {
+			response.setContentType("text/plain; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.print(jsp.substring("ajax:".length()));
+			out.close();
+			return;
+		}
+		
+		// Redirect 처리
+		isRedirect = jsp.indexOf("redirect:");
+		if(isRedirect == 0) {
+			response.sendRedirect(jsp.substring("redirect:".length()));
+			return;
+		} 
+		else {
 			// jsp로 forward 시킨다.
 			// /WEB-INF/views/ + board/list + .jsp
 			request.getRequestDispatcher(prefix + jsp + suffix).forward(request, response);

@@ -9,82 +9,129 @@ import com.solomate.member.vo.MemberVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-public class MemberController implements Controller{
+public class MemberController implements Controller {
 
 	@Override
 	public String execute(HttpServletRequest request) {
 
 		try {
-			
 			String uri = request.getServletPath();
 			HttpSession session = request.getSession();
 			
 			LoginVO loginVO = (LoginVO) session.getAttribute("login");
-			String loginId = null;
-			if(loginVO != null) loginId = loginVO.getId();
-			
+			String loginId = (loginVO != null) ? loginVO.getId() : null;
+
 			switch (uri) {
-			case "/member/loginForm.do":
+				// --- [로그인/로그아웃/가입] ---
+				case "/member/loginForm.do":
+					return "member/loginForm";
 				
-				return "member/loginForm";
-			
-			case "/member/login.do":
-				LoginVO userVO = new LoginVO();
-				userVO.setId(request.getParameter("id"));
-				userVO.setPw(request.getParameter("pw"));
-				loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
-				session.setAttribute("login", loginVO);
-				Execute.execute(Init.getService("/member/changeCon.do"), loginVO.getId());
-				session.setAttribute("msg", "로그인 되었습니다.");
-				return "redirect:/";
+				case "/member/login.do":
+					LoginVO userVO = new LoginVO();
+					userVO.setId(request.getParameter("id"));
+					userVO.setPw(request.getParameter("pw"));
+					loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
+					session.setAttribute("login", loginVO);
+					// 마지막 접속일 업데이트
+					Execute.execute(Init.getService("/member/changeCon.do"), loginVO.getId());
+					session.setAttribute("msg", loginVO.getName() + "님, 환영합니다!");
+					return "redirect:/";
+					
+				case "/member/logout.do":
+					session.removeAttribute("login");
+					session.setAttribute("msg", "로그아웃 되었습니다.");
+					return "redirect:/";
+					
+				case "/member/writeForm.do":
+					return "member/writeForm";
+					
+				case "/member/write.do":
+					MemberVO vo = new MemberVO();
+					vo.setId(request.getParameter("id"));
+					vo.setPw(request.getParameter("pw"));
+					vo.setName(request.getParameter("name"));
+					vo.setTel(request.getParameter("tel"));
+					vo.setAddress(request.getParameter("address"));
+					Execute.execute(Init.getService(uri), vo);
+					session.setAttribute("msg", "회원 가입이 완료되었습니다. 로그인 해주세요.");
+					return "redirect:/member/loginForm.do";
+
+				// --- [관리자 전용 기능] ---
+				case "/member/list.do":
+					// 관리자 권한 체크 (9번이 관리자라고 가정)
+					if (loginVO == null || loginVO.getGradeNo() != 9) {
+						session.setAttribute("msg", "접근 권한이 없습니다.");
+						return "redirect:/";
+					}
+					request.setAttribute("list", Execute.execute(Init.getService(uri), null));
+					return "member/list";
+
+				case "/member/changeStatus.do":
+					vo = new MemberVO();
+					vo.setId(request.getParameter("id"));
+					vo.setStatus(request.getParameter("status"));
+					Execute.execute(Init.getService(uri), vo);
+					session.setAttribute("msg", "회원의 상태가 변경되었습니다.");
+					return "redirect:list.do";
+
+				case "/member/changeGrade.do":
+					vo = new MemberVO();
+					vo.setId(request.getParameter("id"));
+					vo.setGradeNo(Integer.parseInt(request.getParameter("gradeNo")));
+					Execute.execute(Init.getService(uri), vo);
+					session.setAttribute("msg", "회원의 등급이 변경되었습니다.");
+					return "redirect:list.do";
+
+				// --- [비밀번호 관리] ---
+				case "/member/checkpw.do":
+					// AJAX 요청 처리: DispatcherServlet에서 "ajax:" 접두어를 인식함
+					String inputPw = request.getParameter("pw");
+					// 현재 로그인한 사용자의 ID와 입력한 PW를 Map이나 VO에 담아 전달 (여기서는 임시 처리)
+					boolean isDuplicate = (boolean) Execute.execute(Init.getService(uri), new Object[]{loginId, inputPw});
+					return "ajax:" + isDuplicate;
+
+				case "/member/changePwForm.do":
+					return "member/changePwForm";
+
+				case "/member/changePw.do":
+					MemberVO cpwVO = new MemberVO();
+					cpwVO.setId(loginId);
+					cpwVO.setPw(request.getParameter("pw")); // 기존 비번
+					// DB 처리를 위해 MemberVO 등에 newPw 필드를 추가하거나 Map을 사용하세요.
+					request.setAttribute("newPw", request.getParameter("newPw")); 
+					Execute.execute(Init.getService(uri), cpwVO);
+					session.setAttribute("msg", "비밀번호가 변경되었습니다. 다시 로그인해 주세요.");
+					session.removeAttribute("login");
+					return "redirect:/member/loginForm.do";
+
+				// --- [아이디/비번 찾기] ---
+				case "/member/searchId.do":
+				    // 1. 데이터 수집 (이름과 연락처)
+				    MemberVO searchIdVO = new MemberVO();
+				    searchIdVO.setName(request.getParameter("name"));
+				    searchIdVO.setTel(request.getParameter("tel"));
+				    
+				    // 2. 서비스 실행
+				    // DB에서 일치하는 사용자의 ID를 String으로 받아옵니다.
+				    String foundId = (String) Execute.execute(Init.getService(uri), searchIdVO);
+				    
+				    // 3. AJAX 응답 처리
+				    // 아이디가 있으면 아이디를, 없으면 "none" 문자열을 반환합니다.
+				    return "ajax:" + (foundId != null ? foundId : "none");
 				
-			case "/member/logout.do":
-				session.removeAttribute("login");
-				session.setAttribute("msg", "로그아웃 되었습니다.");
-				return "redirect:/";
-				
-			case "/member/writeForm.do":
-				return "member/writeForm";
-				
-			case "/member/write.do":
-				MemberVO vo = new MemberVO();
-				vo.setId(request.getParameter("id"));
-				vo.setPw(request.getParameter("pw"));
-				vo.setName(request.getParameter("name"));
-				vo.setTel(request.getParameter("tel"));
-				vo.setAddress(request.getParameter("address"));
-				Execute.execute(Init.getService(uri), vo);
-				
-				loginVO = new LoginVO();
-				loginVO.setId(vo.getId());
-				loginVO.setName(vo.getName());
-				loginVO.setGradeNo(1);
-				loginVO.setGradeName("일반회원");
-				
-				session.setAttribute("login", loginVO);
-				session.setAttribute("msg", "회원 가입을 축하합니다!");
-				
-				return "redirect:/";
-				
-			default:
-			// 잘못된 URI 처리
-			request.setAttribute("url", request.getRequestURL());
-			// /WEB-INF/views/ + error/noPage + .jsp
-			return "error/noPage";
-		} // 메뉴 처리 switch 문의 끝
-			
-			
-			
-		}catch (Exception e) {
+				case "/member/searchPwForm.do":
+					return "member/searchPwForm";
+
+				default:
+					request.setAttribute("url", request.getRequestURL());
+					return "error/noPage";
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
-			e.getStackTrace();
 			request.setAttribute("url", request.getRequestURL());
 			request.setAttribute("moduleName", "회원 관리");
 			request.setAttribute("e", e);
-			// /WEB-INF/views/ + error/err_500 + .jsp
 			return "error/err_500";
 		}
-		
 	}
-
 }

@@ -2,6 +2,7 @@
 <decorators>
     <excludes>
         <pattern>/member/checkId*</pattern>
+        <pattern>/member/checkpw*</pattern>
         <pattern>/error.jsp</pattern>
         <pattern>/boardreply/*</pattern>
     </excludes>
