@@ -34,7 +34,8 @@ public class BoardController implements Controller {
 			case "/board/view.do":
 				no=Long.parseLong(request.getParameter("no"));
 				long inc=Long.parseLong(request.getParameter("inc"));
-				request.setAttribute("vo", Execute.execute(Init.getService(uri), new Long[] {no,inc}));
+				String id = (String) request.getSession().getAttribute("login");
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), new Object[] {no,inc,id}));
 				return "board/view";
 				
 			case "/board/writeForm.do":

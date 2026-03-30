@@ -139,6 +139,24 @@ public class BoardDAO extends DAO{
 		return vo;
 	} // view()의 끝
 	
+	public long isBookmarked(Long boardNo, String id) throws Exception {
+	    long result = 0;
+
+	    con = DB.getConnection();
+	    String sql = "select count(*) from bookmark where boardNo = ? and id = ?";
+
+	    pstmt = con.prepareStatement(sql);
+	    pstmt.setLong(1, boardNo);
+	    pstmt.setString(2, id);
+
+	    rs = pstmt.executeQuery();
+
+	    if(rs.next()) result = rs.getLong(1);
+
+	    DB.close(con, pstmt, rs);
+	    return result; // 0 or 1
+	} // isBookmarked()의 끝
+	
 	// 글쓰기
 	public Integer write(BoardVO vo) throws Exception {
 		Integer result=0;

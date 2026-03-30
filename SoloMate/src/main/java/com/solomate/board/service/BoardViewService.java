@@ -1,6 +1,7 @@
 package com.solomate.board.service;
 
 import com.solomate.board.dao.BoardDAO;
+import com.solomate.board.vo.BoardVO;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
 
@@ -14,14 +15,28 @@ public class BoardViewService implements Service {
 
 	@Override
 	public Object service(Object obj) throws Exception {
-		Long[] arrs = (Long[]) obj;
-		Long no=arrs[0];
-		Long inc=arrs[1];
-		if(inc == 1) {
-			Integer result = dao.increase(no);
-			if(result != 1) throw new Exception("글보기 조회수 1 증가 오류: 글 번호가 존재하지 않습니다");
-		}
-		return dao.view(no);
-	}
+	    Object[] arr = (Object[]) obj;
+
+        Long no = (Long) arr[0];
+        Long inc = (Long) arr[1];
+        String id = (String) arr[2];
+
+        // 조회수 증가
+        if(inc == 1) {
+            Integer result = dao.increase(no);
+            if(result != 1) throw new Exception("조회수 증가 오류");
+        }
+
+        // 기존 글 데이터
+        BoardVO vo = dao.view(no);
+
+        // 🔥 bookmarked 따로 세팅
+        if(id != null) {
+            long bookmarked = dao.isBookmarked(no, id);
+            vo.setBookmarked(bookmarked);
+        }
+
+        return vo;
+    }
 
 }
