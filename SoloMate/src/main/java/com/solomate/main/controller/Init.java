@@ -3,6 +3,9 @@ package com.solomate.main.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.solomate.adminhotdeal.controller.AdminHotDealController;
+import com.solomate.adminhotdeal.service.AdminHotDealListService;
+import com.solomate.adminhotdeal.service.AdminHotDealWriteService;
 import com.solomate.board.controller.BoardController;
 import com.solomate.board.dao.BoardDAO;
 import com.solomate.board.service.BoardDeleteService;
@@ -10,12 +13,25 @@ import com.solomate.board.service.BoardListService;
 import com.solomate.board.service.BoardUpdateService;
 import com.solomate.board.service.BoardViewService;
 import com.solomate.board.service.BoardWriteService;
+import com.solomate.folder.controller.FolderController;
+import com.solomate.folder.dao.FolderDAO;
+import com.solomate.folder.service.FolderDeleteService;
+import com.solomate.folder.service.FolderListService;
+import com.solomate.folder.service.FolderUpdateService;
+import com.solomate.folder.service.FolderViewService;
+import com.solomate.folder.service.FolderWriteService;
 import com.solomate.food.controller.FoodController;
 import com.solomate.food.dao.FoodDAO;
+import com.solomate.food.service.FoodDeleteService;
 import com.solomate.food.service.FoodListService;
+import com.solomate.food.service.FoodUpdateService;
+import com.solomate.food.service.FoodViewService;
+import com.solomate.food.service.FoodWriteService;
 import com.solomate.hotdeal.controller.HotDealController;
 import com.solomate.hotdeal.dao.HotDealDAO;
+import com.solomate.hotdeal.service.HotDealAddShoppingService;
 import com.solomate.hotdeal.service.HotDealListService;
+import com.solomate.hotdeal.service.HotDealViewService;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
 import com.solomate.shopping.controller.ShoppingController;
@@ -49,6 +65,7 @@ public class Init extends HttpServlet {
 
 	public void init(ServletConfig config) throws ServletException {
 
+		//------------------------------장선우--------------------------------
 		// ***장보기 계획
 		// DAO
 		daoMap.put("shoppingDAO", new ShoppingDAO());
@@ -76,23 +93,64 @@ public class Init extends HttpServlet {
 		// *** 핫딜
 		daoMap.put("hotDealDAO", new HotDealDAO());
 		serviceMap.put("/hotdeal/list.do", new HotDealListService());
+		serviceMap.put("/hotdeal/view.do", new HotDealViewService());
+		serviceMap.put("/hotdeal/addShopping.do", new HotDealAddShoppingService());
 		serviceMap.get("/hotdeal/list.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/hotdeal/view.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/hotdeal/addShopping.do").setDAO(daoMap.get("shoppingDAO"));
 		controllerMap.put("/hotdeal", new HotDealController());
 		
 		
+		// admin hotdeal
+		controllerMap.put("/admin/hotdeal", new AdminHotDealController());
+
+		serviceMap.put("/admin/hotdeal/list.do", new AdminHotDealListService());
+		serviceMap.put("/admin/hotdeal/write.do", new AdminHotDealWriteService());
+
+		serviceMap.get("/admin/hotdeal/list.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/admin/hotdeal/write.do").setDAO(daoMap.get("hotDealDAO"));
 		
+		
+		
+		//------------------------------장은희--------------------------------
 		// *** 식품 생성 / 저장 / 조립
 		// == controller는 모듈명으로 저장
 		controllerMap.put("/food", new FoodController());
 		// == service는 URI로 저장
 		serviceMap.put("/food/list.do", new FoodListService());
+		serviceMap.put("/food/view.do", new FoodViewService());
+		serviceMap.put("/food/write.do", new FoodWriteService());
+		serviceMap.put("/food/update.do", new FoodUpdateService());
+		serviceMap.put("/food/delete.do", new FoodDeleteService());
 		// == dao는 클래스 이름으로 저장. 맨 앞자를 소문자로 바꾼다.
 		daoMap.put("foodDAO", new FoodDAO());
 		// 조립 service <- dao : service를 꺼내서 setter를 이용해서 dao를 꺼내서 넣는다.
 		serviceMap.get("/food/list.do").setDAO(daoMap.get("foodDAO"));
-
+		serviceMap.get("/food/view.do").setDAO(daoMap.get("foodDAO"));
+		serviceMap.get("/food/write.do").setDAO(daoMap.get("foodDAO"));
+		serviceMap.get("/food/update.do").setDAO(daoMap.get("foodDAO"));
+		serviceMap.get("/food/delete.do").setDAO(daoMap.get("foodDAO"));
 		
 		
+		// *** 폴더 생성 / 저장 / 조립
+		// == controller는 모듈명으로 저장
+		controllerMap.put("/folder", new FolderController());
+		// == service는 URI로 저장
+		serviceMap.put("/folder/list.do", new FolderListService());
+		serviceMap.put("/folder/view.do", new FolderViewService());
+		serviceMap.put("/folder/write.do", new FolderWriteService());
+		serviceMap.put("/folder/update.do", new FolderUpdateService());
+		serviceMap.put("/folder/delete.do", new FolderDeleteService());
+		// == dao는 클래스 이름으로 저장. 맨 앞자를 소문자로 바꾼다.
+		daoMap.put("folderDAO", new FolderDAO());
+		// 조립 service <- dao : service를 꺼내서 setter를 이용해서 dao를 꺼내서 넣는다.
+		serviceMap.get("/folder/list.do").setDAO(daoMap.get("folderDAO"));
+		serviceMap.get("/folder/view.do").setDAO(daoMap.get("folderDAO"));
+		serviceMap.get("/folder/write.do").setDAO(daoMap.get("folderDAO"));
+		serviceMap.get("/folder/update.do").setDAO(daoMap.get("folderDAO"));
+		serviceMap.get("/folder/delete.do").setDAO(daoMap.get("folderDAO"));
+		
+		//------------------------------박현정--------------------------------
 		// *** 일반 게시판 생성 / 저장 / 조립
 		// == controller는 모듈명으로 저장
 		controllerMap.put("/board", new BoardController());
