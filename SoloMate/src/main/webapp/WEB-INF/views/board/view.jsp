@@ -60,25 +60,25 @@
 <div class="card p-4">
 
 	    <!-- 버튼 영역 -->
-    <div class="d-flex justify-content-between mt-4">
+    <div class="d-flex justify-content-end mt-4">
 
         <div>
-            <c:if test="${login==vo.writer }">
+            <c:if test="${login.id==vo.writer }">
                 <a href="updateForm.do?no=${param.no }&inc=0&page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
                    class="btn btn-dark">
                    수정
                 </a>
 
-                <button id="deleteBtn" class="btn btn-outline-danger">
+                <button id="deleteBtn" class="btn btn-outline-dark">
                     삭제
                 </button>
             </c:if>
-        </div>
 
-        <a href="list.do?page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
-           class="btn btn-dark">
-           리스트
-        </a>
+	        <a href="list.do?page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
+	           class="btn btn-dark">
+	           리스트
+	        </a>
+        </div>
 
     </div>
 

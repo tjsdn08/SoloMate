@@ -31,6 +31,10 @@ $(function(){
 });
 </script>
 
+<c:if test="${!empty login}">
+    <input type="hidden" name="writer" value="${login.id}">
+</c:if>
+
 </head>
 <body class="container mt-5">
 

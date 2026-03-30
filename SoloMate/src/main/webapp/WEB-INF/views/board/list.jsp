@@ -60,6 +60,14 @@
 	</script>
 </c:if>
 
+<c:if test="${!empty pageObject.category}">
+<script>
+    $(function(){
+        $("#category").val("${pageObject.category}");
+    });
+</script>
+</c:if>
+
 </head>
 <body>
 
@@ -76,7 +84,7 @@
                 </span>
                 <input type="text" class="form-control border-start-0"
                        name="word" id="word"
-                       placeholder="상품명 검색"
+                       placeholder="글 검색"
                        style="height:45px;">
             </div>
 
@@ -88,17 +96,19 @@
                 <option value="w">작성자</option>
             </select>
 
-            <!-- 정렬 -->
-            <select class="form-select" style="width:120px; height:45px;">
-                <option>최신순</option>
-                <option>조회순</option>
-            </select>
-
             <!-- 검색 버튼 -->
             <button class="btn btn-dark" style="width:100px; height:45px;">
                 검색
             </button>
-
+            
+			<select class="form-select form-select-sm w-auto" name="category" 
+			        id="category" onchange="this.form.submit()">	            
+			    <option value="">전체</option>
+	            <option value="자유게시판">자유게시판</option>
+	            <option value="질문답변">질문답변</option>
+	            <option value="정보공유">정보공유</option>
+	            <option value="기타">기타</option>
+	        </select>
         </div>
     </form>
 </div>
