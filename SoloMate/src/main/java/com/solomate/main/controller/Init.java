@@ -69,11 +69,10 @@ public class Init extends HttpServlet {
 
 	public void init(ServletConfig config) throws ServletException {
 
-		//------------------------------장선우--------------------------------
-		// ***장보기 계획
-		// DAO
+		// ------------------------------장선우--------------------------------
+		// shopping
 		daoMap.put("shoppingDAO", new ShoppingDAO());
-		// Service
+		
 		serviceMap.put("/shopping/list.do", new ShoppingListService());
 		serviceMap.put("/shopping/view.do", new ShoppingViewService());
 		serviceMap.put("/shopping/write.do", new ShoppingWriteService());
@@ -81,7 +80,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/shopping/delete.do", new ShoppingDeleteService());
 		serviceMap.put("/shopping/complete.do", new ShoppingCompleteService());
 		serviceMap.put("/shopping/cancel.do", new ShoppingCancelService());
-		// 조립
+		
 		serviceMap.get("/shopping/list.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/view.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/write.do").setDAO(daoMap.get("shoppingDAO"));
@@ -89,23 +88,25 @@ public class Init extends HttpServlet {
 		serviceMap.get("/shopping/delete.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/complete.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/cancel.do").setDAO(daoMap.get("shoppingDAO"));
-		// Controller
+		
 		controllerMap.put("/shopping", new ShoppingController());
-		
-		
-		
-		// *** 핫딜
+
+		// hotdeal
 		daoMap.put("hotDealDAO", new HotDealDAO());
+		
 		serviceMap.put("/hotdeal/list.do", new HotDealListService());
 		serviceMap.put("/hotdeal/view.do", new HotDealViewService());
 		serviceMap.put("/hotdeal/addShopping.do", new HotDealAddShoppingService());
+		
 		serviceMap.get("/hotdeal/list.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/hotdeal/view.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/hotdeal/addShopping.do").setDAO(daoMap.get("shoppingDAO"));
+		
 		controllerMap.put("/hotdeal", new HotDealController());
-		
-		
-		// admin hotdeal service
+
+		// 관리자 핫딜
+		daoMap.put("hotDealDAO", new HotDealDAO());
+
 		serviceMap.put("/adminHotDeal/list.do", new AdminHotDealListService());
 		serviceMap.put("/adminHotDeal/view.do", new AdminHotDealViewService());
 		serviceMap.put("/adminHotDeal/write.do", new AdminHotDealWriteService());
@@ -113,7 +114,6 @@ public class Init extends HttpServlet {
 		serviceMap.put("/adminHotDeal/delete.do", new AdminHotDealDeleteService());
 		serviceMap.put("/adminHotDeal/status.do", new AdminHotDealStatusService());
 
-		// admin hotdeal 조립
 		serviceMap.get("/adminHotDeal/list.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/view.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/write.do").setDAO(daoMap.get("hotDealDAO"));
@@ -121,12 +121,9 @@ public class Init extends HttpServlet {
 		serviceMap.get("/adminHotDeal/delete.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/status.do").setDAO(daoMap.get("hotDealDAO"));
 
-		// admin hotdeal controller
 		controllerMap.put("/adminHotDeal", new AdminHotDealController());
-		
-		
-		
-		//------------------------------장은희--------------------------------
+
+		// ------------------------------장은희--------------------------------
 		// *** 식품 생성 / 저장 / 조립
 		// == controller는 모듈명으로 저장
 		controllerMap.put("/food", new FoodController());
@@ -144,8 +141,7 @@ public class Init extends HttpServlet {
 		serviceMap.get("/food/write.do").setDAO(daoMap.get("foodDAO"));
 		serviceMap.get("/food/update.do").setDAO(daoMap.get("foodDAO"));
 		serviceMap.get("/food/delete.do").setDAO(daoMap.get("foodDAO"));
-		
-		
+
 		// *** 폴더 생성 / 저장 / 조립
 		// == controller는 모듈명으로 저장
 		controllerMap.put("/folder", new FolderController());
@@ -163,8 +159,8 @@ public class Init extends HttpServlet {
 		serviceMap.get("/folder/write.do").setDAO(daoMap.get("folderDAO"));
 		serviceMap.get("/folder/update.do").setDAO(daoMap.get("folderDAO"));
 		serviceMap.get("/folder/delete.do").setDAO(daoMap.get("folderDAO"));
-		
-		//------------------------------박현정--------------------------------
+
+		// ------------------------------박현정--------------------------------
 		// *** 일반 게시판 생성 / 저장 / 조립
 		// == controller는 모듈명으로 저장
 		controllerMap.put("/board", new BoardController());
@@ -184,5 +180,23 @@ public class Init extends HttpServlet {
 		serviceMap.get("/board/write.do").setDAO(daoMap.get("boardDAO"));
 		serviceMap.get("/board/update.do").setDAO(daoMap.get("boardDAO"));
 		serviceMap.get("/board/delete.do").setDAO(daoMap.get("boardDAO"));
+
+		
+		// *** 일반게시판 댓글 생성 / 저장 / 조립
+		// -- Controller 저장 - 모듈 이름
+		//controllerMap.put("/boardreply", new BoardReplyController());
+		// -- Service 저장 - uri
+		//serviceMap.put("/boardreply/list.do", new BoardReplyListService());
+		//serviceMap.put("/boardreply/write.do", new BoardReplyWriteService());
+		//serviceMap.put("/boardreply/update.do", new BoardReplyUpdateService());
+		//serviceMap.put("/boardreply/delete.do", new BoardReplyDeleteService());
+		// -- DAO 저장 - 변수 타입
+		//daoMap.put("boardReplyDAO", new BoardReplyDAO());
+		// -- service에 dao를 조립한다.
+		serviceMap.get("/boardreply/list.do").setDAO(daoMap.get("boardReplyDAO"));
+		serviceMap.get("/boardreply/write.do").setDAO(daoMap.get("boardReplyDAO"));
+		serviceMap.get("/boardreply/update.do").setDAO(daoMap.get("boardReplyDAO"));
+		serviceMap.get("/boardreply/delete.do").setDAO(daoMap.get("boardReplyDAO"));
+
 	}
 }
