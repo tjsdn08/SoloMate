@@ -1,4 +1,4 @@
-package com.webjjang.member.vo;
+package com.solomate.member.vo;
 
 // 로그인 처리할 때 필요한 정보. - 아이디, 비밀번호, 이름, 등급번호, 등급명
 public class LoginVO {

@@ -20,7 +20,7 @@
 		  }
 		  if(!pwCheck){
 			  alert("사용 가능한 비밀번호를 입력하세요.");
-			  $("#id").focus();
+			  $("#pw").focus();
 			  return false;
 		  }
 	  });
@@ -38,47 +38,47 @@
 		 if(len1 == 0) {
 			 $("#pwMsg").removeClass("alert-danger alert-success");
 			 $("#pwMsg").addClass("alert-danger");
-			 $("#pwMsg").text("아이디는 필수 입력 사항입니다.");
+			 $("#pwMsg").text("기존 비밀번호는 필수 입력 사항입니다.");
 		 } else if(len1 < 4) {
-			 $("#idMsg").removeClass("alert-danger alert-success");
-			 $("#idMsg").addClass("alert-danger");
-			 $("#idMsg").text("아이디는 4자 이상 입력하셔야 합니다.");
+			 $("#pwMsg").removeClass("alert-danger alert-success");
+			 $("#pwMsg").addClass("alert-danger");
+			 $("#pwMsg").text("비밀번호는 4자 이상 입력하셔야 합니다.");
 		 }
 		 
 		 if(len2 == 0) {
-			 $("#idMsg").removeClass("alert-danger alert-success");
-			 $("#idMsg").addClass("alert-danger");
-			 $("#idMsg").text("아이디는 필수 입력 사항입니다.");
+			 $("#pwMsg").removeClass("alert-danger alert-success");
+			 $("#pwMsg").addClass("alert-danger");
+			 $("#pwMsg").text("새 비밀번호는 필수 입력 사항입니다.");
 		 } else if(len2 < 4) {
-			 $("#idMsg").removeClass("alert-danger alert-success");
-			 $("#idMsg").addClass("alert-danger");
-			 $("#idMsg").text("아이디는 4자 이상 입력하셔야 합니다.");
+			 $("#pwMsg").removeClass("alert-danger alert-success");
+			 $("#pwMsg").addClass("alert-danger");
+			 $("#pwMsg").text("새 비밀번호는 4자 이상 입력하셔야 합니다.");
 		 }
 		 
 		 if(len3 == 0) {
-			 $("#idMsg").removeClass("alert-danger alert-success");
-			 $("#idMsg").addClass("alert-danger");
-			 $("#idMsg").text("아이디는 필수 입력 사항입니다.");
+			 $("#pwMsg").removeClass("alert-danger alert-success");
+			 $("#pwMsg").addClass("alert-danger");
+			 $("#pwMsg").text("새 비밀번호 확인은 필수 입력 사항입니다.");
 		 } else if(len3 < 4) {
-			 $("#idMsg").removeClass("alert-danger alert-success");
-			 $("#idMsg").addClass("alert-danger");
-			 $("#idMsg").text("아이디는 4자 이상 입력하셔야 합니다.");
+			 $("#pwMsg").removeClass("alert-danger alert-success");
+			 $("#pwMsg").addClass("alert-danger");
+			 $("#pwMsg").text("새 비밀번호 확인은 4자 이상 입력하셔야 합니다.");
 		 } else {
 			  $.ajax(
 
 				{
-					url: "checkId.do?id=" + id,
+					url: "checkpw.do?pw=" + pw,
 					success: function(result){ 
 						console.log("[" + result + "]");
 				    	if(result){
-							 $("#idMsg").removeClass("alert-danger alert-success");
-							 $("#idMsg").addClass("alert-danger");
-							 $("#idMsg").text("아이디(" + id + ")는 중복 아이디입니다. 사용할 수 없습니다.");
+							 $("#pwMsg").removeClass("alert-danger alert-success");
+							 $("#pwMsg").addClass("alert-danger");
+							 $("#pwMsg").text("비밀번호(" + pw + ")는 중복 비밀번호입니다. 사용할 수 없습니다.");
 				    	} else {
-							 $("#idMsg").removeClass("alert-danger alert-success");
-							 $("#idMsg").addClass("alert-success");
-							 $("#idMsg").text("아이디(" + id + ")는 사용 가능합니다.");
-							 idCheck = true;
+							 $("#pwMsg").removeClass("alert-danger alert-success");
+							 $("#pwMsg").addClass("alert-success");
+							 $("#pwMsg").text("비밀번호(" + pw + ")는 사용 가능합니다.");
+							 pwCheck = true;
 				    	}
 				    	
 				  	},
@@ -96,27 +96,27 @@
 <body>
 <h2>비밀번호 변경</h2>
 	<form action="changePw.do" method="post">
-		<input type="hidden" name="page" value="${param.page }">
-		<input type="hidden" name="perPageNum" value="${param.perPageNum }">
-		<input type="hidden" name="key" value="${param.key }">
-		<input type="hidden" name="word" value="${param.word }">
+		<input type="hpwden" name="page" value="${param.page }">
+		<input type="hpwden" name="perPageNum" value="${param.perPageNum }">
+		<input type="hpwden" name="key" value="${param.key }">
+		<input type="hpwden" name="word" value="${param.word }">
 		
 	  
 		<div class="mb-3">
 		    <label for="pw" class="form-label">현재 비밀번호</label>
-		    <input type="password" class="form-control" id="pw" placeholder="본인 확인용 현재 비밀번호 입력" name="pw"
+		    <input type="password" class="form-control" pw="pw" placeholder="본인 확인용 현재 비밀번호 입력" name="pw"
 		     required maxlength="20">
 		</div>
 		
 		<div class="mb-3">
 		    <label for="newPw" class="form-label">새 비밀번호 입력</label>
-		    <input type="password" class="form-control" id="newPw" placeholder="새 비밀번호 입력" name="newPw"
+		    <input type="password" class="form-control" pw="newPw" placeholder="새 비밀번호 입력" name="newPw"
 		     required maxlength="20">
 		</div>
 	  
   	  <div class="mb-3 mt-3">
 	    <label for="newPw2" class="form-label">새 비밀번호 확인</label>
-	    <input type="password" class="form-control" id="newPw2" placeholder="본인 확인용 비밀번호를 입력하세요." name="newPw2">
+	    <input type="password" class="form-control" pw="newPw2" placeholder="본인 확인용 비밀번호를 입력하세요." name="newPw2">
 	  </div>
 
 	  <button type="submit" class="btn btn-primary">변경하기</button>

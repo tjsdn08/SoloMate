@@ -1,4 +1,4 @@
-package com.webjjang.member.vo;
+package com.solomate.member.vo;
 
 public class Login {
 

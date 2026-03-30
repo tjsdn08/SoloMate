@@ -3,8 +3,8 @@ package com.solomate.member.controller;
 import com.solomate.main.controller.Controller;
 import com.solomate.main.controller.Init;
 import com.solomate.main.service.Execute;
-import com.webjjang.member.vo.LoginVO;
-import com.webjjang.member.vo.MemberVO;
+import com.solomate.member.vo.LoginVO;
+import com.solomate.member.vo.MemberVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
