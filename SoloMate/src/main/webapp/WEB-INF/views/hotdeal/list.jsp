@@ -88,6 +88,7 @@
 	overflow: hidden;
 	background: #fff;
 	transition: 0.2s;
+	cursor: pointer;
 }
 
 .hotdeal-item:hover {
@@ -187,6 +188,19 @@
 	opacity: 0.93;
 }
 
+.add-done {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 42px;
+	padding: 0 16px;
+	border-radius: 12px;
+	background: #9aa0a6;
+	color: #fff;
+	font-size: 15px;
+	font-weight: 700;
+}
+
 .empty-box {
 	padding: 80px 0;
 	text-align: center;
@@ -218,12 +232,11 @@ $(function(){
 	$("#word").val("${searchVO.word}");
 
 	$(".hotdeal-item").click(function(e){
-		// 장보기 추가 버튼 클릭 시 카드 상세이동 막기
 		if($(e.target).closest(".add-btn").length > 0) return;
+		if($(e.target).closest(".add-done").length > 0) return;
 
 		let dealId = $(this).data("id");
-		location = "${pageContext.request.contextPath}/hotdeal/view.do?dealId=" + dealId
-				+ "&${pageObject.pageQuery}";
+		location = "${pageContext.request.contextPath}/hotdeal/view.do?dealId=" + dealId;
 	});
 });
 </script>
@@ -289,10 +302,15 @@ $(function(){
 							<div class="hotdeal-bottom">
 								<div class="discount-badge">${vo.discountRate}% 할인</div>
 
-								<a href="${pageContext.request.contextPath}/shopping/writeForm.do?dealId=${vo.dealId}&itemName=${vo.title}&expectedPrice=${vo.price}"
-								   class="add-btn">
-									+ 장보기 추가
-								</a>
+								<c:choose>
+									<c:when test="${vo.addedToShopping eq 'Y'}">
+										<span class="add-done">추가완료</span>
+									</c:when>
+									<c:otherwise>
+										<a href="${pageContext.request.contextPath}/hotdeal/addShopping.do?dealId=${vo.dealId}"
+										   class="add-btn">+ 장보기 추가</a>
+									</c:otherwise>
+								</c:choose>
 							</div>
 						</div>
 					</div>

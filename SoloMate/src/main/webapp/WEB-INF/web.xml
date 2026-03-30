@@ -68,8 +68,8 @@
 	<filter-mapping>
 		<filter-name>sitemesh</filter-name>
 		<url-pattern>*.do</url-pattern>
-	</filter-mapping>
-
+	</filter-mapping> 
+	
 	<!-- 오류에 대한 설정 -->
 	<error-page>
 		<error-code>404</error-code>

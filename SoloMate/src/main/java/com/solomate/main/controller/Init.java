@@ -4,7 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.solomate.adminhotdeal.controller.AdminHotDealController;
+import com.solomate.adminhotdeal.service.AdminHotDealDeleteService;
 import com.solomate.adminhotdeal.service.AdminHotDealListService;
+import com.solomate.adminhotdeal.service.AdminHotDealStatusService;
+import com.solomate.adminhotdeal.service.AdminHotDealUpdateService;
+import com.solomate.adminhotdeal.service.AdminHotDealViewService;
 import com.solomate.adminhotdeal.service.AdminHotDealWriteService;
 import com.solomate.board.controller.BoardController;
 import com.solomate.board.dao.BoardDAO;
@@ -101,14 +105,24 @@ public class Init extends HttpServlet {
 		controllerMap.put("/hotdeal", new HotDealController());
 		
 		
-		// admin hotdeal
-		controllerMap.put("/admin/hotdeal", new AdminHotDealController());
+		// admin hotdeal service
+		serviceMap.put("/adminHotDeal/list.do", new AdminHotDealListService());
+		serviceMap.put("/adminHotDeal/view.do", new AdminHotDealViewService());
+		serviceMap.put("/adminHotDeal/write.do", new AdminHotDealWriteService());
+		serviceMap.put("/adminHotDeal/update.do", new AdminHotDealUpdateService());
+		serviceMap.put("/adminHotDeal/delete.do", new AdminHotDealDeleteService());
+		serviceMap.put("/adminHotDeal/status.do", new AdminHotDealStatusService());
 
-		serviceMap.put("/admin/hotdeal/list.do", new AdminHotDealListService());
-		serviceMap.put("/admin/hotdeal/write.do", new AdminHotDealWriteService());
+		// admin hotdeal 조립
+		serviceMap.get("/adminHotDeal/list.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/adminHotDeal/view.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/adminHotDeal/write.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/adminHotDeal/update.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/adminHotDeal/delete.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/adminHotDeal/status.do").setDAO(daoMap.get("hotDealDAO"));
 
-		serviceMap.get("/admin/hotdeal/list.do").setDAO(daoMap.get("hotDealDAO"));
-		serviceMap.get("/admin/hotdeal/write.do").setDAO(daoMap.get("hotDealDAO"));
+		// admin hotdeal controller
+		controllerMap.put("/adminHotDeal", new AdminHotDealController());
 		
 		
 		

@@ -324,4 +324,35 @@ public class ShoppingDAO extends DAO {
 
 		return result;
 	}
+	// 8. 핫딜에서 장보기 자동 추가
+	public Integer addFromHotDeal(Long dealId) throws Exception {
+
+		Integer result = 0;
+
+		con = DB.getConnection();
+
+		String sql = ""
+				+ " insert into shopping_plan "
+				+ " (shopping_id, user_id, deal_id, item_name, quantity, expected_price, "
+				+ "  plan_date, status, source_type, memo, created_at, is_deleted) "
+				+ " select seq_shopping_plan.nextval, 1, hd.deal_id, hd.title, 1, hd.price, "
+				+ "        sysdate, 'PLANNED', 'HOTDEAL', null, sysdate, 'N' "
+				+ " from hot_deal hd "
+				+ " where hd.deal_id = ? "
+				+ "   and not exists ( "
+				+ "       select 1 "
+				+ "       from shopping_plan sp "
+				+ "       where sp.deal_id = hd.deal_id "
+				+ "         and sp.is_deleted = 'N' "
+				+ "   ) ";
+
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, dealId);
+
+		result = pstmt.executeUpdate();
+
+		DB.close(con, pstmt);
+
+		return result;
+	}
 }

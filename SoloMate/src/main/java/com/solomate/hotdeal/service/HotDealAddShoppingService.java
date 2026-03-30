@@ -1,5 +1,21 @@
 package com.solomate.hotdeal.service;
 
-public class HotDealAddShoppingService {
+import com.solomate.main.dao.DAO;
+import com.solomate.main.service.Service;
+import com.solomate.shopping.dao.ShoppingDAO;
 
+public class HotDealAddShoppingService implements Service {
+
+	private ShoppingDAO dao = null;
+
+	@Override
+	public void setDAO(DAO dao) {
+		this.dao = (ShoppingDAO) dao;
+	}
+
+	@Override
+	public Integer service(Object obj) throws Exception {
+		Long dealId = (Long) obj;
+		return dao.addFromHotDeal(dealId);
+	}
 }

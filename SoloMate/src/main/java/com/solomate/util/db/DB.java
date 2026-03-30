@@ -9,6 +9,7 @@ public class DB {
 
 	// DB 연결 정보
 	private static final String DRIVER = "oracle.jdbc.OracleDriver";
+	
 	private static final String URL = "jdbc:oracle:thin:@10.15.21.205:1521:xe";
 	// 쌤 DB 사용
 	// private static final String URL = "jdbc:oracle:thin:@10.15.21.178:1521:xe";

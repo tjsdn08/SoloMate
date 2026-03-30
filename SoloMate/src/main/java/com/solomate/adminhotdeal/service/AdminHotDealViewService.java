@@ -1,13 +1,11 @@
 package com.solomate.adminhotdeal.service;
 
-import java.util.List;
-
 import com.solomate.hotdeal.dao.HotDealDAO;
 import com.solomate.hotdeal.vo.HotDealVO;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
 
-public class AdminHotDealListService implements Service {
+public class AdminHotDealViewService implements Service {
 
 	private HotDealDAO dao = null;
 
@@ -17,9 +15,8 @@ public class AdminHotDealListService implements Service {
 	}
 
 	@Override
-	public List<HotDealVO> service(Object obj) throws Exception {
-		HotDealVO searchVO = (HotDealVO) obj;
-		searchVO.getPageObject().setTotalRow(dao.getAdminTotalRow(searchVO));
-		return dao.adminList(searchVO);
+	public HotDealVO service(Object obj) throws Exception {
+		Long dealId = (Long) obj;
+		return dao.adminView(dealId);
 	}
 }
