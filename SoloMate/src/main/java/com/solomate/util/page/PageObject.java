@@ -49,6 +49,8 @@ public class PageObject {
 	// 댓글을 위한 원본 글번호 저장 변수
 	private long no;
 
+	private String category;
+	
 	public long getNo() {
 		return no;
 	}
@@ -235,6 +237,13 @@ public class PageObject {
 		this.acceptMode = acceptMode;
 	}
 
+	public String getCategory() {
+	    return category;
+	}
+
+	public void setCategory(String category) {
+	    this.category = category;
+	}
 	// mariaDB를 위한 limit 가져가기
 	public Long getLimit() {
 		return (page - 1) * perPageNum;
