@@ -17,6 +17,12 @@ import com.solomate.board.service.BoardListService;
 import com.solomate.board.service.BoardUpdateService;
 import com.solomate.board.service.BoardViewService;
 import com.solomate.board.service.BoardWriteService;
+import com.solomate.boardreply.controller.BoardReplyController;
+import com.solomate.boardreply.dao.BoardReplyDAO;
+import com.solomate.boardreply.service.BoardReplyDeleteService;
+import com.solomate.boardreply.service.BoardReplyListService;
+import com.solomate.boardreply.service.BoardReplyUpdateService;
+import com.solomate.boardreply.service.BoardReplyWriteService;
 import com.solomate.folder.controller.FolderController;
 import com.solomate.folder.dao.FolderDAO;
 import com.solomate.folder.service.FolderDeleteService;
@@ -184,14 +190,14 @@ public class Init extends HttpServlet {
 		
 		// *** 일반게시판 댓글 생성 / 저장 / 조립
 		// -- Controller 저장 - 모듈 이름
-		//controllerMap.put("/boardreply", new BoardReplyController());
+		controllerMap.put("/boardreply", new BoardReplyController());
 		// -- Service 저장 - uri
-		//serviceMap.put("/boardreply/list.do", new BoardReplyListService());
-		//serviceMap.put("/boardreply/write.do", new BoardReplyWriteService());
-		//serviceMap.put("/boardreply/update.do", new BoardReplyUpdateService());
-		//serviceMap.put("/boardreply/delete.do", new BoardReplyDeleteService());
+		serviceMap.put("/boardreply/list.do", new BoardReplyListService());
+		serviceMap.put("/boardreply/write.do", new BoardReplyWriteService());
+		serviceMap.put("/boardreply/update.do", new BoardReplyUpdateService());
+		serviceMap.put("/boardreply/delete.do", new BoardReplyDeleteService());
 		// -- DAO 저장 - 변수 타입
-		//daoMap.put("boardReplyDAO", new BoardReplyDAO());
+		daoMap.put("boardReplyDAO", new BoardReplyDAO());
 		// -- service에 dao를 조립한다.
 		serviceMap.get("/boardreply/list.do").setDAO(daoMap.get("boardReplyDAO"));
 		serviceMap.get("/boardreply/write.do").setDAO(daoMap.get("boardReplyDAO"));
