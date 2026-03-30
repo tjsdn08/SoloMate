@@ -3,6 +3,12 @@ package com.solomate.main.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.solomate.admincategory.controller.AdminCategoryController;
+import com.solomate.admincategory.dao.HotDealCategoryDAO;
+import com.solomate.admincategory.service.AdminCategoryDeleteService;
+import com.solomate.admincategory.service.AdminCategoryListService;
+import com.solomate.admincategory.service.AdminCategoryUpdateService;
+import com.solomate.admincategory.service.AdminCategoryWriteService;
 import com.solomate.adminhotdeal.controller.AdminHotDealController;
 import com.solomate.adminhotdeal.service.AdminHotDealDeleteService;
 import com.solomate.adminhotdeal.service.AdminHotDealListService;
@@ -44,6 +50,14 @@ import com.solomate.hotdeal.service.HotDealListService;
 import com.solomate.hotdeal.service.HotDealViewService;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
+import com.solomate.member.controller.MemberController;
+import com.solomate.member.dao.MemberDAO;
+import com.solomate.member.service.LoginService;
+import com.solomate.member.service.MemberChangeConDateService;
+import com.solomate.member.service.MemberChangeGradeService;
+import com.solomate.member.service.MemberChangeStatusService;
+import com.solomate.member.service.MemberListService;
+import com.solomate.member.service.MemberWriteService;
 import com.solomate.shopping.controller.ShoppingController;
 import com.solomate.shopping.dao.ShoppingDAO;
 import com.solomate.shopping.service.ShoppingCancelService;
@@ -78,7 +92,7 @@ public class Init extends HttpServlet {
 		// ------------------------------장선우--------------------------------
 		// shopping
 		daoMap.put("shoppingDAO", new ShoppingDAO());
-		
+
 		serviceMap.put("/shopping/list.do", new ShoppingListService());
 		serviceMap.put("/shopping/view.do", new ShoppingViewService());
 		serviceMap.put("/shopping/write.do", new ShoppingWriteService());
@@ -86,7 +100,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/shopping/delete.do", new ShoppingDeleteService());
 		serviceMap.put("/shopping/complete.do", new ShoppingCompleteService());
 		serviceMap.put("/shopping/cancel.do", new ShoppingCancelService());
-		
+
 		serviceMap.get("/shopping/list.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/view.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/write.do").setDAO(daoMap.get("shoppingDAO"));
@@ -94,20 +108,20 @@ public class Init extends HttpServlet {
 		serviceMap.get("/shopping/delete.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/complete.do").setDAO(daoMap.get("shoppingDAO"));
 		serviceMap.get("/shopping/cancel.do").setDAO(daoMap.get("shoppingDAO"));
-		
+
 		controllerMap.put("/shopping", new ShoppingController());
 
 		// hotdeal
 		daoMap.put("hotDealDAO", new HotDealDAO());
-		
+
 		serviceMap.put("/hotdeal/list.do", new HotDealListService());
 		serviceMap.put("/hotdeal/view.do", new HotDealViewService());
 		serviceMap.put("/hotdeal/addShopping.do", new HotDealAddShoppingService());
-		
+
 		serviceMap.get("/hotdeal/list.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/hotdeal/view.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/hotdeal/addShopping.do").setDAO(daoMap.get("shoppingDAO"));
-		
+
 		controllerMap.put("/hotdeal", new HotDealController());
 
 		// 관리자 핫딜
@@ -128,6 +142,21 @@ public class Init extends HttpServlet {
 		serviceMap.get("/adminHotDeal/status.do").setDAO(daoMap.get("hotDealDAO"));
 
 		controllerMap.put("/adminHotDeal", new AdminHotDealController());
+
+		// 관리자 카테고리
+		daoMap.put("categoryDAO", new HotDealCategoryDAO());
+
+		serviceMap.put("/adminCategory/list.do", new AdminCategoryListService());
+		serviceMap.put("/adminCategory/write.do", new AdminCategoryWriteService());
+		serviceMap.put("/adminCategory/update.do", new AdminCategoryUpdateService());
+		serviceMap.put("/adminCategory/delete.do", new AdminCategoryDeleteService());
+
+		serviceMap.get("/adminCategory/list.do").setDAO(daoMap.get("categoryDAO"));
+		serviceMap.get("/adminCategory/write.do").setDAO(daoMap.get("categoryDAO"));
+		serviceMap.get("/adminCategory/update.do").setDAO(daoMap.get("categoryDAO"));
+		serviceMap.get("/adminCategory/delete.do").setDAO(daoMap.get("categoryDAO"));
+
+		controllerMap.put("/adminCategory", new AdminCategoryController());
 
 		// ------------------------------장은희--------------------------------
 		// *** 식품 생성 / 저장 / 조립
@@ -187,7 +216,6 @@ public class Init extends HttpServlet {
 		serviceMap.get("/board/update.do").setDAO(daoMap.get("boardDAO"));
 		serviceMap.get("/board/delete.do").setDAO(daoMap.get("boardDAO"));
 
-		
 		// *** 일반게시판 댓글 생성 / 저장 / 조립
 		// -- Controller 저장 - 모듈 이름
 		controllerMap.put("/boardreply", new BoardReplyController());
@@ -204,5 +232,23 @@ public class Init extends HttpServlet {
 		serviceMap.get("/boardreply/update.do").setDAO(daoMap.get("boardReplyDAO"));
 		serviceMap.get("/boardreply/delete.do").setDAO(daoMap.get("boardReplyDAO"));
 
+		// ------------------------------고승희--------------------------------
+		controllerMap.put("/member", new MemberController());
+		// -- Service 저장
+		serviceMap.put("/member/login.do", new LoginService());
+		serviceMap.put("/member/changeCon.do", new MemberChangeConDateService());
+		serviceMap.put("/member/changeGrade.do", new MemberChangeGradeService());
+		serviceMap.put("/member/changeStatus.do", new MemberChangeStatusService());
+		serviceMap.put("/member/list.do", new MemberListService());
+		serviceMap.put("/member/write.do", new MemberWriteService());
+		// -- DAO 저장
+		daoMap.put("memberDAO", new MemberDAO());
+		// service
+		serviceMap.get("/member/login.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/changeCon.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/changeGrade.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/changeStatus.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/list.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
 	}
 }
