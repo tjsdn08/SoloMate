@@ -94,31 +94,36 @@ public class MemberController implements Controller {
 					return "member/changePwForm";
 
 				case "/member/changePw.do":
-					MemberVO cpwVO = new MemberVO();
-					cpwVO.setId(loginId);
-					cpwVO.setPw(request.getParameter("pw")); // 기존 비번
-					// DB 처리를 위해 MemberVO 등에 newPw 필드를 추가하거나 Map을 사용하세요.
+					vo = new MemberVO();
+					vo.setId(loginId);
+					vo.setPw(request.getParameter("pw")); // 기존 비번
 					request.setAttribute("newPw", request.getParameter("newPw")); 
-					Execute.execute(Init.getService(uri), cpwVO);
+					Execute.execute(Init.getService(uri), vo);
 					session.setAttribute("msg", "비밀번호가 변경되었습니다. 다시 로그인해 주세요.");
 					session.removeAttribute("login");
 					return "redirect:/member/loginForm.do";
 
 				// --- [아이디/비번 찾기] ---
 				case "/member/searchId.do":
-				    // 1. 데이터 수집 (이름과 연락처)
-				    MemberVO searchIdVO = new MemberVO();
-				    searchIdVO.setName(request.getParameter("name"));
-				    searchIdVO.setTel(request.getParameter("tel"));
+				    vo = new MemberVO();
+				    vo.setName(request.getParameter("name"));
+				    vo.setTel(request.getParameter("tel"));
 				    
 				    // 2. 서비스 실행
 				    // DB에서 일치하는 사용자의 ID를 String으로 받아옵니다.
-				    String foundId = (String) Execute.execute(Init.getService(uri), searchIdVO);
+				    String foundId = (String) Execute.execute(Init.getService(uri), vo);
 				    
 				    // 3. AJAX 응답 처리
 				    // 아이디가 있으면 아이디를, 없으면 "none" 문자열을 반환합니다.
 				    return "ajax:" + (foundId != null ? foundId : "none");
-				
+				case "/member/view.do":
+					vo = new MemberVO();
+					vo.setId(request.getParameter("id"));
+					vo.setName(request.getParameter("name"));
+					vo.setTel(request.getParameter("tel"));
+					vo.setStatus(request.getParameter("status"));
+					vo.setGradeName(request.getParameter("gradeName"));
+					
 				case "/member/searchPwForm.do":
 					return "member/searchPwForm";
 
