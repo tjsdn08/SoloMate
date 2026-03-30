@@ -70,6 +70,9 @@
 	<div>
 		<pageNav:pageNav listURI="list.do" pageObject="${pageObject }"></pageNav:pageNav>
 	</div>
+	
+	<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-primary">식품 추가하기</a>
+	<a href="list.do" class="btn btn-success">새로고침</a>
 
 </body>
 </html>

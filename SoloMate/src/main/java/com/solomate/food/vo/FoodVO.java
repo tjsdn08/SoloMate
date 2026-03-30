@@ -16,7 +16,8 @@ public class FoodVO {
 	private String createdAt;
 	private String updatedAt;
 	private String dDay;
-	private List<String> folders;
+	private List<String> folders;   // 조회용
+	private List<Long> folderNos; // 등록/수정 용
 	
 	public long getNo() {
 		return no;
@@ -84,12 +85,22 @@ public class FoodVO {
 	public void setFolders(List<String> folders) {
 		this.folders = folders;
 	}
+	
+	
+	public List<Long> getFolderNos() {
+		return folderNos;
+	}
+	public void setFolderNos(List<Long> folderNos) {
+		this.folderNos = folderNos;
+	}
 	@Override
 	public String toString() {
 		return "FoodVO [no=" + no + ", memberId=" + memberId + ", name=" + name + ", quantity=" + quantity
 				+ ", storageType=" + storageType + ", expiryDate=" + expiryDate + ", memo=" + memo + ", createdAt="
-				+ createdAt + ", updatedAt=" + updatedAt + ", dDay=" + dDay + ", folders=" + folders + "]";
+				+ createdAt + ", updatedAt=" + updatedAt + ", dDay=" + dDay + ", folders=" + folders + ", folderNos="
+				+ folderNos + "]";
 	}
+
 	
 	
 

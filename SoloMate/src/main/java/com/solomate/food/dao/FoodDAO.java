@@ -166,5 +166,58 @@ public class FoodDAO extends DAO{
 
 	    return vo;
 	}
+	
+	// 3. 식품 추가 + 폴더 매핑
+	public Integer write(FoodVO vo) throws Exception {
+
+	    Integer result = 0;
+
+	    con = DB.getConnection();
+
+
+        // 1️. 식품 등록
+        String sql = "INSERT INTO food "
+                   + "(no, memberId, name, quantity, storageType, expiryDate, memo) "
+                   + "VALUES (food_seq.NEXTVAL, ?, ?, ?, ?, TO_DATE(?, 'yyyy-mm-dd'), ?)";
+
+        // no 컬럼을 insert 이후에 준다.
+        pstmt = con.prepareStatement(sql, new String[] {"no"});
+
+        int idx = 1;
+        pstmt.setString(idx++, vo.getMemberId());
+        pstmt.setString(idx++, vo.getName());
+        pstmt.setLong(idx++, vo.getQuantity());
+        pstmt.setString(idx++, vo.getStorageType());
+        pstmt.setString(idx++, vo.getExpiryDate());
+        pstmt.setString(idx++, vo.getMemo());
+
+        result = pstmt.executeUpdate();
+
+        // 생성된 food 번호 가져오기
+        rs = pstmt.getGeneratedKeys();
+        long foodNo = 0;
+        if (rs.next()) {
+            foodNo = rs.getLong(1);
+        }
+
+        // 2️. 폴더 매핑 (여러 개 가능)
+        if (vo.getFolderNos() != null) {
+
+            String mapSql = "INSERT INTO folder_food (no, folderNo, foodNo) "
+                          + "VALUES (folder_food_seq.NEXTVAL, ?, ?)";
+
+            pstmt = con.prepareStatement(mapSql);
+
+            for (Long folderNo : vo.getFolderNos()) {
+                pstmt.setLong(1, folderNo);
+                pstmt.setLong(2, foodNo);
+                pstmt.executeUpdate();
+            }
+        }
+
+        DB.close(con, pstmt, rs);
+
+	    return result;
+	}
 
 }
