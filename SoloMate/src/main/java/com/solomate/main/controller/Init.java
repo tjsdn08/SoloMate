@@ -7,6 +7,7 @@ import com.solomate.admincategory.controller.AdminCategoryController;
 import com.solomate.admincategory.dao.HotDealCategoryDAO;
 import com.solomate.admincategory.service.AdminCategoryDeleteService;
 import com.solomate.admincategory.service.AdminCategoryListService;
+import com.solomate.admincategory.service.AdminCategoryStatusService;
 import com.solomate.admincategory.service.AdminCategoryUpdateService;
 import com.solomate.admincategory.service.AdminCategoryWriteService;
 import com.solomate.adminhotdeal.controller.AdminHotDealController;
@@ -111,9 +112,9 @@ public class Init extends HttpServlet {
 
 		controllerMap.put("/shopping", new ShoppingController());
 
-		// hotdeal
 		daoMap.put("hotDealDAO", new HotDealDAO());
 
+		// hotdeal
 		serviceMap.put("/hotdeal/list.do", new HotDealListService());
 		serviceMap.put("/hotdeal/view.do", new HotDealViewService());
 		serviceMap.put("/hotdeal/addShopping.do", new HotDealAddShoppingService());
@@ -125,8 +126,6 @@ public class Init extends HttpServlet {
 		controllerMap.put("/hotdeal", new HotDealController());
 
 		// 관리자 핫딜
-		daoMap.put("hotDealDAO", new HotDealDAO());
-
 		serviceMap.put("/adminHotDeal/list.do", new AdminHotDealListService());
 		serviceMap.put("/adminHotDeal/view.do", new AdminHotDealViewService());
 		serviceMap.put("/adminHotDeal/write.do", new AdminHotDealWriteService());
@@ -150,11 +149,13 @@ public class Init extends HttpServlet {
 		serviceMap.put("/adminCategory/write.do", new AdminCategoryWriteService());
 		serviceMap.put("/adminCategory/update.do", new AdminCategoryUpdateService());
 		serviceMap.put("/adminCategory/delete.do", new AdminCategoryDeleteService());
+		serviceMap.put("/adminCategory/status.do", new AdminCategoryStatusService());
 
 		serviceMap.get("/adminCategory/list.do").setDAO(daoMap.get("categoryDAO"));
 		serviceMap.get("/adminCategory/write.do").setDAO(daoMap.get("categoryDAO"));
 		serviceMap.get("/adminCategory/update.do").setDAO(daoMap.get("categoryDAO"));
 		serviceMap.get("/adminCategory/delete.do").setDAO(daoMap.get("categoryDAO"));
+		serviceMap.get("/adminCategory/status.do").setDAO(daoMap.get("categoryDAO"));
 
 		controllerMap.put("/adminCategory", new AdminCategoryController());
 
@@ -232,6 +233,26 @@ public class Init extends HttpServlet {
 		serviceMap.get("/boardreply/update.do").setDAO(daoMap.get("boardReplyDAO"));
 		serviceMap.get("/boardreply/delete.do").setDAO(daoMap.get("boardReplyDAO"));
 
+		// -- 꿀팁 아카이브 북마크 Init --
+		// *** 북마크 생성 / 저장 / 조립
+		// -- Controller 저장 - 모듈 이름 (보통 /bookmark로 시작하는 요청 처리)
+		//controllerMap.put("/bookmark", new BookmarkController());
+
+		// -- Service 저장 - uri
+		// 1. 북마크 목록 (내가 북마크한 글만 모아보기)
+		//serviceMap.put("/bookmark/list.do", new BookmarkListService());
+		// 2. 북마크 추가 (등록)
+		//serviceMap.put("/bookmark/write.do", new BookmarkWriteService());
+		// 3. 북마크 삭제 (해제)
+		//serviceMap.put("/bookmark/delete.do", new BookmarkDeleteService());
+
+		// -- DAO 저장 - 변수명으로 저장하여 각 서비스에 주입
+		//daoMap.put("bookmarkDAO", new BookmarkDAO());
+
+		// -- Service에 DAO를 조립 (의존성 주입)
+		serviceMap.get("/bookmark/list.do").setDAO(daoMap.get("bookmarkDAO"));
+		serviceMap.get("/bookmark/write.do").setDAO(daoMap.get("bookmarkDAO"));
+		serviceMap.get("/bookmark/delete.do").setDAO(daoMap.get("bookmarkDAO"));
 		// ------------------------------고승희--------------------------------
 		controllerMap.put("/member", new MemberController());
 		// -- Service 저장

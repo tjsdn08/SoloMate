@@ -128,6 +128,11 @@ public class AdminHotDealController implements Controller {
 		vo.setDealUrl(request.getParameter("dealUrl"));
 		vo.setDescription(request.getParameter("description"));
 		vo.setEndDate(request.getParameter("endDate"));
-		vo.setStatus(request.getParameter("status"));
+
+		String status = request.getParameter("status");
+		if (status == null || status.trim().equals("")) {
+			status = "ACTIVE";
+		}
+		vo.setStatus(status);
 	}
 }

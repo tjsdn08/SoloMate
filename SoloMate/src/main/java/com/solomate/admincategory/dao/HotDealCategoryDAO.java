@@ -98,4 +98,25 @@ public class HotDealCategoryDAO extends DAO {
 		DB.close(con, pstmt);
 		return result;
 	}
+	
+	// 상태 변경
+	public Integer changeStatus(HotDealCategoryVO vo) throws Exception {
+
+		con = DB.getConnection();
+
+		String sql = ""
+				+ " update hot_deal_category "
+				+ " set status = ?, updated_at = sysdate "
+				+ " where category_id = ? "
+				+ "   and is_deleted = 'N' ";
+
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getStatus());
+		pstmt.setLong(2, vo.getCategoryId());
+
+		int result = pstmt.executeUpdate();
+
+		DB.close(con, pstmt);
+		return result;
+	}
 }
