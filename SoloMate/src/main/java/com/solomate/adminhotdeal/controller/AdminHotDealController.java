@@ -48,6 +48,10 @@ public class AdminHotDealController implements Controller {
 				return "adminHotDeal/view";
 
 			case "/adminHotDeal/writeForm.do":
+
+				request.setAttribute("categoryList",
+						Execute.execute(Init.getService("/adminCategory/list.do"), null));
+
 				return "adminHotDeal/writeForm";
 
 			case "/adminHotDeal/write.do":
@@ -66,6 +70,8 @@ public class AdminHotDealController implements Controller {
 
 				Long updateFormId = Long.parseLong(request.getParameter("dealId"));
 				request.setAttribute("vo", Execute.execute(Init.getService("/adminHotDeal/view.do"), updateFormId));
+				request.setAttribute("categoryList",
+						Execute.execute(Init.getService("/adminCategory/list.do"), null));
 
 				return "adminHotDeal/updateForm";
 

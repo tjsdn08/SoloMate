@@ -236,32 +236,41 @@ public class Init extends HttpServlet {
 		// -- 꿀팁 아카이브 북마크 Init --
 		// *** 북마크 생성 / 저장 / 조립
 		// -- Controller 저장 - 모듈 이름 (보통 /bookmark로 시작하는 요청 처리)
-		//controllerMap.put("/bookmark", new BookmarkController());
+		// controllerMap.put("/bookmark", new BookmarkController());
 
 		// -- Service 저장 - uri
 		// 1. 북마크 목록 (내가 북마크한 글만 모아보기)
-		//serviceMap.put("/bookmark/list.do", new BookmarkListService());
+		// serviceMap.put("/bookmark/list.do", new BookmarkListService());
 		// 2. 북마크 추가 (등록)
-		//serviceMap.put("/bookmark/write.do", new BookmarkWriteService());
+		// serviceMap.put("/bookmark/write.do", new BookmarkWriteService());
 		// 3. 북마크 삭제 (해제)
-		//serviceMap.put("/bookmark/delete.do", new BookmarkDeleteService());
+		// serviceMap.put("/bookmark/delete.do", new BookmarkDeleteService());
 
 		// -- DAO 저장 - 변수명으로 저장하여 각 서비스에 주입
-		//daoMap.put("bookmarkDAO", new BookmarkDAO());
+		// daoMap.put("bookmarkDAO", new BookmarkDAO());
 
 		// -- Service에 DAO를 조립 (의존성 주입)
 		serviceMap.get("/bookmark/list.do").setDAO(daoMap.get("bookmarkDAO"));
 		serviceMap.get("/bookmark/write.do").setDAO(daoMap.get("bookmarkDAO"));
 		serviceMap.get("/bookmark/delete.do").setDAO(daoMap.get("bookmarkDAO"));
+
 		// ------------------------------고승희--------------------------------
+		// 고승희 - 회원관리
 		controllerMap.put("/member", new MemberController());
 		// -- Service 저장
 		serviceMap.put("/member/login.do", new LoginService());
 		serviceMap.put("/member/changeCon.do", new MemberChangeConDateService());
 		serviceMap.put("/member/changeGrade.do", new MemberChangeGradeService());
 		serviceMap.put("/member/changeStatus.do", new MemberChangeStatusService());
+		;
 		serviceMap.put("/member/list.do", new MemberListService());
 		serviceMap.put("/member/write.do", new MemberWriteService());
+		//serviceMap.put("/member/checkId.do", new MemberCheckIdService());
+		//serviceMap.put("/member/view.do", new MemberViewService());
+		//serviceMap.put("/member/update.do", new MemberUpdateService());
+		//serviceMap.put("/member/searchId.do", new MemberSearchIdService());
+		//serviceMap.put("/member/checkPw.do", new MemberCheckPwService());
+		//serviceMap.put("/member/changePw.do", new MemberChangePwService());
 		// -- DAO 저장
 		daoMap.put("memberDAO", new MemberDAO());
 		// service
@@ -271,5 +280,48 @@ public class Init extends HttpServlet {
 		serviceMap.get("/member/changeStatus.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/list.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/view.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/update.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/searchId.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/checkPw.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/changePw.do").setDAO(daoMap.get("memberDAO"));
+
+		// 고승희 - 레시피 아카이브
+
+		//controllerMap.put("/recipes", new MemberRecipesController());
+
+		// -- Service 저장
+		//serviceMap.put("/recipes/list.do", new RecipesListService());
+		//serviceMap.put("/recipes/view.do", new RecipesViewService());
+		//serviceMap.put("/recipes/update.do", new RecipesUpdateService());
+		//serviceMap.put("/recipes/write.do", new RecipesWriteService());
+		//serviceMap.put("/recipes/changeImg.do", new RecipesChangeImgService());
+		//serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
+
+		// -- DAO 저장
+		//daoMap.put("recipesDAO", new recipesDAO());
+		// -- service
+		serviceMap.get("/recipes/list.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/view.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/update.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/write.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/changeImg.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/delete.do").setDAO(daoMap.get("recipesDAO"));
+
+		// 고승희 - 레시피 아카이브 북마크 처리
+
+		//controllerMap.put("/recipesBookmarks", new MemberRecipesBookmarksController());
+
+		// -- Service 저장
+		//serviceMap.put("/recipesBookmarks/list.do", new RecipesBookmarksListService());
+		//serviceMap.put("/recipesBookmarks/update.do", new RecipesBookmarksUpdateService());
+		//serviceMap.put("/recipesBookmarks/delete.do", new RecipesBookmarksDeleteService());
+		// -- DAO 저장
+		//daoMap.put("recipesBookmarksDAO", new recipesBookmarksDAO());
+		// -- service
+		serviceMap.get("/recipesBookmarks/list.do").setDAO(daoMap.get("recipesBookmarksDAO"));
+		serviceMap.get("/recipesBookmarks/update.do").setDAO(daoMap.get("recipesBookmarksDAO"));
+		serviceMap.get("/recipesBookmarks/delete.do").setDAO(daoMap.get("recipesBookmarksDAO"));
 	}
 }
