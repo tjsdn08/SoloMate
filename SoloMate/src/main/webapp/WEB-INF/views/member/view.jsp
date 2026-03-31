@@ -38,6 +38,14 @@
 				<th>등급명</th>
 				<td>${vo.gradeName }</td>
 			</tr>
+			<tr>
+				<th>가입일 </th>
+				<td>${vo.regDate }</td>
+			</tr>
+			<tr>
+				<th>최근 방문일 </th>
+				<td>${vo.conDate }</td>
+			</tr>
 		</tbody>
 	</table>
 	

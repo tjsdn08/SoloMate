@@ -103,26 +103,26 @@ public class MemberController implements Controller {
 					session.removeAttribute("login");
 					return "redirect:/member/loginForm.do";
 
-				// --- [아이디/비번 찾기] ---
+				// --- [아이디 찾기] ---
+
+				case "/member/searchIdForm.do":
+				    return "member/searchIdForm";
+
+				// 2. 실제로 아이디 찾기 버튼을 눌렀을 때 (DB 작업 필요)
 				case "/member/searchId.do":
+				    // 데이터 수집
 				    vo = new MemberVO();
 				    vo.setName(request.getParameter("name"));
 				    vo.setTel(request.getParameter("tel"));
 				    
-				    // 2. 서비스 실행
-				    // DB에서 일치하는 사용자의 ID를 String으로 받아옵니다.
 				    String foundId = (String) Execute.execute(Init.getService(uri), vo);
 				    
-				    // 3. AJAX 응답 처리
-				    // 아이디가 있으면 아이디를, 없으면 "none" 문자열을 반환합니다.
-				    return "ajax:" + (foundId != null ? foundId : "none");
+				    request.setAttribute("foundId", (foundId != null && !foundId.equals("")) ? foundId : "none");
+				    
+				    return "member/searchIdForm";
 				case "/member/view.do":
 					vo = new MemberVO();
 					vo.setId(request.getParameter("id"));
-					vo.setName(request.getParameter("name"));
-					vo.setTel(request.getParameter("tel"));
-					vo.setStatus(request.getParameter("status"));
-					vo.setGradeName(request.getParameter("gradeName"));
 					request.setAttribute("vo", Execute.execute(Init.getService(uri), vo.getId()));
 					return "member/view";
 				case "/member/searchPwForm.do":

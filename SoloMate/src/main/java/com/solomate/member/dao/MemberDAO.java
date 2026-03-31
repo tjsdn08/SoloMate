@@ -200,7 +200,7 @@ public class MemberDAO extends DAO{
 		// 1. 드라이버 확인 & 2. 연결 객체
 		con = DB.getConnection();
 		// 3. SQL
-		String sql = "SELECT m.id, m.name, m.tel, m.address, m.status, m.gradeNo, m.gradeNo, g.gradeName "
+		String sql = "SELECT m.id, m.name, m.tel, m.address, m.status, m.gradeNo, m.gradeNo, g.gradeName, m.regDate, m.conDate "
 				+ " FROM member m, grade g "
 				+ " WHERE m.id = ? AND m.gradeNo = g.gradeNo";
 		// 4. 실행 객체 & 데이터 세팅
@@ -218,12 +218,36 @@ public class MemberDAO extends DAO{
 			vo.setStatus(rs.getString("status"));
 			vo.setGradeNo(rs.getInt("gradeNo"));
 			vo.setGradeName(rs.getString("gradeName"));
+			vo.setRegDate(rs.getString("regDate"));
+			vo.setConDate(rs.getString("conDate"));
 		} // if 의 끝
 		// 7. 닫기
 		DB.close(con, pstmt, rs);
 		
 		return vo;
 	} // view()의 끝
+	
+	// 아이디 찾기 - 이름과 연락처 사용
+	public String searchId(MemberVO vo) throws Exception {
+	    String id = null;
+	    
+	        con = DB.getConnection();
+	        String sql = "select id from member where name = ? and tel = ?";
+	        
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, vo.getName());
+	        pstmt.setString(2, vo.getTel());
+	        
+	        rs = pstmt.executeQuery();
+	        
+	        if(rs != null && rs.next()) {
+	            id = rs.getString("id");
+	        }
+	        DB.close(con, pstmt, rs);
+	    
+	    
+	    return id;
+	}
 	
 	
 }
