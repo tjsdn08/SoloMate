@@ -58,7 +58,9 @@ import com.solomate.member.service.MemberChangeConDateService;
 import com.solomate.member.service.MemberChangeGradeService;
 import com.solomate.member.service.MemberChangePwService;
 import com.solomate.member.service.MemberChangeStatusService;
+import com.solomate.member.service.MemberDeleteService;
 import com.solomate.member.service.MemberListService;
+import com.solomate.member.service.MemberReactivateService;
 import com.solomate.member.service.MemberSearchIdService;
 import com.solomate.member.service.MemberUpdateService;
 import com.solomate.member.service.MemberViewService;
@@ -272,11 +274,10 @@ public class Init extends HttpServlet {
 		serviceMap.put("/member/view.do", new MemberViewService());
 		serviceMap.put("/member/searchId.do", new MemberSearchIdService());
 		serviceMap.put("/member/changePw.do", new MemberChangePwService());
-//		serviceMap.put("/member/write.do", new MemberWriteService());
-//		serviceMap.put("/member/checkId.do", new MemberCheckIdService());
 		serviceMap.put("/member/update.do", new MemberUpdateService());
+		serviceMap.put("/member/delete.do", new MemberDeleteService());
+		serviceMap.put("/member/reactivate.do", new MemberReactivateService());
 		
-//		//serviceMap.put("/member/checkPw.do", new MemberCheckPwService());
 //		// -- DAO 저장
 		daoMap.put("memberDAO", new MemberDAO());
 //		// service
@@ -289,10 +290,8 @@ public class Init extends HttpServlet {
 		serviceMap.get("/member/searchId.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/changePw.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/update.do").setDAO(daoMap.get("memberDAO"));
-//		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
-//		serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
-//		serviceMap.get("/member/searchId.do").setDAO(daoMap.get("memberDAO"));
-//		serviceMap.get("/member/checkPw.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/delete.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/reactivate.do").setDAO(daoMap.get("memberDAO"));
 
 		// 고승희 - 레시피 아카이브
 

@@ -23,18 +23,30 @@ public class MemberController implements Controller {
 				// 로그인 폼
 				case "/member/loginForm.do":
 					return "member/loginForm";
-				// 로그인
 				case "/member/login.do":
-					LoginVO userVO = new LoginVO();
-					userVO.setId(request.getParameter("id"));
-					userVO.setPw(request.getParameter("pw"));
-					loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
-					session.setAttribute("login", loginVO);
-					// 마지막 접속일 업데이트
-					Execute.execute(Init.getService("/member/changeCon.do"), loginVO.getId());
-					session.setAttribute("msg", loginVO.getName() + "님, 환영합니다!");
-					return "redirect:/";
-					
+				    LoginVO userVO = new LoginVO();
+				    userVO.setId(request.getParameter("id"));
+				    userVO.setPw(request.getParameter("pw"));
+				    
+				    // 1. 로그인 시도
+				    loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
+				    
+				    if (loginVO != null) {
+				        //status가 잘 찍히는지 확인용
+				        System.out.println("로그인 직후 상태: " + loginVO.getStatus());
+
+				        if ("탈퇴".equals(loginVO.getStatus())) {
+				            // 1. DB 상태를 '정상'으로 변경
+				            Execute.execute(Init.getService("/member/reactivate.do"), loginVO.getId());
+				            // 2. 현재 로그인 객체의 상태도 '정상'으로 변경
+				            loginVO.setStatus("정상");
+				            session.setAttribute("msg", loginVO.getName() + "님, 탈퇴 계정이 복구되었습니다.");
+				        }
+				        session.setAttribute("login", loginVO);
+				        // 마지막 접속일 업데이트
+				        Execute.execute(Init.getService("/member/changeCon.do"), loginVO.getId());
+				        return "redirect:/";
+				    }
 				// 로그아웃
 				case "/member/logout.do":
 					session.removeAttribute("login");
@@ -157,7 +169,26 @@ public class MemberController implements Controller {
 				        return "member/updateForm";
 				    }
 				
+				 // 회원 탈퇴 처리
 
+				 case "/member/deleteForm.do":
+				     return "member/deleteForm";
+
+				 case "/member/delete.do":
+				     vo = new MemberVO();
+				     vo.setId(loginVO.getId());
+				     vo.setPw(request.getParameter("pw")); // 확인용 비밀번호
+				     
+				     Integer deleteResult = (Integer) Execute.execute(Init.getService(uri), vo);
+				     
+				     if (deleteResult == 1) {
+				         session.removeAttribute("login");
+				         session.setAttribute("msg", "회원 탈퇴가 정상적으로 처리되었습니다. 그동안 이용해주셔서 감사합니다.");
+				         return "redirect:/";
+				     } else {
+				         request.setAttribute("deleteStatus", "fail");
+				         return "member/deleteForm";
+				     }
 				default:
 					request.setAttribute("url", request.getRequestURL());
 					return "error/noPage";

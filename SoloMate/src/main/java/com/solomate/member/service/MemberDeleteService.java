@@ -3,10 +3,10 @@ package com.solomate.member.service;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
 import com.solomate.member.dao.MemberDAO;
-import com.solomate.member.vo.LoginVO;
+import com.solomate.member.vo.MemberVO;
 
 // Service 종류라고 하려면 반드시 Service를 상속 받아야만 한다.
-public class LoginService implements Service{
+public class MemberDeleteService implements Service{
 
 	private MemberDAO dao = null;
 	
@@ -17,9 +17,8 @@ public class LoginService implements Service{
 
 	@Override
 	public Object service(Object obj) throws Exception {
-	    LoginVO vo = (LoginVO) obj; 
-	    
-	    return dao.login(vo); 
+		// TODO Auto-generated method stub
+		return dao.delete((MemberVO) obj);
 	}
 
 }
