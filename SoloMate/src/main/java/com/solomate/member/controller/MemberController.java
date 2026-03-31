@@ -84,7 +84,7 @@ public class MemberController implements Controller {
 					session.setAttribute("msg", "회원의 등급이 변경되었습니다.");
 					return "redirect:list.do";
 
-				// --- [비밀번호 변경] ---
+				// 회원 비밀번호 변경
 				case "/member/changePwForm.do":
 				    return "member/changePwForm";
 
@@ -100,7 +100,6 @@ public class MemberController implements Controller {
 				    
 				    // 3. 결과에 따른 처리
 				    if (pwResult == 1) {
-				        // [성공 시]
 				        session.removeAttribute("login");
 				        session.setAttribute("msg", "비밀번호가 정상적으로 변경되었습니다. 새 비밀번호로 로그인하세요.");
 				        return "redirect:/member/loginForm.do";
@@ -109,7 +108,7 @@ public class MemberController implements Controller {
 				        return "member/changePwForm";
 				    }
 
-				// --- [아이디 찾기] ---
+				// 아이디 찾기
 				case "/member/searchIdForm.do":
 				    return "member/searchIdForm";
 
@@ -125,18 +124,39 @@ public class MemberController implements Controller {
 				    
 				    return "member/searchIdForm";
 				    
-				    
+				 // 회원 정보 상세 보기
 				case "/member/view.do":
 					vo = new MemberVO();
 					vo.setId(request.getParameter("id"));
 					request.setAttribute("vo", Execute.execute(Init.getService(uri), vo.getId()));
 					return "member/view";
 					
-					
-					
-					
-				case "/member/searchPwForm.do":
-					return "member/searchPwForm";
+
+				// 회원 정보 수정
+
+				case "/member/updateForm.do":
+				    request.setAttribute("vo", Execute.execute(Init.getService("/member/view.do"), loginVO.getId()));
+				    return "member/updateForm";
+
+				case "/member/update.do":
+				    vo = new MemberVO();
+				    vo.setId(loginVO.getId()); 
+				    vo.setPw(request.getParameter("pw")); // 본인 확인용 비번
+				    vo.setName(request.getParameter("name"));
+				    vo.setTel(request.getParameter("tel"));
+				    vo.setAddress(request.getParameter("address"));
+				    
+				    Integer updateResult = (Integer) Execute.execute(Init.getService(uri), vo);
+				    
+				    if (updateResult == 1) {
+				        session.setAttribute("msg", "회원 정보가 성공적으로 수정되었습니다.");
+				        return "redirect:/member/view.do?id=" + vo.getId();
+				    } else {
+				        request.setAttribute("updateStatus", "fail");
+				        request.setAttribute("vo", vo); // 입력했던 내용 유지
+				        return "member/updateForm";
+				    }
+				
 
 				default:
 					request.setAttribute("url", request.getRequestURL());

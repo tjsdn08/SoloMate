@@ -60,6 +60,7 @@ import com.solomate.member.service.MemberChangePwService;
 import com.solomate.member.service.MemberChangeStatusService;
 import com.solomate.member.service.MemberListService;
 import com.solomate.member.service.MemberSearchIdService;
+import com.solomate.member.service.MemberUpdateService;
 import com.solomate.member.service.MemberViewService;
 import com.solomate.shopping.controller.ShoppingController;
 import com.solomate.shopping.dao.ShoppingDAO;
@@ -273,7 +274,8 @@ public class Init extends HttpServlet {
 		serviceMap.put("/member/changePw.do", new MemberChangePwService());
 //		serviceMap.put("/member/write.do", new MemberWriteService());
 //		serviceMap.put("/member/checkId.do", new MemberCheckIdService());
-//		//serviceMap.put("/member/update.do", new MemberUpdateService());
+		serviceMap.put("/member/update.do", new MemberUpdateService());
+		
 //		//serviceMap.put("/member/checkPw.do", new MemberCheckPwService());
 //		// -- DAO 저장
 		daoMap.put("memberDAO", new MemberDAO());
@@ -286,9 +288,9 @@ public class Init extends HttpServlet {
 		serviceMap.get("/member/view.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/searchId.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/changePw.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/update.do").setDAO(daoMap.get("memberDAO"));
 //		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
 //		serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
-//		serviceMap.get("/member/update.do").setDAO(daoMap.get("memberDAO"));
 //		serviceMap.get("/member/searchId.do").setDAO(daoMap.get("memberDAO"));
 //		serviceMap.get("/member/checkPw.do").setDAO(daoMap.get("memberDAO"));
 

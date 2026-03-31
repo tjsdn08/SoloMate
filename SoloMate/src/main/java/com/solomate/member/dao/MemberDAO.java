@@ -264,4 +264,25 @@ public class MemberDAO extends DAO{
 	    return result;
 	}
 	
+	
+	// 회원 정보 수정
+	
+	public int update(MemberVO vo) throws Exception {
+	    int result = 0;
+	        con = DB.getConnection();
+	        String sql = "update member set name = ?, tel = ?, address = ? where id = ? and pw = ?";
+	        
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, vo.getName());
+	        pstmt.setString(2, vo.getTel());
+	        pstmt.setString(3, vo.getAddress());
+	        pstmt.setString(4, vo.getId());
+	        pstmt.setString(5, vo.getPw());
+	        
+	        result = pstmt.executeUpdate();
+	        DB.close(con, pstmt);
+	    return result;
+	}
+	
+	
 }
