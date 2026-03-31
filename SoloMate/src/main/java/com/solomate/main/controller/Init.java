@@ -58,6 +58,7 @@ import com.solomate.member.service.MemberChangeConDateService;
 import com.solomate.member.service.MemberChangeGradeService;
 import com.solomate.member.service.MemberChangeStatusService;
 import com.solomate.member.service.MemberListService;
+import com.solomate.member.service.MemberViewService;
 import com.solomate.member.service.MemberWriteService;
 import com.solomate.shopping.controller.ShoppingController;
 import com.solomate.shopping.dao.ShoppingDAO;
@@ -250,42 +251,44 @@ public class Init extends HttpServlet {
 		// daoMap.put("bookmarkDAO", new BookmarkDAO());
 
 		// -- Service에 DAO를 조립 (의존성 주입)
-		serviceMap.get("/bookmark/list.do").setDAO(daoMap.get("bookmarkDAO"));
-		serviceMap.get("/bookmark/write.do").setDAO(daoMap.get("bookmarkDAO"));
-		serviceMap.get("/bookmark/delete.do").setDAO(daoMap.get("bookmarkDAO"));
+//		serviceMap.get("/bookmark/list.do").setDAO(daoMap.get("bookmarkDAO"));
+//		serviceMap.get("/bookmark/write.do").setDAO(daoMap.get("bookmarkDAO"));
+//		serviceMap.get("/bookmark/delete.do").setDAO(daoMap.get("bookmarkDAO"));
 
+		
+		
+		
 		// ------------------------------고승희--------------------------------
 		// 고승희 - 회원관리
 		controllerMap.put("/member", new MemberController());
-		// -- Service 저장
+//		// -- Service 저장
 		serviceMap.put("/member/login.do", new LoginService());
 		serviceMap.put("/member/changeCon.do", new MemberChangeConDateService());
 		serviceMap.put("/member/changeGrade.do", new MemberChangeGradeService());
 		serviceMap.put("/member/changeStatus.do", new MemberChangeStatusService());
-		;
 		serviceMap.put("/member/list.do", new MemberListService());
-		serviceMap.put("/member/write.do", new MemberWriteService());
-		//serviceMap.put("/member/checkId.do", new MemberCheckIdService());
-		//serviceMap.put("/member/view.do", new MemberViewService());
-		//serviceMap.put("/member/update.do", new MemberUpdateService());
-		//serviceMap.put("/member/searchId.do", new MemberSearchIdService());
-		//serviceMap.put("/member/checkPw.do", new MemberCheckPwService());
-		//serviceMap.put("/member/changePw.do", new MemberChangePwService());
-		// -- DAO 저장
+		serviceMap.put("/member/view.do", new MemberViewService());
+//		serviceMap.put("/member/write.do", new MemberWriteService());
+//		serviceMap.put("/member/checkId.do", new MemberCheckIdService());
+//		//serviceMap.put("/member/update.do", new MemberUpdateService());
+//		//serviceMap.put("/member/searchId.do", new MemberSearchIdService());
+//		//serviceMap.put("/member/checkPw.do", new MemberCheckPwService());
+//		//serviceMap.put("/member/changePw.do", new MemberChangePwService());
+//		// -- DAO 저장
 		daoMap.put("memberDAO", new MemberDAO());
-		// service
+//		// service
 		serviceMap.get("/member/login.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/changeCon.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/changeGrade.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/changeStatus.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/list.do").setDAO(daoMap.get("memberDAO"));
-		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
-		serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/view.do").setDAO(daoMap.get("memberDAO"));
-		serviceMap.get("/member/update.do").setDAO(daoMap.get("memberDAO"));
-		serviceMap.get("/member/searchId.do").setDAO(daoMap.get("memberDAO"));
-		serviceMap.get("/member/checkPw.do").setDAO(daoMap.get("memberDAO"));
-		serviceMap.get("/member/changePw.do").setDAO(daoMap.get("memberDAO"));
+//		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
+//		serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
+//		serviceMap.get("/member/update.do").setDAO(daoMap.get("memberDAO"));
+//		serviceMap.get("/member/searchId.do").setDAO(daoMap.get("memberDAO"));
+//		serviceMap.get("/member/checkPw.do").setDAO(daoMap.get("memberDAO"));
+//		serviceMap.get("/member/changePw.do").setDAO(daoMap.get("memberDAO"));
 
 		// 고승희 - 레시피 아카이브
 
@@ -300,14 +303,14 @@ public class Init extends HttpServlet {
 		//serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
 
 		// -- DAO 저장
-		//daoMap.put("recipesDAO", new recipesDAO());
-		// -- service
-		serviceMap.get("/recipes/list.do").setDAO(daoMap.get("recipesDAO"));
-		serviceMap.get("/recipes/view.do").setDAO(daoMap.get("recipesDAO"));
-		serviceMap.get("/recipes/update.do").setDAO(daoMap.get("recipesDAO"));
-		serviceMap.get("/recipes/write.do").setDAO(daoMap.get("recipesDAO"));
-		serviceMap.get("/recipes/changeImg.do").setDAO(daoMap.get("recipesDAO"));
-		serviceMap.get("/recipes/delete.do").setDAO(daoMap.get("recipesDAO"));
+//		daoMap.put("recipesDAO", new recipesDAO());
+//		 -- service
+//		serviceMap.get("/recipes/list.do").setDAO(daoMap.get("recipesDAO"));
+//		serviceMap.get("/recipes/view.do").setDAO(daoMap.get("recipesDAO"));
+//		serviceMap.get("/recipes/update.do").setDAO(daoMap.get("recipesDAO"));
+//		serviceMap.get("/recipes/write.do").setDAO(daoMap.get("recipesDAO"));
+//		serviceMap.get("/recipes/changeImg.do").setDAO(daoMap.get("recipesDAO"));
+//		serviceMap.get("/recipes/delete.do").setDAO(daoMap.get("recipesDAO"));
 
 		// 고승희 - 레시피 아카이브 북마크 처리
 
@@ -320,8 +323,8 @@ public class Init extends HttpServlet {
 		// -- DAO 저장
 		//daoMap.put("recipesBookmarksDAO", new recipesBookmarksDAO());
 		// -- service
-		serviceMap.get("/recipesBookmarks/list.do").setDAO(daoMap.get("recipesBookmarksDAO"));
-		serviceMap.get("/recipesBookmarks/update.do").setDAO(daoMap.get("recipesBookmarksDAO"));
-		serviceMap.get("/recipesBookmarks/delete.do").setDAO(daoMap.get("recipesBookmarksDAO"));
+//		serviceMap.get("/recipesBookmarks/list.do").setDAO(daoMap.get("recipesBookmarksDAO"));
+//		serviceMap.get("/recipesBookmarks/update.do").setDAO(daoMap.get("recipesBookmarksDAO"));
+//		serviceMap.get("/recipesBookmarks/delete.do").setDAO(daoMap.get("recipesBookmarksDAO"));
 	}
 }

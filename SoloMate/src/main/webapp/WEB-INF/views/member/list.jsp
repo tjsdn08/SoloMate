@@ -6,7 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>회원 리스트</title>
-
+<style>
+    .dataRow { cursor: pointer; }
+</style>
 <script type="text/javascript">
 $(function(){
     $(".dataRow").click(function(e){

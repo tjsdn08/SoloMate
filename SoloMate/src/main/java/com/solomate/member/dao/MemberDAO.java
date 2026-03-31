@@ -194,6 +194,36 @@ public class MemberDAO extends DAO{
 		return pw;
 	}
 	
+	public MemberVO view(String id) throws Exception {
+		MemberVO vo = null;
+		
+		// 1. 드라이버 확인 & 2. 연결 객체
+		con = DB.getConnection();
+		// 3. SQL
+		String sql = "SELECT m.id, m.name, m.tel, m.address, m.status, m.gradeNo, m.gradeNo, g.gradeName "
+				+ " FROM member m, grade g "
+				+ " WHERE m.id = ? AND m.gradeNo = g.gradeNo";
+		// 4. 실행 객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, id);
+		// 5. 실행
+		rs = pstmt.executeQuery();
+		// 6. 데이터 저장
+		if(rs != null && rs.next()) {
+			vo = new MemberVO();
+			vo.setId(rs.getString("id"));
+			vo.setName(rs.getString("name"));
+			vo.setTel(rs.getString("tel"));
+			vo.setAddress(rs.getString("address"));
+			vo.setStatus(rs.getString("status"));
+			vo.setGradeNo(rs.getInt("gradeNo"));
+			vo.setGradeName(rs.getString("gradeName"));
+		} // if 의 끝
+		// 7. 닫기
+		DB.close(con, pstmt, rs);
+		
+		return vo;
+	} // view()의 끝
 	
 	
 }

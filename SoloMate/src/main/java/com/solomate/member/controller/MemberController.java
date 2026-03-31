@@ -123,7 +123,8 @@ public class MemberController implements Controller {
 					vo.setTel(request.getParameter("tel"));
 					vo.setStatus(request.getParameter("status"));
 					vo.setGradeName(request.getParameter("gradeName"));
-					
+					request.setAttribute("vo", Execute.execute(Init.getService(uri), vo.getId()));
+					return "member/view";
 				case "/member/searchPwForm.do":
 					return "member/searchPwForm";
 
