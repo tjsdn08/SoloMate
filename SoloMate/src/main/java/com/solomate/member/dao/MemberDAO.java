@@ -10,28 +10,28 @@ import com.solomate.util.db.DB;
 
 public class MemberDAO extends DAO{
 
-	// 1-1. 로그인 처리 
-	public LoginVO login(LoginVO userVO) throws Exception{
-		LoginVO vo = null;
-		
-		con = DB.getConnection();
-		String sql = "select m.id, m.name, m.gradeNo, g.gradeName from member m, grade g "
-				+ " where (id = ? and pw = ?) and (m.gradeNo = g.gradeNo)";
-		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, userVO.getId());
-		pstmt.setString(2, userVO.getPw());
-		rs = pstmt.executeQuery();
-		if(rs != null && rs.next()) {
-			vo = new LoginVO();
-			vo.setId(rs.getString("id"));
-			vo.setName(rs.getString("name"));
-			vo.setGradeNo(rs.getInt("gradeNo"));
-			vo.setGradeName(rs.getString("gradeName"));
-		}
-		DB.close(con, pstmt, rs);
-		
-		return vo;
-	} // login()의 끝
+	public LoginVO login(LoginVO vo) throws Exception {
+	        con = DB.getConnection();
+	        String sql = "select m.id, m.name, m.gradeNo, g.gradeName, m.status "
+	                   + " from member m, grade g "
+	                   + " where (id = ? and pw = ?) and (m.gradeNo = g.gradeNo)";
+	        
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, vo.getId());
+	        pstmt.setString(2, vo.getPw());
+	        
+	        rs = pstmt.executeQuery();
+	        
+	        if(rs != null && rs.next()) {
+	            vo = new LoginVO();
+	            vo.setId(rs.getString("id"));
+	            vo.setName(rs.getString("name"));
+	            vo.setGradeNo(rs.getInt("gradeNo"));
+	            vo.setGradeName(rs.getString("gradeName"));
+	            vo.setStatus(rs.getString("status"));
+	        }
+	    return vo;
+	}
 	
 	// 1-1-1 최근 접속일 변경(U) - id
 	public Integer changeConDate(String id) throws Exception {
@@ -284,5 +284,28 @@ public class MemberDAO extends DAO{
 	    return result;
 	}
 	
+	// 회원 탈퇴 처리
+	public int delete(MemberVO vo) throws Exception {
+	    int result = 0;
+	        con = DB.getConnection();
+	        String sql = "update member set status = '탈퇴' where id = ? and pw = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, vo.getId());
+	        pstmt.setString(2, vo.getPw());
+	        result = pstmt.executeUpdate();
+	        DB.close(con, pstmt);
+	    return result;
+	}
 	
+	// 탈퇴 회원 이 재 로그인시 상태를 정상으로 변경
+	public int reactivate(String id) throws Exception {
+	    int result = 0;
+	        con = DB.getConnection();
+	        String sql = "update member set status = '정상' where id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        result = pstmt.executeUpdate();
+	        DB.close(con, pstmt);
+	    return result;
+	}
 }

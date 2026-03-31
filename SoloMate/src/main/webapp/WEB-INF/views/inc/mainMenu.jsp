@@ -53,7 +53,7 @@
 					<li class="nav-item"><a class="nav-link"
 						href="/member/changePw.do">비밀번호 변경</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="/member/searchPwForm.do">회원 탈퇴</a></li>
+						href="/member/deleteForm.do">회원 탈퇴</a></li>
 					<!-- 로그인을 한 경우의 메뉴 끝 -->
 				</c:if>
 			</ul>

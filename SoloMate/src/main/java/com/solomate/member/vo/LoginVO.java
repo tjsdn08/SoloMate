@@ -8,6 +8,7 @@ public class LoginVO {
 	private String name;
 	private Integer gradeNo;
 	private String gradeName;
+	private String status;
 	public String getId() {
 		return id;
 	}
@@ -38,10 +39,18 @@ public class LoginVO {
 	public void setGradeName(String gradeName) {
 		this.gradeName = gradeName;
 	}
+	
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	@Override
 	public String toString() {
 		return "LoginVO [id=" + id + ", pw=" + pw + ", name=" + name + ", gradeNo=" + gradeNo + ", gradeName="
-				+ gradeName + "]";
+				+ gradeName + ", status=" + status + "]";
 	}
+
 	
 }
