@@ -6,6 +6,8 @@ public class BoardBookmarkVO {
 	private long boardNo;
 	private String id;
 	private String regDate;
+	private String title;
+	private String writer;
 	public long getBookmarkNo() {
 		return bookmarkNo;
 	}
@@ -29,6 +31,18 @@ public class BoardBookmarkVO {
 	}
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
+	}
+	public String getTitle() {
+		return title; 
+	}
+	public void setTitle(String title) {
+		this.title = title; 
+	}
+	public String getWriter() { 
+		return writer; 
+	}
+	public void setWriter(String writer) {
+		this.writer = writer; 
 	}
 	@Override
 	public String toString() {

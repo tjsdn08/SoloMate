@@ -52,6 +52,9 @@ public class BoardController implements Controller {
 			    // (이전 코드에서 에러를 냈던 vo.setBookmarked 부분은 서비스로 옮겨갔으니 지우셔도 됩니다.)
 
 			    request.setAttribute("vo", vo);
+			    
+			    String from = request.getParameter("from");
+			    request.setAttribute("from", from);
 			    return "board/view";
 				
 			case "/board/writeForm.do":
