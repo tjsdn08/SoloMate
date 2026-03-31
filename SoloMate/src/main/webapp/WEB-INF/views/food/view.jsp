@@ -46,10 +46,13 @@
 					
 					</c:if>
 				</td>
-				<td>${vo.folderName }</td>
 			</tr>
 		</tbody>
 	</table>
-
+	<a href="updateForm.do?no=${param.no }&page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
+	 class="btn btn-primary">식품 수정</a>
+	<a href="delete.do?no=${vo.no}&page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }" class="btn btn-danger" onclick="return confirm('삭제하시겠습니까?');">식품 삭제</a>
+	<a href="list.do?page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
+	 class="btn btn-warning">식품 목록 보기</a>
 </body>
 </html>

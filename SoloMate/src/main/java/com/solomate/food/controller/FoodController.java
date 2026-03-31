@@ -46,13 +46,13 @@ public class FoodController implements Controller {
 			case "/food/view.do":
 				
 				no = Long.parseLong(request.getParameter("no"));
-				
 				request.setAttribute("vo", Execute.execute(Init.getService(uri), no));
 				
 				return "food/view";
 			case "/food/writeForm.do":
 				
 				// 선택 용 폴더 
+				// 폴더 목록 추가 test 임시 데이터 !!!!
 				FolderDAO dao = new FolderDAO();
 				request.setAttribute("folderList", dao.listAll("test"));
 				
@@ -66,7 +66,7 @@ public class FoodController implements Controller {
 				vo.setQuantity(Long.parseLong(request.getParameter("quantity")));
 				vo.setStorageType(request.getParameter("storageType"));
 				vo.setMemo(request.getParameter("memo"));
-				vo.setMemberId(loginId);
+				vo.setMemberId("test");       // test" 임시 로 !!!!
 				
 				// 폴더
 				String[] folderNoArr = request.getParameterValues("folderNos");
@@ -82,7 +82,82 @@ public class FoodController implements Controller {
 			    Execute.execute(Init.getService(uri), vo);
 				
 			    return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+			    
+			case "/food/updateForm.do":
+				no = Long.parseLong(request.getParameter("no"));
+				
+				// 식품 정보
+				request.setAttribute("vo", Execute.execute(Init.getService("/food/view.do"), no));
+				
+				// 폴더 목록 추가 test 임시 데이터 !!!!
+				dao = new FolderDAO();
+				request.setAttribute("folderList", dao.listAll("test"));
+				return "food/updateForm";		
+			
+			case "/food/update.do":
+				
+				pageObject = PageObject.getInstance(request);
 
+			    // 1. 데이터 수집
+			    no = Long.parseLong(request.getParameter("no"));
+			    String name = request.getParameter("name");
+			    Long quantity = Long.parseLong(request.getParameter("quantity"));
+			    String storageType = request.getParameter("storageType");
+			    String expiryDate = request.getParameter("expiryDate");
+			    String memo = request.getParameter("memo");
+
+			    // 2. VO 세팅
+			    vo = new FoodVO();
+			    vo.setNo(no);
+			    vo.setName(name);
+			    vo.setQuantity(quantity);
+			    vo.setStorageType(storageType);
+			    vo.setExpiryDate(expiryDate);
+			    vo.setMemo(memo);
+
+			    // 3. 폴더 (체크박스 → 배열)
+			    String[] folderNos = request.getParameterValues("folderNos");
+
+			    if (folderNos != null) {
+			        List<Long> folderNoList = new ArrayList<>();
+
+			        for (String f : folderNos) {
+			            folderNoList.add(Long.parseLong(f));
+			        }
+
+			        vo.setFolderNos(folderNoList);
+			    }
+
+			    // 4. 실행
+			    result = (Integer) Execute.execute(Init.getService(uri), vo);
+
+			    // 5. 결과 처리
+			    if (result == 1) {
+					request.getSession().setAttribute("msg", "수정이 되었습니다.");
+			    } else {
+					request.getSession().setAttribute("msg", "수정에 실패하였습니다. 정보를 확인해주세요.");
+			    }
+			    return "redirect:/food/view.do?no=" + no + "&" + pageObject.getPageQuery();
+
+			case "/food/delete.do":
+
+			    no = Long.parseLong(request.getParameter("no"));
+
+			    result = (Integer) Execute.execute(Init.getService("/food/delete.do"), no);
+
+			    if (result == 1) {
+					request.getSession().setAttribute("msg", "삭제가 되었습니다.");
+			        return "redirect:/food/list.do?perPageNum=" + request.getParameter("perPageNum");
+			    } else {
+					request.getSession().setAttribute("msg", "삭제에 실패하였습니다. 정보를 확인해주세요.");
+			        return "redirect:/food/view.do?no=" + no 
+			        		+ "&page=" + request.getParameter("page")
+			        		+ "&perPageNum=" + request.getParameter("perPageNum")
+			        		+ "&key=" + request.getParameter("key")
+			        		+ "&word=" + request.getParameter("word")
+			        		;
+			    }
+			    
 			default:
 				// /WEB-INF/views + error/noPage + .jsp
 				return "error/noPage";
