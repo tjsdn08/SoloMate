@@ -19,7 +19,7 @@ public class BoardDAO extends DAO{
 		        + " to_char(b.writeDate, 'yyyy-mm-dd') writeDate, "
 		        + " b.hit, NVL(count(m.bookmarkNo),0) bookmark "
 		        + " from board b "
-		        + " left join bookmark m on b.no = m.boardNo ";
+		        + " left join board_bookmark m on b.no = m.boardNo ";
 		sql += search(pageObject);
 		sql += " group by b.no, b.title, b.writer, b.writeDate, b.hit ";
 		sql += " order by b.no desc";
@@ -133,7 +133,7 @@ public class BoardDAO extends DAO{
 		        + " to_char(b.writeDate, 'yyyy-mm-dd') writeDate, "
 		        + " b.hit, NVL(count(m.bookmarkNo),0) bookmark "
 		        + " from board b "
-		        + " left join bookmark m on b.no = m.boardNo "
+		        + " left join board_bookmark m on b.no = m.boardNo "
 		        + " where b.no = ? "
 		        + " group by b.no, b.title, b.content, b.writer, b.writeDate, b.hit";		
 		pstmt = con.prepareStatement(sql);
@@ -157,7 +157,7 @@ public class BoardDAO extends DAO{
 	    long result = 0;
 
 	    con = DB.getConnection();
-	    String sql = "select count(*) from bookmark where boardNo = ? and id = ?";
+	    String sql = "select count(*) from board_bookmark where boardNo = ? and id = ?";
 
 	    pstmt = con.prepareStatement(sql);
 	    pstmt.setLong(1, boardNo);

@@ -129,6 +129,12 @@
             </tr>
         </tbody>
     </table>
+    <c:if test="${from == 'bookmark'}">
+	    <a href="${pageContext.request.contextPath}/boardbookmark/list.do?page=${param.page}&perPageNum=${param.perPageNum}"
+	       class="btn btn-outline-dark">
+	       ← 북마크로 돌아가기
+	    </a>
+	</c:if>
 
 </div>
 

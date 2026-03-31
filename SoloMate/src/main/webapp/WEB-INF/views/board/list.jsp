@@ -156,6 +156,12 @@
 	    <a href="list.do" class="btn btn-outline-dark">
 	        새로고침
 	    </a>
+	    <c:if test="${not empty login}">
+		    <a href="${pageContext.request.contextPath}/boardbookmark/list.do"
+		       class="btn btn-dark">
+		       북마크 목록
+		    </a>
+		</c:if>
 	</div>
 
 </body>
