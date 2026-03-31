@@ -249,5 +249,19 @@ public class MemberDAO extends DAO{
 	    return id;
 	}
 	
+	// 비밀번호 변경 
+	public int changePw(String id, String pw, String newPw) throws Exception {
+	    int result = 0;
+	    
+	        con = DB.getConnection();
+	        String sql = "update member set pw = ? where id = ? and pw = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, newPw); // 새 비밀번호
+	        pstmt.setString(2, id);    // 로그인한 사용자 아이디
+	        pstmt.setString(3, pw);    // 현재 입력한 기존 비밀번호
+	        result = pstmt.executeUpdate();
+	        DB.close(con, pstmt);
+	    return result;
+	}
 	
 }

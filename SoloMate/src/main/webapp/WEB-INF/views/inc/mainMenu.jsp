@@ -43,12 +43,15 @@
 				<!-- empty는 객체가 null이거나 length나 size가 0인 상태 -->
 				<c:if test="${!empty login }">
 					<!-- 로그인을 한 경우의 메뉴 시작 -->
-					<li class="nav-item"><a class="nav-link"
-						href="/member/view.do">${login.name }(${login.gradeName })</a></li>
+					<li class="nav-item">
+					    <a class="nav-link" href="/member/view.do?id=${login.id}">
+					        ${login.name}(${login.gradeName})
+					    </a>
+					</li>
 					<li class="nav-item"><a class="nav-link"
 						href="/member/logout.do">로그아웃</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="/member/searchIdForm.do">비밀번호 변경</a></li>
+						href="/member/changePw.do">비밀번호 변경</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="/member/searchPwForm.do">회원 탈퇴</a></li>
 					<!-- 로그인을 한 경우의 메뉴 끝 -->

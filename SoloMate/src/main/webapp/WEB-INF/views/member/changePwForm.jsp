@@ -1,111 +1,104 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>비밀번호 변경</title>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    /* 실시간 메시지 스타일: 작고 옅게 */
+    .msg-text { font-size: 0.75rem; margin-top: 4px; display: block; min-height: 18px; }
+    .text-pass { color: #0d6efd; } /* 파란색: 통과 */
+    .text-warn { color: #dc3545; } /* 빨간색: 경고 */
+</style>
+
 <script type="text/javascript">
-$(function(){
-    let pwCheck = false;
-
-    // 폼 전송 시 최종 체크
-    $("#changePwForm").submit(function(){
-        if($("#newPw").val() !== $("#newPw2").val()){
-            alert("새 비밀번호와 확인이 일치하지 않습니다.");
-            $("#newPw2").focus();
-            return false;
-        }
-        if(!pwCheck){
-            alert("새 비밀번호를 유효하게 입력해주세요.");
-            $("#newPw").focus();
-            return false;
-        }
-        return true;
-    });
-
-    $(".cancelBtn").click(function(){ history.back(); });
-
-    $("#newPw, #newPw2").on("keyup", function(){
-        let pw = $("#pw").val(); // 현재 비밀번호
-        let newPw = $("#newPw").val(); // 새 비밀번호
-        let newPw2 = $("#newPw2").val(); // 새 비밀번호 확인
-
-        // 1. 새 비밀번호 유효성 및 중복 체크 (AJAX)
-        if(newPw.length < 4) {
-            $("#newPwMsg").text("새 비밀번호는 4자 이상이어야 합니다.")
-                         .addClass("text-danger").removeClass("text-success");
-            pwCheck = false;
-        } else if(newPw === pw) { // 현재 비번과 같은지 체크
-            $("#newPwMsg").text("현재 비밀번호와 동일합니다. 다른 비밀번호를 쓰세요.")
-                         .addClass("text-danger").removeClass("text-success");
-            pwCheck = false;
-        } else {
-            // 새 비밀번호가 4자 이상이고 현재 비번과 다를 때만 AJAX 호출
-            $.ajax({
-                url: "checkpw.do",
-                data: { pw: newPw },
-                success: function(isDuplicate){ 
-                    if(isDuplicate === "true"){
-                        $("#newPwMsg").text("이전에 사용한 비밀번호입니다.")
-                                     .addClass("text-danger").removeClass("text-success");
-                        pwCheck = false;
-                    } else {
-                        $("#newPwMsg").text("사용 가능한 비밀번호입니다.")
-                                     .addClass("text-success").removeClass("text-danger");
-                        pwCheck = true;
-                    }
-                }
-            });
-        }
-
-        // 2. 비밀번호 일치 여부 실시간 체크
-        if(newPw2.length > 0) {
-            if(newPw !== newPw2) {
-                $("#newPw2Msg").text("비밀번호가 일치하지 않습니다.")
-                             .addClass("text-danger").removeClass("text-success");
-            } else {
-                $("#newPw2Msg").text("비밀번호가 일치합니다.")
-                             .addClass("text-success").removeClass("text-danger");
-            }
-        } else {
-            $("#newPw2Msg").text(""); // 확인란이 비어있으면 메시지 삭제
-        }
-    });
-});
+	function validate() {
+	    let pw = document.getElementById("pw").value;
+	    let newPw = document.getElementById("newPw").value;
+	    let newPw2 = document.getElementById("newPw2").value;
+	    
+	    let nMsg = document.getElementById("newPwMsg");
+	    let nMsg2 = document.getElementById("newPw2Msg");
+	    
+	    let failMsg = document.getElementById("failMsg");
+	    if (failMsg) { // 박스가 화면에 존재할 때만 실행
+	        failMsg.style.display = "none";
+	    }
+	
+	    // 1. 새 비밀번호 실시간 체크
+	    if (newPw.length > 0) {
+	        if (newPw.length < 4) {
+	            nMsg.innerText = "4자 이상 입력해주세요.";
+	            nMsg.className = "msg-text text-warn";
+	        } else if (pw === newPw) {
+	            nMsg.innerText = "현재 비밀번호와 동일합니다.";
+	            nMsg.className = "msg-text text-warn";
+	        } else {
+	            nMsg.innerText = "사용 가능한 비밀번호입니다.";
+	            nMsg.className = "msg-text text-pass";
+	        }
+	    } else {
+	        nMsg.innerText = "";
+	    }
+	
+	    // 2. 비밀번호 확인 실시간 체크
+	    if (newPw2.length > 0) {
+	        if (newPw === newPw2) {
+	            nMsg2.innerText = "비밀번호가 일치합니다.";
+	            nMsg2.className = "msg-text text-pass";
+	        } else {
+	            nMsg2.innerText = "비밀번호가 일치하지 않습니다.";
+	            nMsg2.className = "msg-text text-warn";
+	        }
+	    } else {
+	        nMsg2.innerText = "";
+	    }
+	}
 </script>
 </head>
 <body class="container mt-5">
-    <div class="card shadow-sm p-4 mx-auto" style="max-width: 500px;">
-        <h2 class="mb-4 text-center">비밀번호 변경</h2>
-        <form action="changePw.do" method="post" id="changePwForm">
-            <input type="hidden" name="page" value="${param.page}">
-            <input type="hidden" name="perPageNum" value="${param.perPageNum}">
-            
-            <div class="mb-3">
-                <label for="pw" class="form-label">현재 비밀번호</label>
-                <input type="password" class="form-control" id="pw" name="pw" required maxlength="20">
-                <div id="pwMsg" class="form-text"></div>
-            </div>
-            
-            <div class="mb-3">
-                <label for="newPw" class="form-label">새 비밀번호</label>
-                <input type="password" class="form-control" id="newPw" name="newPw" required maxlength="20">
-                <div id="newPwMsg" class="form-text"></div>
-            </div>
-          
-            <div class="mb-3">
-                <label for="newPw2" class="form-label">새 비밀번호 확인</label>
-                <input type="password" class="form-control" id="newPw2" name="newPw2" required maxlength="20">
-                <div id="newPw2Msg" class="form-text"></div>
-            </div>
 
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">변경하기</button>
-                <button type="reset" class="btn btn-outline-warning">새로입력</button>
-                <button type="button" class="cancelBtn btn btn-link text-secondary text-decoration-none">취소</button>
-            </div>
-        </form>
-    </div>
+<div class="card border-0 shadow-none p-4 mx-auto" style="max-width: 500px;">
+    <h2 class="mb-4 text-start fw-bold">비밀번호 변경</h2>
+    
+    <form action="changePw.do" method="post" class="text-start" onsubmit="return checkForm()">
+        
+        <div class="mb-3">
+            <label for="pw" class="form-label small text-secondary">현재 비밀번호</label>
+            <input type="password" class="form-control border-secondary-subtle" 
+                   id="pw" name="pw" placeholder="현재 비밀번호 입력" oninput="validate()" required>
+            <span class="msg-text"></span> </div>
+
+        <div class="mb-3">
+            <label for="newPw" class="form-label small text-secondary">새 비밀번호</label>
+            <input type="password" class="form-control border-secondary-subtle" 
+                   id="newPw" name="newPw" placeholder="4자 이상 입력" oninput="validate()" required>
+            <span id="newPwMsg" class="msg-text"></span>
+        </div>
+
+        <div class="mb-4">
+            <label for="newPw2" class="form-label small text-secondary">새 비밀번호 확인</label>
+            <input type="password" class="form-control border-secondary-subtle" 
+                   id="newPw2" name="newPw2" placeholder="비밀번호 다시 입력" oninput="validate()" required>
+            <span id="newPw2Msg" class="msg-text"></span>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-start">
+            <button type="submit" class="btn btn-primary btn-sm px-4 rounded-2">변경하기</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-2" onclick="history.back()">취소</button>
+        </div>
+    </form>
+
+	<c:if test="${pwResult == 'fail'}">
+	    <div id="failMsg" class="mt-4 p-3 w-100 border border-danger-subtle bg-danger-subtle bg-opacity-10 rounded-3 text-start shadow-none">
+	        <p class="text-danger-emphasis mb-0 small">
+	            현재 비밀번호가 일치하지 않습니다. 다시 확인해주세요.
+	        </p>
+	    </div>
+	</c:if>
+</div>
+
 </body>
 </html>

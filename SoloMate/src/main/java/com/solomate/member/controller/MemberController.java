@@ -19,13 +19,11 @@ public class MemberController implements Controller {
 			HttpSession session = request.getSession();
 			
 			LoginVO loginVO = (LoginVO) session.getAttribute("login");
-			String loginId = (loginVO != null) ? loginVO.getId() : null;
-
 			switch (uri) {
-				// --- [로그인/로그아웃/가입] ---
+				// 로그인 폼
 				case "/member/loginForm.do":
 					return "member/loginForm";
-				
+				// 로그인
 				case "/member/login.do":
 					LoginVO userVO = new LoginVO();
 					userVO.setId(request.getParameter("id"));
@@ -37,14 +35,17 @@ public class MemberController implements Controller {
 					session.setAttribute("msg", loginVO.getName() + "님, 환영합니다!");
 					return "redirect:/";
 					
+				// 로그아웃
 				case "/member/logout.do":
 					session.removeAttribute("login");
 					session.setAttribute("msg", "로그아웃 되었습니다.");
 					return "redirect:/";
 					
+				// 회원가입 폼
 				case "/member/writeForm.do":
 					return "member/writeForm";
 					
+				// 회원가입
 				case "/member/write.do":
 					MemberVO vo = new MemberVO();
 					vo.setId(request.getParameter("id"));
@@ -56,9 +57,8 @@ public class MemberController implements Controller {
 					session.setAttribute("msg", "회원 가입이 완료되었습니다. 로그인 해주세요.");
 					return "redirect:/member/loginForm.do";
 
-				// --- [관리자 전용 기능] ---
+				// 관리자 회원리스트
 				case "/member/list.do":
-					// 관리자 권한 체크 (9번이 관리자라고 가정)
 					if (loginVO == null || loginVO.getGradeNo() != 9) {
 						session.setAttribute("msg", "접근 권한이 없습니다.");
 						return "redirect:/";
@@ -66,6 +66,7 @@ public class MemberController implements Controller {
 					request.setAttribute("list", Execute.execute(Init.getService(uri), null));
 					return "member/list";
 
+				// 관리자 회원 리스트- 회원 상태 수정
 				case "/member/changeStatus.do":
 					vo = new MemberVO();
 					vo.setId(request.getParameter("id"));
@@ -74,6 +75,7 @@ public class MemberController implements Controller {
 					session.setAttribute("msg", "회원의 상태가 변경되었습니다.");
 					return "redirect:list.do";
 
+				// 관리자 회원 리스트 - 회원 등급 변경
 				case "/member/changeGrade.do":
 					vo = new MemberVO();
 					vo.setId(request.getParameter("id"));
@@ -82,33 +84,35 @@ public class MemberController implements Controller {
 					session.setAttribute("msg", "회원의 등급이 변경되었습니다.");
 					return "redirect:list.do";
 
-				// --- [비밀번호 관리] ---
-				case "/member/checkpw.do":
-					// AJAX 요청 처리: DispatcherServlet에서 "ajax:" 접두어를 인식함
-					String inputPw = request.getParameter("pw");
-					// 현재 로그인한 사용자의 ID와 입력한 PW를 Map이나 VO에 담아 전달 (여기서는 임시 처리)
-					boolean isDuplicate = (boolean) Execute.execute(Init.getService(uri), new Object[]{loginId, inputPw});
-					return "ajax:" + isDuplicate;
-
+				// --- [비밀번호 변경] ---
 				case "/member/changePwForm.do":
-					return "member/changePwForm";
+				    return "member/changePwForm";
 
 				case "/member/changePw.do":
-					vo = new MemberVO();
-					vo.setId(loginId);
-					vo.setPw(request.getParameter("pw")); // 기존 비번
-					request.setAttribute("newPw", request.getParameter("newPw")); 
-					Execute.execute(Init.getService(uri), vo);
-					session.setAttribute("msg", "비밀번호가 변경되었습니다. 다시 로그인해 주세요.");
-					session.removeAttribute("login");
-					return "redirect:/member/loginForm.do";
+				    // 1. 데이터 수집
+				    vo = new MemberVO();
+				    vo.setId(loginVO.getId());
+				    vo.setPw(request.getParameter("pw"));
+				    String newPw = request.getParameter("newPw");
+				    
+				    // 2. 서비스 실행
+				    Integer pwResult = (Integer) Execute.execute(Init.getService(uri), new Object[]{vo.getId(), vo.getPw(), newPw});
+				    
+				    // 3. 결과에 따른 처리
+				    if (pwResult == 1) {
+				        // [성공 시]
+				        session.removeAttribute("login");
+				        session.setAttribute("msg", "비밀번호가 정상적으로 변경되었습니다. 새 비밀번호로 로그인하세요.");
+				        return "redirect:/member/loginForm.do";
+				    } else {
+				        request.setAttribute("pwResult", "fail");
+				        return "member/changePwForm";
+				    }
 
 				// --- [아이디 찾기] ---
-
 				case "/member/searchIdForm.do":
 				    return "member/searchIdForm";
 
-				// 2. 실제로 아이디 찾기 버튼을 눌렀을 때 (DB 작업 필요)
 				case "/member/searchId.do":
 				    // 데이터 수집
 				    vo = new MemberVO();
@@ -120,11 +124,17 @@ public class MemberController implements Controller {
 				    request.setAttribute("foundId", (foundId != null && !foundId.equals("")) ? foundId : "none");
 				    
 				    return "member/searchIdForm";
+				    
+				    
 				case "/member/view.do":
 					vo = new MemberVO();
 					vo.setId(request.getParameter("id"));
 					request.setAttribute("vo", Execute.execute(Init.getService(uri), vo.getId()));
 					return "member/view";
+					
+					
+					
+					
 				case "/member/searchPwForm.do":
 					return "member/searchPwForm";
 
