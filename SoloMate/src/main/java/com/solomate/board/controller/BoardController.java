@@ -54,7 +54,7 @@ public class BoardController implements Controller {
 			    request.setAttribute("vo", vo);
 			    
 			    String from = request.getParameter("from");
-			    request.setAttribute("from", from);
+			    request.setAttribute("from", request.getParameter("from"));
 			    return "board/view";
 				
 			case "/board/writeForm.do":
