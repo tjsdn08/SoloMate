@@ -53,7 +53,7 @@ public class BoardDAO extends DAO{
 	public Long getTotalRow(PageObject pageObject) throws Exception{
 		Long totalRow = 0L;
 		con = DB.getConnection();
-		String sql = "select count(*) from board ";
+		String sql = "select count(*) from board b";
 		sql += search(pageObject);
 		pstmt = con.prepareStatement(sql);
 		int idx = 1;
@@ -67,37 +67,51 @@ public class BoardDAO extends DAO{
 	} // getTotalRow()의 끝
 	
 	// 검색
+	// 검색 조건을 생성하는 메서드
 	public String search(PageObject pageObject) {
-		String sql = "";
-		String key = pageObject.getKey();
-		String word = pageObject.getWord();
-		if(word != null && word.length() != 0) {
-			sql = " where 1=0 ";
-			if(key.indexOf("t") >= 0)
-				sql += " or title like ? ";
-			if(key.indexOf("c") >= 0)
-				sql += " or content like ? ";
-			if(key.indexOf("w") >= 0)
-				sql += " or writer like ? ";
-		}
-		return sql;
-	} // search()의 끝
+	    String sql = " where 1=1 "; // 모든 조건 앞에 1=1을 붙여서 다음에 오는 AND 처리를 쉽게 함
+
+	    // 1. 카테고리 조건 추가 (카테고리가 있을 때만)
+	    String category = pageObject.getCategory();
+	    if (category != null && !category.equals("")) {
+	        // b.category인 이유는 list() 메서드 SQL에서 board 테이블을 'b'로 별칭 주었기 때문
+	        sql += " and b.category = ? "; 
+	    }
+
+	    // 2. 검색어 조건 추가 (기존 로직 유지 및 b. 추가)
+	    String key = pageObject.getKey();
+	    String word = pageObject.getWord();
+	    if (word != null && word.length() != 0) {
+	        sql += " and ( 1=0 ";
+	        if (key.indexOf("t") >= 0) sql += " or b.title like ? ";
+	        if (key.indexOf("c") >= 0) sql += " or b.content like ? ";
+	        if (key.indexOf("w") >= 0) sql += " or b.writer like ? ";
+	        sql += " ) ";
+	    }
+	    return sql;
+	}
 	
 	// 검색어 세팅
+	// 검색어 데이터를 세팅하는 메서드
 	public Integer searchDataSet(PreparedStatement pstmt, int idx, PageObject pageObject)
-	 throws Exception{
-		String key = pageObject.getKey();
-		String word = pageObject.getWord();
-		if(word != null && word.length() != 0) {
-			if(key.indexOf("t") >= 0)
-				pstmt.setString(idx++, "%" + word + "%");
-			if(key.indexOf("c") >= 0)
-				pstmt.setString(idx++, "%" + word + "%");
-			if(key.indexOf("w") >= 0)
-				pstmt.setString(idx++, "%" + word + "%");
-		}
-		return idx;
-	} // searchDataSet()의 끝
+	 throws Exception {
+	    
+	    // 1. 카테고리 데이터 세팅
+	    String category = pageObject.getCategory();
+	    if (category != null && !category.equals("")) {
+	        pstmt.setString(idx++, category);
+	    }
+
+	    // 2. 검색어 데이터 세팅 (기존 로직)
+	    String key = pageObject.getKey();
+	    String word = pageObject.getWord();
+	    if (word != null && word.length() != 0) {
+	        if (key.indexOf("t") >= 0) pstmt.setString(idx++, "%" + word + "%");
+	        if (key.indexOf("c") >= 0) pstmt.setString(idx++, "%" + word + "%");
+	        if (key.indexOf("w") >= 0) pstmt.setString(idx++, "%" + word + "%");
+	    }
+	    return idx;
+	}
 	
 	// 조회수 증가
 	public Integer increase(Long no) throws Exception{

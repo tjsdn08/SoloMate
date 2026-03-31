@@ -119,8 +119,8 @@ $(function(){
                 <div>작성자</div>
 
                 <div>
-                    <button class="btn btn-outline-dark btn-sm reply-btn" id="replyUpdateBtn">수정</button>
-                    <button class="btn btn-outline-dark btn-sm reply-btn" id="replyDeleteBtn">삭제</button>
+                    <button class="btn btn-dark btn-sm" id="replyUpdateBtn">수정</button>
+                    <button class="btn btn-outline-dark btn-sm" id="replyDeleteBtn">삭제</button>
                 </div>
 
             </div>
@@ -154,7 +154,7 @@ $(function(){
 
       <div class="modal-footer">
         <button type="button" class="btn btn-dark" id="modalReplyWriteBtn">등록</button>
-        <button type="button" class="btn btn-outline-dark" id="modalReplyUpdateBtn">수정</button>
+        <button type="button" class="btn btn-dark" id="modalReplyUpdateBtn">수정</button>
         <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">취소</button>
       </div>
 

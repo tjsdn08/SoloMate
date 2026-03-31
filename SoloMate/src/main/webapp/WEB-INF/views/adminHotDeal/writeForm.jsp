@@ -17,7 +17,7 @@
 	background: #fff;
 	border-radius: 18px;
 	padding: 28px;
-	box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .form-title {
@@ -72,96 +72,104 @@
 </head>
 <body>
 
-<div class="form-page">
-	<div class="form-card">
-		<div class="form-title">관리자 핫딜 등록</div>
+	<div class="form-page">
+		<div class="form-card">
+			<div class="form-title">관리자 핫딜 등록</div>
 
-		<form action="${pageContext.request.contextPath}/adminHotDeal/write.do" method="post">
+			<form
+				action="${pageContext.request.contextPath}/adminHotDeal/write.do"
+				method="post">
 
-			<div class="form-grid">
-				<div>
-					<div class="form-label">카테고리</div>
-					<select name="categoryId" class="form-select" required>
-						<option value="">선택</option>
-						<option value="1">식품</option>
-						<option value="2">생활용품</option>
-						<option value="3">가전</option>
-					</select>
+				<div class="form-grid">
+					<div>
+						<div class="form-label">카테고리</div>
+						<select name="categoryId" class="form-select" required>
+							<option value="">선택</option>
+							<c:forEach items="${categoryList}" var="cvo">
+								<c:if test="${cvo.status eq 'ACTIVE'}">
+									<option value="${cvo.categoryId}">${cvo.categoryName}</option>
+								</c:if>
+							</c:forEach>
+						</select>
+					</div>
+
+					<div>
+						<div class="form-label">상태</div>
+						<select name="status" class="form-select" required>
+							<option value="ACTIVE">ACTIVE</option>
+							<option value="INACTIVE">INACTIVE</option>
+						</select>
+					</div>
 				</div>
 
-				<div>
-					<div class="form-label">상태</div>
-					<select name="status" class="form-select" required>
-						<option value="ACTIVE">ACTIVE</option>
-						<option value="INACTIVE">INACTIVE</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="form-row-full">
-				<div class="form-label">상품명</div>
-				<input type="text" name="title" class="form-input" required>
-			</div>
-
-			<div class="form-grid">
-				<div>
-					<div class="form-label">가격</div>
-					<input type="number" name="price" class="form-input" min="0" required>
+				<div class="form-row-full">
+					<div class="form-label">상품명</div>
+					<input type="text" name="title" class="form-input" required>
 				</div>
 
-				<div>
-					<div class="form-label">원가</div>
-					<input type="number" name="originalPrice" class="form-input" min="0" required>
-				</div>
-			</div>
+				<div class="form-grid">
+					<div>
+						<div class="form-label">가격</div>
+						<input type="number" name="price" class="form-input" min="0"
+							required>
+					</div>
 
-			<div class="form-grid">
-				<div>
-					<div class="form-label">할인율</div>
-					<input type="number" step="0.01" name="discountRate" class="form-input" min="0" required>
-				</div>
-
-				<div>
-					<div class="form-label">종료일</div>
-					<input type="date" name="endDate" class="form-input" required>
-				</div>
-			</div>
-
-			<div class="form-grid">
-				<div>
-					<div class="form-label">판매처</div>
-					<input type="text" name="shopName" class="form-input" required>
+					<div>
+						<div class="form-label">원가</div>
+						<input type="number" name="originalPrice" class="form-input"
+							min="0" required>
+					</div>
 				</div>
 
-				<div>
-					<div class="form-label">판매자</div>
-					<input type="text" name="sellerName" class="form-input">
+				<div class="form-grid">
+					<div>
+						<div class="form-label">할인율</div>
+						<input type="number" step="0.01" name="discountRate"
+							class="form-input" min="0" required>
+					</div>
+
+					<div>
+						<div class="form-label">종료일</div>
+						<input type="date" name="endDate" class="form-input" required>
+					</div>
 				</div>
-			</div>
 
-			<div class="form-row-full">
-				<div class="form-label">이미지 URL</div>
-				<input type="text" name="imageUrl" class="form-input">
-			</div>
+				<div class="form-grid">
+					<div>
+						<div class="form-label">판매처</div>
+						<input type="text" name="shopName" class="form-input" required>
+					</div>
 
-			<div class="form-row-full">
-				<div class="form-label">구매 링크</div>
-				<input type="text" name="dealUrl" class="form-input" required>
-			</div>
+					<div>
+						<div class="form-label">판매자</div>
+						<input type="text" name="sellerName" class="form-input">
+					</div>
+				</div>
 
-			<div class="form-row-full">
-				<div class="form-label">설명</div>
-				<textarea name="description" class="form-textarea"></textarea>
-			</div>
+				<div class="form-row-full">
+					<div class="form-label">이미지 URL</div>
+					<input type="text" name="imageUrl" class="form-input">
+				</div>
 
-			<div class="bottom-btns">
-				<a href="${pageContext.request.contextPath}/adminHotDeal/list.do" class="btn btn-secondary">취소</a>
-				<button type="submit" class="btn btn-primary">등록</button>
-			</div>
-		</form>
+				<div class="form-row-full">
+					<div class="form-label">구매 링크</div>
+					<input type="text" name="dealUrl" class="form-input" required>
+				</div>
 
+				<div class="form-row-full">
+					<div class="form-label">설명</div>
+					<textarea name="description" class="form-textarea"></textarea>
+				</div>
+
+				<div class="bottom-btns">
+					<a href="${pageContext.request.contextPath}/adminHotDeal/list.do"
+						class="btn btn-secondary">취소</a>
+					<button type="submit" class="btn btn-primary">등록</button>
+				</div>
+			</form>
+
+		</div>
 	</div>
-</div>
 
 </body>
 </html>

@@ -47,6 +47,7 @@ public class HotDealDAO extends DAO {
 				+ "     join hot_deal_category c on hd.category_id = c.category_id "
 				+ "     where hd.is_deleted = 'N' "
 				+ "       and c.is_deleted = 'N' "
+				+ "       and c.status = 'ACTIVE' "
 				+ "       and hd.status = 'ACTIVE' "
 				+ search(searchVO)
 				+ orderSql
@@ -99,6 +100,7 @@ public class HotDealDAO extends DAO {
 				+ " join hot_deal_category c on hd.category_id = c.category_id "
 				+ " where hd.is_deleted = 'N' "
 				+ "   and c.is_deleted = 'N' "
+				+ "   and c.status = 'ACTIVE' "
 				+ "   and hd.status = 'ACTIVE' "
 				+ search(searchVO);
 
@@ -196,7 +198,8 @@ public class HotDealDAO extends DAO {
 				+ " join hot_deal_category c on hd.category_id = c.category_id "
 				+ " where hd.deal_id = ? "
 				+ "   and hd.is_deleted = 'N' "
-				+ "   and c.is_deleted = 'N' ";
+				+ "   and c.is_deleted = 'N' "
+				+ "   and c.status = 'ACTIVE' ";
 
 		pstmt = con.prepareStatement(sql);
 		pstmt.setLong(1, dealId);

@@ -49,6 +49,14 @@ public class AdminCategoryController implements Controller {
 				Execute.execute(Init.getService(uri), id);
 				return "redirect:list.do";
 
+			case "/adminCategory/status.do":
+				HotDealCategoryVO svo = new HotDealCategoryVO();
+				svo.setCategoryId(Long.parseLong(request.getParameter("categoryId")));
+				svo.setStatus(request.getParameter("status"));
+
+				Execute.execute(Init.getService(uri), svo);
+				return "redirect:list.do";
+				
 			default:
 				return "error/noPage";
 			}
