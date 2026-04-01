@@ -194,6 +194,32 @@ public class MemberController implements Controller {
 				         request.setAttribute("deleteStatus", "fail");
 				         return "member/deleteForm";
 				     }
+				     
+				     
+				 case "/member/searchPwForm.do":
+				     return "member/searchPwForm";
+
+				 case "/member/findPw.do":
+					    vo = new MemberVO();
+					    vo.setId(request.getParameter("id"));
+					    vo.setName(request.getParameter("name"));
+					    vo.setTel(request.getParameter("tel"));
+					    
+					    String resultTel = (String) Execute.execute(Init.getService(uri), vo);
+					    
+					    if (resultTel != null) {
+					        // 보안을 위해 > 010-1234-****
+					        String maskedTel = resultTel.substring(0, resultTel.length() - 4) + "****";
+					        
+					        request.setAttribute("maskedTel", maskedTel);
+					        request.setAttribute("msg", "비밀번호가 등록된 연락처로 재설정되었습니다.");
+					        
+					        return "member/searchPwForm"; 
+					    } else {
+					        request.setAttribute("msg", "입력하신 정보와 일치하는 회원이 없습니다.");
+					        return "member/searchPwForm";
+					    }
+				     
 				default:
 					request.setAttribute("url", request.getRequestURL());
 					return "error/noPage";

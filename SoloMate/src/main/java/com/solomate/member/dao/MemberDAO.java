@@ -305,4 +305,43 @@ public class MemberDAO extends DAO{
 	        DB.close(con, pstmt);
 	    return result;
 	}
+	
+	// MemberDAO.java
+
+	// 이름, 아이디, 연락처가 모두 일치하는 회원의 연락처를 가져오는 메서드
+	public String findTel(String id, String name, String tel) throws Exception {
+	    String foundTel = null;
+	    try {
+	        con = DB.getConnection();
+	        String sql = "select tel from member where id = ? and name = ? and tel = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        pstmt.setString(2, name);
+	        pstmt.setString(3, tel);
+	        rs = pstmt.executeQuery();
+	        
+	        if(rs.next()) {
+	            foundTel = rs.getString("tel");
+	        }
+	    } finally {
+	        DB.close(con, pstmt, rs);
+	    }
+	    return foundTel; // 일치하는 정보가 없으면 null 반환
+	}
+
+	// 비밀번호를 연락처로 업데이트
+	public int updatePw(String id, String newPw) throws Exception {
+	    int result = 0;
+	    try {
+	        con = DB.getConnection();
+	        String sql = "update member set pw = ? where id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, newPw);
+	        pstmt.setString(2, id);
+	        result = pstmt.executeUpdate();
+	    } finally {
+	        DB.close(con, pstmt);
+	    }
+	    return result;
+	}
 }
