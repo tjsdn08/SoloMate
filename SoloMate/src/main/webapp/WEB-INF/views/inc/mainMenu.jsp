@@ -3,22 +3,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="/">Webjjang Co.</a>
+		<a class="navbar-brand" href="/">SoloMate Co.</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
 			data-bs-target="#mynavbar">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="mynavbar">
 			<ul class="navbar-nav me-auto">
-				<li class="nav-item"><a class="nav-link" href="/notice/list.do">공지사항</a>
+				<li class="nav-item"><a class="nav-link" href="/food/list.do">식품 관리</a>
 				</li>
-				<li class="nav-item"><a class="nav-link" href="/shop/list.do">쇼핑몰</a>
+				<li class="nav-item"><a class="nav-link" href="/shopping/list.do">장보기 계획</a>
 				</li>
-				<li class="nav-item"><a class="nav-link" href="/board/list.do">일반게시판</a>
+				<li class="nav-item"><a class="nav-link" href="/board/list.do">꿀팁 아카이브</a>
 				</li>
-				<li class="nav-item"><a class="nav-link" href="/qna/list.do">질문답변</a>
+				<li class="nav-item"><a class="nav-link" href="/hotdeal/list.do">핫딜 관리</a>
 				</li>
-				<li class="nav-item"><a class="nav-link" href="/image/list.do">이미지</a>
+				<li class="nav-item"><a class="nav-link" href="/food/list.do">식품 폴더 관리</a>
 				</li>
 				<c:if test="${!empty login && login.gradeNo == 9 }">
 					<!-- 관리자 메뉴 -->
