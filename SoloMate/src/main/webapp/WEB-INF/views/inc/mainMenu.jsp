@@ -12,16 +12,17 @@
 			<ul class="navbar-nav me-auto">
 				<li class="nav-item"><a class="nav-link" href="/food/list.do">식품
 						관리</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="/shopping/list.do">장보기 계획</a></li>
-				<li class="nav-item"><a class="nav-link" href="/board/list.do">꿀팁
-						아카이브</a></li>
-				<li class="nav-item"><a class="nav-link"
-					href="/hotdeal/list.do">핫딜 관리</a></li>
 				<li class="nav-item"><a class="nav-link" href="/folder/list.do">식품
 						폴더 관리</a></li>
 				<li class="nav-item"><a class="nav-link"
+					href="/shopping/list.do">장보기 계획</a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="/hotdeal/list.do">핫딜 관리</a></li>
+				<li class="nav-item"><a class="nav-link"
 					href="/recipes/list.do">레시피 아카이브</a></li>
+				<li class="nav-item"><a class="nav-link" href="/board/list.do">꿀팁
+						아카이브</a></li>
+			
 				<c:if test="${!empty login && login.gradeNo == 9 }">
 					<!-- 관리자 메뉴 -->
 					<li class="nav-item"><a class="nav-link"
