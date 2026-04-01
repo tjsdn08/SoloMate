@@ -1,10 +1,11 @@
 package com.solomate.folder.dao;
 
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.solomate.folder.vo.FolderVO;
+import com.solomate.food.dao.FoodDAO;
+import com.solomate.food.vo.FoodVO;
 import com.solomate.main.dao.DAO;
 import com.solomate.util.db.DB;
 import com.solomate.util.page.PageObject;
@@ -37,6 +38,73 @@ public class FolderDAO extends DAO{
 	    DB.close(con, pstmt, rs);
 
 	    return list;
+	}
+	
+	// 폴더 상세 보기
+	public FolderVO view(Long no) throws Exception {
+
+	    FolderVO folder = null;
+	    List<FoodVO> foods = new ArrayList<>();
+
+	    con = DB.getConnection();
+
+	    try {
+	        String sql = "select "
+	                + "f.no as folderNo, "
+	                + "f.name as folderName, "
+	                + "TO_CHAR(f.createdAt, 'yyyy-mm-dd') createdAt, "
+	                + "fo.no as foodNo, "
+	                + "fo.name as foodName, "
+	                + "fo.quantity, "
+	                + "fo.storageType, "
+	                + "TO_CHAR(fo.expiryDate, 'yyyy-mm-dd') expiryDate "
+	                + "from folder f "
+	                + "left join folder_food ff on f.no = ff.folderNo "
+	                + "left join food fo on ff.foodNo = fo.no "
+	                + "where f.no = ?";
+
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setLong(1, no);
+	        rs = pstmt.executeQuery();
+
+	        while (rs.next()) {
+
+	            // 🔹 folder는 한 번만 생성
+	            if (folder == null) {
+	                folder = new FolderVO();
+	                folder.setNo(rs.getLong("folderNo"));
+	                folder.setName(rs.getString("folderName"));
+	                folder.setCreatedAt(rs.getString("createdAt"));
+	            }
+
+	            // 🔹 food가 존재할 때만 생성
+	            Long foodNo = rs.getLong("foodNo");
+	            if (!rs.wasNull()) {
+	                FoodVO food = new FoodVO();
+	                food.setNo(foodNo);
+	                food.setName(rs.getString("foodName"));
+	                food.setQuantity(rs.getInt("quantity"));
+	                food.setStorageType(rs.getString("storageType"));
+	                food.setExpiryDate(rs.getString("expiryDate"));
+	                food.setdDay(FoodDAO.getDday(rs.getString("expiryDate"))); // dDay 계산
+
+	                foods.add(food);
+	            }
+	        }
+
+	        if (folder != null) {
+	            folder.setFoods(foods);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        if (rs != null) rs.close();
+	        if (pstmt != null) pstmt.close();
+	    }
+
+	    return folder;
 	}
 	
 	// 폴더 목록 보기
@@ -113,6 +181,11 @@ public class FolderDAO extends DAO{
 		return totalRow;
 	} // getTotalRow()의 끝	
 	
+	// 폴더 상세 보기
+	
+	
+	
+	// 폴더 등록
 	public Integer write(FolderVO vo) throws Exception {
 		Integer result = 0;
 		

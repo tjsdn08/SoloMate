@@ -26,6 +26,7 @@ public class FolderController implements Controller{
 			
 			// 사용 변수 선언
 			FolderVO vo;
+			Long no;
 			
 			switch (uri) {
 			case "/folder/list.do":
@@ -38,6 +39,13 @@ public class FolderController implements Controller{
 				request.setAttribute("pageObject", pageObject);
 				
 				return "folder/list";
+				
+			case "/folder/view.do":
+				
+				no = Long.parseLong(request.getParameter("no"));
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), no));
+				
+				return "folder/view";
 				
 			case "/folder/writeForm.do":
 				
