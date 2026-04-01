@@ -26,30 +26,36 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-	$(function(){
-	    $("#deleteBtn").click(function(){
-	        if(confirm("정말 삭제하시겠습니까?")){
-	            $("#deleteForm").submit();
-	        }
-	    });
-	
-	    $("#bookmarkBtn").click(function(){
-	        $("#bookmarkForm").submit();
-	    });
-	    
-	    $(".bookmarkBtn").click(function(){
-	        let login = "${login}";
-	        // ❌ 로그인 안 한 경우
-	        if(!login){
-	            alert("로그인을 해주세요.");
-	            // 로그인 페이지 이동
-	            location = "/member/loginForm.do";
-	            return;
-	        }
-	        // ✅ 로그인 한 경우 → 북마크 실행
-	        $("#bookmarkForm").submit();
-	    });
-	});
+$(function(){
+
+    $("#deleteBtn").click(function(){
+        if(confirm("정말 삭제하시겠습니까?")){
+            $("#deleteForm").submit();
+        }
+    });
+
+    $(function(){
+        // 북마크 버튼 클릭 이벤트
+        $(".bookmarkBtn").click(function(){
+            let loginId = "${login.id}";
+
+            if(!loginId || loginId === "null"){
+                alert("로그인을 해주세요.");
+                location = "/member/loginForm.do";
+                return;
+            }
+
+            // 현재 버튼의 상태에 따라 다른 폼을 서브밋
+            if($(this).hasClass("is-booked")) {
+                // 이미 북마크 된 상태면 삭제 폼 실행
+                $("#bookmarkDeleteForm").submit();
+            } else {
+                // 북마크 안 된 상태면 등록 폼 실행
+                $("#bookmarkWriteForm").submit();
+            }
+        });
+    });
+});
 </script>
 
 </head>
@@ -112,15 +118,12 @@
 				<th>북마크</th>
 				<td class="d-flex align-items-center gap-2">
 				
-				    <!-- 북마크 O -->
 				    <c:if test="${vo.bookmarked == 1}">
-				        <button type="button" class="btn btn-dark btn-sm bookmarkBtn">★</button>
-				    </c:if>
-				
-				    <!-- 북마크 X -->
-				    <c:if test="${vo.bookmarked == 0}">
-				        <button type="button" class="btn btn-outline-dark btn-sm bookmarkBtn">☆</button>
-				    </c:if>
+					    <button type="button" class="btn btn-dark btn-sm bookmarkBtn is-booked">★</button>
+					</c:if>
+					<c:if test="${vo.bookmarked == 0}">
+					    <button type="button" class="btn btn-outline-dark btn-sm bookmarkBtn">☆</button>
+					</c:if>
 				
 				    <!-- 개수 -->
 				    <span>${vo.bookmark}</span>
@@ -139,7 +142,7 @@
 </div>
 
 <!-- 폼 -->
-<form id="bookmarkForm" action="bookmark.do" method="post">
+<form id="bookmarkForm" action="/boardbookmark/write.do" method="post">
     <input type="hidden" name="boardNo" value="${vo.no}">
 </form>
 
@@ -151,10 +154,27 @@
     <input type="hidden" name="word" value="${param.word }">
 </form>
 
+<form id="bookmarkWriteForm" action="/boardbookmark/write.do" method="post">
+    <input type="hidden" name="no" value="${vo.no}">
+    <input type="hidden" name="from" value="${param.from}">
+    
+    <input type="hidden" name="page" value="${param.page}">
+    <input type="hidden" name="perPageNum" value="${param.perPageNum}">
+</form>
+
+<form id="bookmarkDeleteForm" action="/boardbookmark/delete.do" method="post">
+    <input type="hidden" name="no" value="${vo.no}">
+    <input type="hidden" name="from" value="${param.from}">
+    
+    <input type="hidden" name="page" value="${param.page}">
+    <input type="hidden" name="perPageNum" value="${param.perPageNum}">
+</form>
+
 <!-- 댓글 -->
 <div class="mt-5">
     <%@ include file="reply.jsp" %>
 </div>
+
 
 </body>
 </html>

@@ -36,7 +36,7 @@ public class FoodDAO extends DAO{
 		int idx = 1; //검색 처리
 		
 //		idx = searchDataSet(pstmt, idx, pageObject); 검색 처리
-		// 아이디 하드코딩함. LoginVO loginvo를 받아야함. 
+		// 아이디 하드코딩함. LoginVO loginvo를 받아야함. !!!!!!! 
 		pstmt.setString(idx++, "test");
 		pstmt.setLong(idx++, pageObject.getStartRow()); // 검색처리시 수정해야댐
 		pstmt.setLong(idx++, pageObject.getEndRow()); // 검색처리시 수정해야댐
@@ -119,14 +119,17 @@ public class FoodDAO extends DAO{
 	public FoodVO view(Long no) throws Exception {
 
 	    FoodVO vo = null;
+
 	    List<String> folderList = new ArrayList<>();
+	    List<Long> folderNos = new ArrayList<>(); // ⭐ 추가
 
 	    con = DB.getConnection();
 
 	    String sql = "SELECT "
 	            + " f.no, f.name, TO_CHAR(f.expiryDate, 'yyyy-mm-dd') expiryDate, "
 	            + " f.quantity, f.storageType, f.memo, "
-	            + " fo.name AS folderName "
+	            + " fo.name AS folderName, "
+	            + " fo.no AS folderNo "   // ⭐ 추가
 	            + "FROM food f "
 	            + "LEFT JOIN folder_food ff ON f.no = ff.foodNo "
 	            + "LEFT JOIN folder fo ON ff.folderNo = fo.no "
@@ -150,23 +153,29 @@ public class FoodDAO extends DAO{
 	            vo.setMemo(rs.getString("memo"));
 	        }
 
-	        // 폴더는 여러 개일 수 있음 → 리스트에 추가
+	        // ⭐ 폴더 이름
 	        String folderName = rs.getString("folderName");
 	        if (folderName != null) {
 	            folderList.add(folderName);
 	        }
+
+	        // ⭐ 폴더 번호 (핵심)
+	        long folderNo = rs.getLong("folderNo");
+	        if (!rs.wasNull()) {
+	            folderNos.add(folderNo);
+	        }
 	    }
 
-	    // 폴더 리스트 세팅
+	    // ⭐ 세팅
 	    if (vo != null) {
-	        vo.setFolders(folderList);;
+	        vo.setFolders(folderList);     // 이름 (출력용)
+	        vo.setFolderNos(folderNos);   // 번호 (체크용)
 	    }
 
 	    DB.close(con, pstmt, rs);
 
 	    return vo;
 	}
-	
 	// 3. 식품 추가 + 폴더 매핑
 	public Integer write(FoodVO vo) throws Exception {
 
@@ -174,31 +183,33 @@ public class FoodDAO extends DAO{
 
 	    con = DB.getConnection();
 
+	    // 1. 시퀀스 먼저 조회
+	    String seqSql = "SELECT food_seq.NEXTVAL FROM dual";
+	    pstmt = con.prepareStatement(seqSql);
+	    rs = pstmt.executeQuery();
+	    
+	    long foodNo = 0;
+	    if (rs.next()) {
+	    	foodNo = rs.getLong(1);
+	    }
 
         // 1️. 식품 등록
-        String sql = "INSERT INTO food "
-                   + "(no, memberId, name, quantity, storageType, expiryDate, memo) "
-                   + "VALUES (food_seq.NEXTVAL, ?, ?, ?, ?, TO_DATE(?, 'yyyy-mm-dd'), ?)";
+	    String sql = "INSERT INTO food (no, memberId, name, quantity, storageType, expiryDate, memo) "
+	            + "VALUES (?, ?, ?, ?, ?, TO_DATE(?, 'yyyy-mm-dd'), ?)";
 
-        // no 컬럼을 insert 이후에 준다.
-        pstmt = con.prepareStatement(sql, new String[] {"no"});
+	    pstmt = con.prepareStatement(sql);
 
-        int idx = 1;
-        pstmt.setString(idx++, vo.getMemberId());
-        pstmt.setString(idx++, vo.getName());
-        pstmt.setLong(idx++, vo.getQuantity());
-        pstmt.setString(idx++, vo.getStorageType());
-        pstmt.setString(idx++, vo.getExpiryDate());
-        pstmt.setString(idx++, vo.getMemo());
+	    pstmt.setLong(1, foodNo);
+
+        pstmt.setString(2, vo.getMemberId());
+        pstmt.setString(3, vo.getName());
+        pstmt.setLong(4, vo.getQuantity());
+        pstmt.setString(5, vo.getStorageType());
+        pstmt.setString(6, vo.getExpiryDate());
+        pstmt.setString(7, vo.getMemo());
 
         result = pstmt.executeUpdate();
 
-        // 생성된 food 번호 가져오기
-        rs = pstmt.getGeneratedKeys();
-        long foodNo = 0;
-        if (rs.next()) {
-            foodNo = rs.getLong(1);
-        }
 
         // 2️. 폴더 매핑 (여러 개 가능)
         if (vo.getFolderNos() != null) {
@@ -216,6 +227,99 @@ public class FoodDAO extends DAO{
         }
 
         DB.close(con, pstmt, rs);
+
+	    return result;
+	}
+	
+	// 4. 식품 수정
+	public Integer update(FoodVO vo) throws Exception {
+
+	    Integer result = 0;
+
+	    con = DB.getConnection();
+
+	    try {
+
+	        // 1. food 테이블 수정
+	        String sql = "UPDATE food SET "
+	                + "name = ?, "
+	                + "quantity = ?, "
+	                + "storageType = ?, "
+	                + "expiryDate = TO_DATE(?, 'yyyy-mm-dd'), "
+	                + "memo = ?, "
+	                + "updatedAt = SYSDATE "
+	                + "WHERE no = ?";
+
+	        pstmt = con.prepareStatement(sql);
+
+	        pstmt.setString(1, vo.getName());
+	        pstmt.setLong(2, vo.getQuantity());
+	        pstmt.setString(3, vo.getStorageType());
+	        pstmt.setString(4, vo.getExpiryDate());
+	        pstmt.setString(5, vo.getMemo());
+	        pstmt.setLong(6, vo.getNo());
+
+	        result = pstmt.executeUpdate();
+
+	        // 2. 기존 폴더 매핑 삭제
+	        String deleteSql = "DELETE FROM folder_food WHERE foodNo = ?";
+	        pstmt = con.prepareStatement(deleteSql);
+	        pstmt.setLong(1, vo.getNo());
+	        pstmt.executeUpdate();
+
+	        // 3. 폴더 재등록
+	        if (vo.getFolderNos() != null && !vo.getFolderNos().isEmpty()) {
+
+	            String insertSql = "INSERT INTO folder_food (no, folderNo, foodNo) "
+	                    + "VALUES (folder_food_seq.NEXTVAL, ?, ?)";
+
+	            pstmt = con.prepareStatement(insertSql);
+
+	            for (Long folderNo : vo.getFolderNos()) {
+	                pstmt.setLong(1, folderNo);
+	                pstmt.setLong(2, vo.getNo());
+	                pstmt.executeUpdate();
+	            }
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DB.close(con, pstmt);
+	    }
+
+	    return result;
+	}
+	
+	// 5. 식품 삭제
+	public Integer delete(Long no) throws Exception {
+
+	    Integer result = 0;
+
+	    con = DB.getConnection();
+
+	    try {
+
+	        // 1. 폴더 매핑 삭제
+	        String mapSql = "DELETE FROM folder_food WHERE foodNo = ?";
+	        pstmt = con.prepareStatement(mapSql);
+	        pstmt.setLong(1, no);
+	        pstmt.executeUpdate();
+
+	        // 2. 식품 삭제
+	        String sql = "DELETE FROM food WHERE no = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setLong(1, no);
+
+	        result = pstmt.executeUpdate();
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DB.close(con, pstmt);
+	    }
 
 	    return result;
 	}

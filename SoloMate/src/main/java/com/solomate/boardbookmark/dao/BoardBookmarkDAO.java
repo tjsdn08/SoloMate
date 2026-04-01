@@ -78,4 +78,61 @@ public class BoardBookmarkDAO extends DAO{
 		return totalRow;
 	}
 	
+	// 이미 북마크가 되어있는지 확인 (결과가 있으면 1, 없으면 0)
+	public int check(BoardBookmarkVO vo) throws Exception {
+	    int count = 0;
+	    try {
+	        con = DB.getConnection();
+	        String sql = "select count(*) from board_bookmark where boardNo = ? and id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setLong(1, vo.getBoardNo());
+	        pstmt.setString(2, vo.getId());
+	        rs = pstmt.executeQuery();
+	        if(rs.next()) count = rs.getInt(1);
+	    } finally {
+	        DB.close(con, pstmt, rs);
+	    }
+	    return count;
+	}
+	
+	// 북마크 등록
+	public int write(BoardBookmarkVO vo) throws Exception {
+
+	    int result = 0;
+
+	    con = DB.getConnection();
+
+	    String sql = ""
+	        + " insert into board_bookmark "
+	        + " (bookmarkNo, boardNo, id, regdate) "
+	        + " values (board_bookmark_seq.nextval, ?, ?, sysdate) ";
+
+	    pstmt = con.prepareStatement(sql);
+
+	    pstmt.setLong(1, vo.getBoardNo());
+	    pstmt.setString(2, vo.getId());
+
+	    result = pstmt.executeUpdate();
+
+	    DB.close(con, pstmt);
+
+	    return result;
+	}
+	
+	// 북마크 삭제
+	public int delete(BoardBookmarkVO vo) throws Exception {
+	    int result = 0;
+	    try {
+	        con = DB.getConnection();
+	        String sql = "delete from board_bookmark where boardNo = ? and id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setLong(1, vo.getBoardNo());
+	        pstmt.setString(2, vo.getId());
+	        result = pstmt.executeUpdate();
+	    } finally {
+	        DB.close(con, pstmt);
+	    }
+	    return result;
+	}
+	
 }

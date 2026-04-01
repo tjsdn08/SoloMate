@@ -92,7 +92,7 @@
 		<c:forEach items="${list}" var="vo" varStatus="status">
 			<tr class="dataRow" data-no="${vo.boardNo}">
 
-				<td>${status.count}</td>
+				<td>${pageObject.totalRow - ((pageObject.page - 1) * pageObject.perPageNum + status.index)}</td>
 
 				<td>${vo.title}</td>
 
@@ -103,7 +103,7 @@
 				<td>
 					<a href="${pageContext.request.contextPath}/boardbookmark/delete.do?no=${vo.boardNo}"
 					   class="btn btn-outline-dark btn-sm"
-					   onclick="event.stopPropagation(); return confirm('삭제하시겠습니까?');">
+					   onclick="event.stopPropagation(); return confirm('북마크 리스트에서 삭제하시겠습니까?');">
 						삭제
 					</a>
 				</td>

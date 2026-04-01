@@ -1,5 +1,6 @@
 package com.solomate.folder.dao;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import com.solomate.util.page.PageObject;
 
 public class FolderDAO extends DAO{
 	
-	// 전체 조회 (폼용)
+	// 전체 조회 (폼용) food - writeform updateform
 	public List<FolderVO> listAll(String memberId) throws Exception {
 	    List<FolderVO> list = new ArrayList<>();
 
@@ -23,17 +24,113 @@ public class FolderDAO extends DAO{
 
 	    rs = pstmt.executeQuery();
 
-	    while(rs.next()) {
-	        FolderVO vo = new FolderVO();
-	        vo.setNo(rs.getLong("no"));
-	        vo.setName(rs.getString("name"));
-	        vo.setCreatedAt(rs.getString("createdAt"));
-	        list.add(vo);
-	    }
+		if(rs != null) {
+		    while(rs.next()) {
+		        FolderVO vo = new FolderVO();
+		        vo.setNo(rs.getLong("no"));
+		        vo.setName(rs.getString("name"));
+		        vo.setCreatedAt(rs.getString("createdAt"));
+		        list.add(vo);
+		    }
+		}
 
 	    DB.close(con, pstmt, rs);
 
 	    return list;
 	}
+	
+	// 폴더 목록 보기
+	public List<FolderVO> list(PageObject pageObject) throws Exception {
+		List<FolderVO> list = new ArrayList<>();
+		
+		con = DB.getConnection();
+		
+		String sql = "SELECT no, name, TO_CHAR(createdAt, 'yyyy-mm-dd') createdAt FROM folder WHERE memberId = ? order by createdAt desc ";
+		
+		sql = "SELECT rownum rnum, no, name, createdAt "
+				+ " FROM(" + sql + ")";
+		sql = "SELECT rnum, no, name, createdAt "
+				+ " FROM(" + sql + ") where rnum between ? and ?";
+		
+		// 4. 
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, pageObject.getAccepter()); // -> 나중엔 로그인값!!!!!!!
+		pstmt.setLong(2, pageObject.getStartRow());
+		pstmt.setLong(3, pageObject.getEndRow());
+		
+		rs = pstmt.executeQuery();
+		
+		if(rs != null) {
+			while(rs.next()) {
+				FolderVO vo = new FolderVO();
+				vo.setNo(rs.getLong("no"));
+				vo.setName(rs.getString("name"));
+				vo.setCreatedAt(rs.getString("createdAt"));
+				list.add(vo);
+			}
+		}
+		
+		DB.close(con, pstmt, rs);
+		
+		return list;
+	}
+	
+	// 1-1. 폴더 목록 보기에서 글의 개수
+	public Long getTotalRow(PageObject pageObject) throws Exception{
+		
+		Long totalRow = 0L;
+		
+		con = DB.getConnection();
+		
+		String sql = "select count(*) from folder where memberId = ? ";
+		
+		// 검색 처리를 한다. -> list()의 검색 처리와 같다. -> 반복이 된다. 메서드를 만든다.
+		// sql += search(pageObject);
+		
+		// 4. 실행 객체 & 데이터 세팅
+		pstmt = con.prepareStatement(sql);
+		// 하드코딩 !!!!!!!!
+		pstmt.setString(1, pageObject.getAccepter());
+		
+		// - 검색 처리를 하면 데이터 세팅이 필요하다. ?가 생긴다.
+		// 순서 번호의 변수 선언해서 사용한다.
+		// int idx = 1;
+		// 검색 데이터 세팅을 한다. - ?가 생길 수도 있다.
+		// idx = searchDataSet(pstmt, idx, pageObject); // pstmt 데이터 메서드 안에서 변경하면 밖에서 변경된 상태 : 참조형 변수 - 주소 전달
+		
+		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
+		rs = pstmt.executeQuery();
+		
+		// 6. DB에서 가져온 데이터 채우기
+		if(rs != null && rs.next()) {
+			// 데이터를 저장한다.
+			totalRow = rs.getLong(1);
+		} // if의 끝
+		
+		// 7. DB 닫기
+		DB.close(con, pstmt, rs);
+		
+		return totalRow;
+	} // getTotalRow()의 끝	
+	
+	public Integer write(FolderVO vo) throws Exception {
+		Integer result = 0;
+		
+		con = DB.getConnection();
+		
+		String sql = "insert into folder(no, memberId, name, createdAt, updatedAt) values(folder_seq.nextval, ?, ?, sysdate, sysdate)";
+		
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getMemberId());
+		pstmt.setString(2, vo.getName());
+		
+		result = pstmt.executeUpdate();
+		
+		DB.close(con, pstmt);
+		
+		return result;
+		
+	}
+	
 
 }
