@@ -3,6 +3,7 @@ package com.solomate.recipes.controller;
 import com.solomate.main.controller.Controller;
 import com.solomate.main.controller.Init;
 import com.solomate.main.service.Execute;
+import com.solomate.recipes.vo.RecipesVO;
 import com.solomate.util.page.PageObject;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ public class RecipesController implements Controller{
 			
 //			RecipesVO vo;
 //			Integer result;
-//			Long no;
+			Long no;
 			
 			switch (uri) {
 			case "/recipes/list.do": 
@@ -28,6 +29,19 @@ public class RecipesController implements Controller{
 				System.out.println("RecipesController.execuete().pageObject - " + pageObject);
 				request.setAttribute("pageObject", pageObject);
 				return "recipes/list";
+			
+			case "/recipes/view.do":
+			    no = Long.parseLong(request.getParameter("no"));
+			    int inc = Integer.parseInt(request.getParameter("inc"));
+
+			    RecipesVO vo = (RecipesVO) Execute.execute(Init.getService(uri), new Object[]{no, inc});
+
+			    request.setAttribute("vo", vo);
+
+			    request.setAttribute("pageObject", PageObject.getInstance(request));
+
+			    // 5. JSP 경로 리턴
+			    return "recipes/view";
 			
 			default:
 				return "error/noPage";

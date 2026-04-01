@@ -113,7 +113,7 @@
 							<td>${vo.description}</td>
 							<td>${vo.recipes_time}분</td>
 							<td>${vo.recipes_level}</td>
-							<td><span class="badge bg-danger">${vo.bookmark}</span></td>
+							<td><span class="badge bg-danger">${vo.recipes_bookmark}</span></td>
 						</tr>
 					</c:forEach>
 				</c:if>
