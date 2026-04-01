@@ -26,7 +26,9 @@ import com.solomate.board.service.BoardViewService;
 import com.solomate.board.service.BoardWriteService;
 import com.solomate.boardbookmark.controller.BoardBookmarkController;
 import com.solomate.boardbookmark.dao.BoardBookmarkDAO;
+import com.solomate.boardbookmark.service.BoardBookmarkDeleteService;
 import com.solomate.boardbookmark.service.BoardBookmarkListService;
+import com.solomate.boardbookmark.service.BoardBookmarkWriteService;
 import com.solomate.boardreply.controller.BoardReplyController;
 import com.solomate.boardreply.dao.BoardReplyDAO;
 import com.solomate.boardreply.service.BoardReplyDeleteService;
@@ -241,34 +243,27 @@ public class Init extends HttpServlet {
 		serviceMap.get("/boardreply/update.do").setDAO(daoMap.get("boardReplyDAO"));
 		serviceMap.get("/boardreply/delete.do").setDAO(daoMap.get("boardReplyDAO"));
 
-		
 		// -- 꿀팁 아카이브 북마크 Init --
 		// *** 북마크 생성 / 저장 / 조립
 		// -- Controller 저장 - 모듈 이름 (보통 /boardbookmark로 시작하는 요청 처리)
 		controllerMap.put("/boardbookmark", new BoardBookmarkController());
 
-
 		// -- Service 저장 - uri
 		// 1. 북마크 목록 (내가 북마크한 글만 모아보기)
 		serviceMap.put("/boardbookmark/list.do", new BoardBookmarkListService());
 		// 2. 북마크 추가 (등록)
-		serviceMap.put("/boardbookmark/write.do", new BoardBookmarkListService());
+		serviceMap.put("/boardbookmark/write.do", new BoardBookmarkWriteService());
 		// 3. 북마크 삭제 (해제)
-		serviceMap.put("/boardbookmark/delete.do", new BoardBookmarkListService());
-
+		serviceMap.put("/boardbookmark/delete.do", new BoardBookmarkDeleteService());
 
 		// -- DAO 저장 - 변수명으로 저장하여 각 서비스에 주입
 		daoMap.put("boardbookmarkDAO", new BoardBookmarkDAO());
-
 
 		// -- Service에 DAO를 조립 (의존성 주입)
 		serviceMap.get("/boardbookmark/list.do").setDAO(daoMap.get("boardbookmarkDAO"));
 		serviceMap.get("/boardbookmark/write.do").setDAO(daoMap.get("boardbookmarkDAO"));
 		serviceMap.get("/boardbookmark/delete.do").setDAO(daoMap.get("boardbookmarkDAO"));
 
-		
-		
-		
 		// ------------------------------고승희--------------------------------
 		// 고승희 - 회원관리
 		controllerMap.put("/member", new MemberController());
@@ -284,7 +279,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/member/update.do", new MemberUpdateService());
 		serviceMap.put("/member/delete.do", new MemberDeleteService());
 		serviceMap.put("/member/reactivate.do", new MemberReactivateService());
-		
+
 //		// -- DAO 저장
 		daoMap.put("memberDAO", new MemberDAO());
 //		// service
@@ -302,15 +297,15 @@ public class Init extends HttpServlet {
 
 		// 고승희 - 레시피 아카이브
 
-		//controllerMap.put("/recipes", new MemberRecipesController());
+		// controllerMap.put("/recipes", new MemberRecipesController());
 
 		// -- Service 저장
-		//serviceMap.put("/recipes/list.do", new RecipesListService());
-		//serviceMap.put("/recipes/view.do", new RecipesViewService());
-		//serviceMap.put("/recipes/update.do", new RecipesUpdateService());
-		//serviceMap.put("/recipes/write.do", new RecipesWriteService());
-		//serviceMap.put("/recipes/changeImg.do", new RecipesChangeImgService());
-		//serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
+		// serviceMap.put("/recipes/list.do", new RecipesListService());
+		// serviceMap.put("/recipes/view.do", new RecipesViewService());
+		// serviceMap.put("/recipes/update.do", new RecipesUpdateService());
+		// serviceMap.put("/recipes/write.do", new RecipesWriteService());
+		// serviceMap.put("/recipes/changeImg.do", new RecipesChangeImgService());
+		// serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
 
 		// -- DAO 저장
 //		daoMap.put("recipesDAO", new recipesDAO());
@@ -324,14 +319,18 @@ public class Init extends HttpServlet {
 
 		// 고승희 - 레시피 아카이브 북마크 처리
 
-		//controllerMap.put("/recipesBookmarks", new MemberRecipesBookmarksController());
+		// controllerMap.put("/recipesBookmarks", new
+		// MemberRecipesBookmarksController());
 
 		// -- Service 저장
-		//serviceMap.put("/recipesBookmarks/list.do", new RecipesBookmarksListService());
-		//serviceMap.put("/recipesBookmarks/update.do", new RecipesBookmarksUpdateService());
-		//serviceMap.put("/recipesBookmarks/delete.do", new RecipesBookmarksDeleteService());
+		// serviceMap.put("/recipesBookmarks/list.do", new
+		// RecipesBookmarksListService());
+		// serviceMap.put("/recipesBookmarks/update.do", new
+		// RecipesBookmarksUpdateService());
+		// serviceMap.put("/recipesBookmarks/delete.do", new
+		// RecipesBookmarksDeleteService());
 		// -- DAO 저장
-		//daoMap.put("recipesBookmarksDAO", new recipesBookmarksDAO());
+		// daoMap.put("recipesBookmarksDAO", new recipesBookmarksDAO());
 		// -- service
 		serviceMap.get("/recipesBookmarks/list.do").setDAO(daoMap.get("recipesBookmarksDAO"));
 		serviceMap.get("/recipesBookmarks/update.do").setDAO(daoMap.get("recipesBookmarksDAO"));
