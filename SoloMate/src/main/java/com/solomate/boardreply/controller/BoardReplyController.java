@@ -127,7 +127,7 @@ public class BoardReplyController implements Controller {
 				
 				// 데이터를 꺼내서 BoardReplyVO에 넣는다
 				vo = new BoardReplyVO();
-				vo.setNo(jsonObject.getLong("no"));
+				vo.setRno(jsonObject.getLong("rno"));
 				vo.setContent(jsonObject.getString("content"));
 				vo.setId(id); // 로그인 정보에서 아이디 꺼내기 - 코드가 위에 있음
 				
