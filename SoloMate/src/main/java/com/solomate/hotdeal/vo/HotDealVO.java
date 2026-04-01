@@ -12,6 +12,8 @@ public class HotDealVO {
 	private Long originalPrice;
 	private Double discountRate;
 	private String imageUrl;
+	private String imageName;
+	private String thumbName;
 	private String shopName;
 	private String sellerName;
 	private String dealUrl;
@@ -74,6 +76,18 @@ public class HotDealVO {
 	}
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+	public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+	public String getThumbName() {
+		return thumbName;
+	}
+	public void setThumbName(String thumbName) {
+		this.thumbName = thumbName;
 	}
 	public String getShopName() {
 		return shopName;
@@ -163,12 +177,10 @@ public class HotDealVO {
 	public String toString() {
 		return "HotDealVO [dealId=" + dealId + ", categoryId=" + categoryId + ", categoryName=" + categoryName
 				+ ", title=" + title + ", price=" + price + ", originalPrice=" + originalPrice + ", discountRate="
-				+ discountRate + ", imageUrl=" + imageUrl + ", shopName=" + shopName + ", sellerName=" + sellerName
-				+ ", dealUrl=" + dealUrl + ", description=" + description + ", endDate=" + endDate + ", viewCount="
-				+ viewCount + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", isDeleted=" + isDeleted + ", pageObject=" + pageObject + ", word=" + word + ", sort=" + sort
-				+ ", addedToShopping=" + addedToShopping + "]";
+				+ discountRate + ", imageUrl=" + imageUrl + ", imageName=" + imageName + ", thumbName=" + thumbName
+				+ ", shopName=" + shopName + ", sellerName=" + sellerName + ", dealUrl=" + dealUrl + ", description="
+				+ description + ", endDate=" + endDate + ", viewCount=" + viewCount + ", status=" + status
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", isDeleted=" + isDeleted + ", pageObject="
+				+ pageObject + ", word=" + word + ", sort=" + sort + ", addedToShopping=" + addedToShopping + "]";
 	}
-	
-	
 }

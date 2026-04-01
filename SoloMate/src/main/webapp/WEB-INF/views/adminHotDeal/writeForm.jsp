@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -78,7 +79,7 @@
 
 			<form
 				action="${pageContext.request.contextPath}/adminHotDeal/write.do"
-				method="post">
+				method="post" enctype="multipart/form-data">
 
 				<div class="form-grid">
 					<div>
@@ -122,11 +123,7 @@
 				</div>
 
 				<div class="form-grid">
-					<div>
-						<div class="form-label">할인율</div>
-						<input type="number" step="0.01" name="discountRate"
-							class="form-input" min="0" required>
-					</div>
+					
 
 					<div>
 						<div class="form-label">종료일</div>
@@ -147,8 +144,9 @@
 				</div>
 
 				<div class="form-row-full">
-					<div class="form-label">이미지 URL</div>
-					<input type="text" name="imageUrl" class="form-input">
+					<div class="form-label">상품 이미지</div>
+					<input type="file" name="imageFile" class="form-input"
+						accept="image/*">
 				</div>
 
 				<div class="form-row-full">

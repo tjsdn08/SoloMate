@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,7 @@
 	background: #fff;
 	border-radius: 18px;
 	padding: 28px;
-	box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .form-title {
@@ -68,100 +69,146 @@
 	justify-content: space-between;
 	margin-top: 24px;
 }
+
+.preview-box {
+	margin-top: 10px;
+}
+
+.preview-box img {
+	width: 180px;
+	height: 180px;
+	object-fit: cover;
+	border-radius: 12px;
+	border: 1px solid #ddd;
+	background: #f5f5f5;
+	display: block;
+}
 </style>
 </head>
 <body>
 
-<div class="form-page">
-	<div class="form-card">
-		<div class="form-title">관리자 핫딜 수정</div>
+	<div class="form-page">
+		<div class="form-card">
+			<div class="form-title">관리자 핫딜 수정</div>
 
-		<form action="${pageContext.request.contextPath}/adminHotDeal/update.do" method="post">
-			<input type="hidden" name="dealId" value="${vo.dealId}">
+			<form
+				action="${pageContext.request.contextPath}/adminHotDeal/update.do"
+				method="post" enctype="multipart/form-data">
 
-			<div class="form-grid">
-				<div>
-					<div class="form-label">카테고리</div>
-					<select name="categoryId" class="form-select" required>
-						<option value="1" ${vo.categoryId eq 1 ? 'selected' : ''}>식품</option>
-						<option value="2" ${vo.categoryId eq 2 ? 'selected' : ''}>생활용품</option>
-						<option value="3" ${vo.categoryId eq 3 ? 'selected' : ''}>가전</option>
-					</select>
+				<input type="hidden" name="dealId" value="${vo.dealId}"> <input
+					type="hidden" name="oldImageUrl" value="${vo.imageUrl}">
+
+				<div class="form-grid">
+					<div>
+						<div class="form-label">카테고리</div>
+						<select name="categoryId" class="form-select" required>
+							<option value="1" ${vo.categoryId eq 1 ? 'selected' : ''}>식품</option>
+							<option value="2" ${vo.categoryId eq 2 ? 'selected' : ''}>생활용품</option>
+							<option value="3" ${vo.categoryId eq 3 ? 'selected' : ''}>가전</option>
+						</select>
+					</div>
+
+					<div>
+						<div class="form-label">상태</div>
+						<select name="status" class="form-select" required>
+							<option value="ACTIVE" ${vo.status eq 'ACTIVE' ? 'selected' : ''}>ACTIVE</option>
+							<option value="INACTIVE"
+								${vo.status eq 'INACTIVE' ? 'selected' : ''}>INACTIVE</option>
+						</select>
+					</div>
 				</div>
 
-				<div>
-					<div class="form-label">상태</div>
-					<select name="status" class="form-select" required>
-						<option value="ACTIVE" ${vo.status eq 'ACTIVE' ? 'selected' : ''}>ACTIVE</option>
-						<option value="INACTIVE" ${vo.status eq 'INACTIVE' ? 'selected' : ''}>INACTIVE</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="form-row-full">
-				<div class="form-label">상품명</div>
-				<input type="text" name="title" class="form-input" value="${vo.title}" required>
-			</div>
-
-			<div class="form-grid">
-				<div>
-					<div class="form-label">가격</div>
-					<input type="number" name="price" class="form-input" value="${vo.price}" min="0" required>
+				<div class="form-row-full">
+					<div class="form-label">상품명</div>
+					<input type="text" name="title" class="form-input"
+						value="${vo.title}" required>
 				</div>
 
-				<div>
-					<div class="form-label">원가</div>
-					<input type="number" name="originalPrice" class="form-input" value="${vo.originalPrice}" min="0" required>
-				</div>
-			</div>
+				<div class="form-grid">
+					<div>
+						<div class="form-label">가격</div>
+						<input type="number" name="price" class="form-input"
+							value="${vo.price}" min="0" required>
+					</div>
 
-			<div class="form-grid">
-				<div>
-					<div class="form-label">할인율</div>
-					<input type="number" step="0.01" name="discountRate" class="form-input" value="${vo.discountRate}" min="0" required>
-				</div>
-
-				<div>
-					<div class="form-label">종료일</div>
-					<input type="date" name="endDate" class="form-input" value="${vo.endDate}" required>
-				</div>
-			</div>
-
-			<div class="form-grid">
-				<div>
-					<div class="form-label">판매처</div>
-					<input type="text" name="shopName" class="form-input" value="${vo.shopName}" required>
+					<div>
+						<div class="form-label">원가</div>
+						<input type="number" name="originalPrice" class="form-input"
+							value="${vo.originalPrice}" min="0" required>
+					</div>
 				</div>
 
-				<div>
-					<div class="form-label">판매자</div>
-					<input type="text" name="sellerName" class="form-input" value="${vo.sellerName}">
+				<div class="form-grid">
+					<div>
+						<div class="form-label">할인율</div>
+						<input type="number" name="discountRate" class="form-input"
+							value="${vo.discountRate}" min="0" readonly>
+					</div>
+
+					<div>
+						<div class="form-label">종료일</div>
+						<input type="date" name="endDate" class="form-input"
+							value="${vo.endDate}" required>
+					</div>
 				</div>
-			</div>
 
-			<div class="form-row-full">
-				<div class="form-label">이미지 URL</div>
-				<input type="text" name="imageUrl" class="form-input" value="${vo.imageUrl}">
-			</div>
+				<div class="form-grid">
+					<div>
+						<div class="form-label">판매처</div>
+						<input type="text" name="shopName" class="form-input"
+							value="${vo.shopName}" required>
+					</div>
 
-			<div class="form-row-full">
-				<div class="form-label">구매 링크</div>
-				<input type="text" name="dealUrl" class="form-input" value="${vo.dealUrl}" required>
-			</div>
+					<div>
+						<div class="form-label">판매자</div>
+						<input type="text" name="sellerName" class="form-input"
+							value="${vo.sellerName}">
+					</div>
+				</div>
 
-			<div class="form-row-full">
-				<div class="form-label">설명</div>
-				<textarea name="description" class="form-textarea">${vo.description}</textarea>
-			</div>
+				<div class="form-row-full">
+					<div class="form-label">상품 이미지</div>
+					<input type="file" name="imageFile" class="form-input"
+						accept="image/*">
 
-			<div class="bottom-btns">
-				<a href="${pageContext.request.contextPath}/adminHotDeal/view.do?dealId=${vo.dealId}" class="btn btn-secondary">취소</a>
-				<button type="submit" class="btn btn-primary">수정</button>
-			</div>
-		</form>
+					<div class="preview-box">
+						<c:choose>
+							<c:when test="${not empty vo.imageUrl}">
+								<img
+									src="${pageContext.request.contextPath}/upload/hotdeal/${vo.imageUrl}"
+									alt="${vo.title}"
+									onerror="this.src='${pageContext.request.contextPath}/upload/hotdeal/default.png'">
+							</c:when>
+							<c:otherwise>
+								<img
+									src="${pageContext.request.contextPath}/upload/hotdeal/default.png"
+									alt="기본 이미지">
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</div>
 
+				<div class="form-row-full">
+					<div class="form-label">구매 링크</div>
+					<input type="text" name="dealUrl" class="form-input"
+						value="${vo.dealUrl}" required>
+				</div>
+
+				<div class="form-row-full">
+					<div class="form-label">설명</div>
+					<textarea name="description" class="form-textarea">${vo.description}</textarea>
+				</div>
+
+				<div class="bottom-btns">
+					<a
+						href="${pageContext.request.contextPath}/adminHotDeal/view.do?dealId=${vo.dealId}"
+						class="btn btn-secondary">취소</a>
+					<button type="submit" class="btn btn-primary">수정</button>
+				</div>
+			</form>
+
+		</div>
 	</div>
-</div>
 
 </body>
 </html>

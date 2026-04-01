@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,7 +17,7 @@
 	background: #fff;
 	border-radius: 18px;
 	padding: 18px;
-	box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .hotdeal-search-bar {
@@ -41,8 +42,7 @@
 	outline: none;
 }
 
-.hotdeal-search-input input:focus,
-.hotdeal-select:focus {
+.hotdeal-search-input input:focus, .hotdeal-select:focus {
 	border-color: #222;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .hotdeal-item:hover {
-	box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 	transform: translateY(-2px);
 }
 
@@ -208,13 +208,13 @@
 	font-size: 16px;
 }
 
-@media (max-width: 1200px) {
+@media ( max-width : 1200px) {
 	.hotdeal-grid {
 		grid-template-columns: repeat(2, 1fr);
 	}
 }
 
-@media (max-width: 768px) {
+@media ( max-width : 768px) {
 	.hotdeal-search-bar {
 		grid-template-columns: 1fr;
 	}
@@ -225,101 +225,117 @@
 </style>
 
 <script type="text/javascript">
-$(function(){
+	$(function() {
 
-	$("#categoryId").val("${searchVO.categoryId}");
-	$("#sort").val("${searchVO.sort}");
-	$("#word").val("${searchVO.word}");
+		$("#categoryId").val("${searchVO.categoryId}");
+		$("#sort").val("${searchVO.sort}");
+		$("#word").val("${searchVO.word}");
 
-	$(".hotdeal-item").click(function(e){
-		if($(e.target).closest(".add-btn").length > 0) return;
-		if($(e.target).closest(".add-done").length > 0) return;
+		$(".hotdeal-item")
+				.click(
+						function(e) {
+							if ($(e.target).closest(".add-btn").length > 0)
+								return;
+							if ($(e.target).closest(".add-done").length > 0)
+								return;
 
-		let dealId = $(this).data("id");
-		location = "${pageContext.request.contextPath}/hotdeal/view.do?dealId=" + dealId;
+							let dealId = $(this).data("id");
+							location = "${pageContext.request.contextPath}/hotdeal/view.do?dealId="
+									+ dealId;
+						});
 	});
-});
 </script>
 </head>
 <body>
 
-<div class="hotdeal-page">
-	<div class="hotdeal-wrap">
+	<div class="hotdeal-page">
+		<div class="hotdeal-wrap">
 
-		<form action="${pageContext.request.contextPath}/hotdeal/list.do" method="get">
-			<div class="hotdeal-search-bar">
+			<form action="${pageContext.request.contextPath}/hotdeal/list.do"
+				method="get">
+				<div class="hotdeal-search-bar">
 
-				<div class="hotdeal-search-input">
-					<span class="hotdeal-search-icon">🔍</span>
-					<input type="text" name="word" id="word" placeholder="상품명 검색">
+					<div class="hotdeal-search-input">
+						<span class="hotdeal-search-icon"><svg
+								xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+								viewBox="0 0 24 24">
+								<path fill="currentColor"
+									d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg></span>
+						<input type="text" name="word" id="word" placeholder="상품명 검색">
+					</div>
+
+					<select name="categoryId" id="categoryId" class="hotdeal-select">
+						<option value="">전체</option>
+						<option value="1">식품</option>
+						<option value="2">생활용품</option>
+						<option value="3">가전</option>
+					</select> <select name="sort" id="sort" class="hotdeal-select">
+						<option value="">최신순</option>
+						<option value="popular">인기순</option>
+					</select>
+
+					<button type="submit" class="hotdeal-search-btn">검색</button>
 				</div>
+			</form>
 
-				<select name="categoryId" id="categoryId" class="hotdeal-select">
-					<option value="">전체</option>
-					<option value="1">식품</option>
-					<option value="2">생활용품</option>
-					<option value="3">가전</option>
-				</select>
+			<c:if test="${empty list}">
+				<div class="empty-box">등록된 핫딜 상품이 없습니다.</div>
+			</c:if>
 
-				<select name="sort" id="sort" class="hotdeal-select">
-					<option value="">최신순</option>
-					<option value="popular">인기순</option>
-				</select>
-
-				<button type="submit" class="hotdeal-search-btn">검색</button>
-			</div>
-		</form>
-
-		<c:if test="${empty list}">
-			<div class="empty-box">등록된 핫딜 상품이 없습니다.</div>
-		</c:if>
-
-		<c:if test="${!empty list}">
-			<div class="hotdeal-grid">
-				<c:forEach items="${list}" var="vo">
-					<div class="hotdeal-item" data-id="${vo.dealId}">
-						<div class="hotdeal-thumb">
-							<c:choose>
-								<c:when test="${!empty vo.imageUrl}">
-									<img src="${vo.imageUrl}" alt="${vo.title}">
-								</c:when>
-								<c:otherwise>
-									<img src="${pageContext.request.contextPath}/images/no-image.png" alt="이미지 없음">
-								</c:otherwise>
-							</c:choose>
-						</div>
-
-						<div class="hotdeal-body">
-							<div class="hotdeal-title">${vo.title}</div>
-
-							<div class="hotdeal-shop">${vo.shopName}</div>
-
-							<div class="hotdeal-price-row">
-								<div class="hotdeal-price">${vo.price}원</div>
-								<div class="hotdeal-original">${vo.originalPrice}원</div>
-							</div>
-
-							<div class="hotdeal-bottom">
-								<div class="discount-badge">${vo.discountRate}% 할인</div>
-
+			<c:if test="${!empty list}">
+				<div class="hotdeal-grid">
+					<c:forEach items="${list}" var="vo">
+						<div class="hotdeal-item" data-id="${vo.dealId}">
+							<div class="hotdeal-thumb">
 								<c:choose>
-									<c:when test="${vo.addedToShopping eq 'Y'}">
-										<span class="add-done">추가완료</span>
+									<c:when test="${!empty vo.imageUrl}">
+										<img
+											src="${pageContext.request.contextPath}/upload/hotdeal/${vo.imageUrl}"
+											alt="${vo.title}"
+											onerror="this.src='${pageContext.request.contextPath}/upload/hotdeal/default.png'">
 									</c:when>
 									<c:otherwise>
-										<a href="${pageContext.request.contextPath}/hotdeal/addShopping.do?dealId=${vo.dealId}"
-										   class="add-btn">+ 장보기 추가</a>
+										<img
+											src="${pageContext.request.contextPath}/upload/hotdeal/default.png"
+											alt="기본 이미지">
 									</c:otherwise>
 								</c:choose>
 							</div>
-						</div>
-					</div>
-				</c:forEach>
-			</div>
-		</c:if>
 
+							<div class="hotdeal-body">
+								<div class="hotdeal-title">${vo.title}</div>
+
+								<div class="hotdeal-shop">${vo.shopName}</div>
+
+								<div class="hotdeal-price-row">
+									<div class="hotdeal-price">${vo.price}원</div>
+									<div class="hotdeal-original">${vo.originalPrice}원</div>
+								</div>
+
+								<div class="hotdeal-bottom">
+									<div class="discount-badge">
+										<fmt:formatNumber value="${vo.discountRate}" pattern="0" />
+										%할인
+									</div>
+									<c:choose>
+										<c:when test="${vo.addedToShopping eq 'Y'}">
+											<span class="add-done">추가완료</span>
+										</c:when>
+										<c:otherwise>
+											<a
+												href="${pageContext.request.contextPath}/hotdeal/addShopping.do?dealId=${vo.dealId}"
+												class="add-btn">+ 장보기 추가</a>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+			</c:if>
+
+		</div>
 	</div>
-</div>
 
 </body>
 </html>

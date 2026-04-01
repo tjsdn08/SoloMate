@@ -1,5 +1,8 @@
 package com.solomate.adminhotdeal.controller;
 
+import java.io.File;
+import java.util.UUID;
+
 import com.solomate.hotdeal.vo.HotDealVO;
 import com.solomate.main.controller.Controller;
 import com.solomate.main.controller.Init;
@@ -7,6 +10,7 @@ import com.solomate.main.service.Execute;
 import com.solomate.util.page.PageObject;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 
 public class AdminHotDealController implements Controller {
 
@@ -57,7 +61,7 @@ public class AdminHotDealController implements Controller {
 			case "/adminHotDeal/write.do":
 
 				HotDealVO writeVO = new HotDealVO();
-				setData(request, writeVO);
+				setData(request, writeVO, false);
 
 				Integer writeResult = (Integer) Execute.execute(Init.getService(uri), writeVO);
 
@@ -79,7 +83,7 @@ public class AdminHotDealController implements Controller {
 
 				HotDealVO updateVO = new HotDealVO();
 				updateVO.setDealId(Long.parseLong(request.getParameter("dealId")));
-				setData(request, updateVO);
+				setData(request, updateVO, true);
 
 				Integer updateResult = (Integer) Execute.execute(Init.getService(uri), updateVO);
 
@@ -122,13 +126,22 @@ public class AdminHotDealController implements Controller {
 		}
 	}
 
-	private void setData(HttpServletRequest request, HotDealVO vo) {
+	private void setData(HttpServletRequest request, HotDealVO vo, boolean isUpdate) throws Exception {
 		vo.setCategoryId(Long.parseLong(request.getParameter("categoryId")));
 		vo.setTitle(request.getParameter("title"));
-		vo.setPrice(Long.parseLong(request.getParameter("price")));
-		vo.setOriginalPrice(Long.parseLong(request.getParameter("originalPrice")));
-		vo.setDiscountRate(Double.parseDouble(request.getParameter("discountRate")));
-		vo.setImageUrl(request.getParameter("imageUrl"));
+
+		Long price = Long.parseLong(request.getParameter("price"));
+		Long originalPrice = Long.parseLong(request.getParameter("originalPrice"));
+
+		vo.setPrice(price);
+		vo.setOriginalPrice(originalPrice);
+
+		double discountRate = 0;
+		if (originalPrice > 0 && originalPrice >= price) {
+			discountRate = Math.round((originalPrice - price) * 100.0 / originalPrice);
+		}
+		vo.setDiscountRate(discountRate);
+
 		vo.setShopName(request.getParameter("shopName"));
 		vo.setSellerName(request.getParameter("sellerName"));
 		vo.setDealUrl(request.getParameter("dealUrl"));
@@ -140,5 +153,52 @@ public class AdminHotDealController implements Controller {
 			status = "ACTIVE";
 		}
 		vo.setStatus(status);
+
+		// 이미지 처리
+		Part imagePart = request.getPart("imageFile");
+		String imageFileName = null;
+
+		if (imagePart != null && imagePart.getSize() > 0) {
+			String originalFileName = imagePart.getSubmittedFileName();
+
+			if (originalFileName != null && !originalFileName.trim().equals("")) {
+				String ext = "";
+				int dotIdx = originalFileName.lastIndexOf(".");
+				if (dotIdx != -1) {
+					ext = originalFileName.substring(dotIdx);
+				}
+
+				String saveFileName = UUID.randomUUID().toString() + ext;
+
+				String uploadPath = request.getServletContext().getRealPath("/upload/hotdeal");
+				File uploadDir = new File(uploadPath);
+				if (!uploadDir.exists()) {
+					uploadDir.mkdirs();
+				}
+
+				imagePart.write(uploadPath + File.separator + saveFileName);
+				imageFileName = saveFileName;
+			}
+		}
+
+		// 등록일 때
+		if (!isUpdate) {
+			if (imageFileName == null) {
+				imageFileName = "default.png";
+			}
+			vo.setImageUrl(imageFileName);
+		}
+		// 수정일 때
+		else {
+			if (imageFileName != null) {
+				vo.setImageUrl(imageFileName);
+			} else {
+				String oldImageUrl = request.getParameter("oldImageUrl");
+				if (oldImageUrl == null || oldImageUrl.trim().equals("")) {
+					oldImageUrl = "default.png";
+				}
+				vo.setImageUrl(oldImageUrl);
+			}
+		}
 	}
 }

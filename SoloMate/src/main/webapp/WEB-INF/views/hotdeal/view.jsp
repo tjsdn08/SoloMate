@@ -16,7 +16,7 @@
 	background: #fff;
 	border-radius: 18px;
 	padding: 28px;
-	box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .view-grid {
@@ -95,8 +95,7 @@
 	margin-bottom: 24px;
 }
 
-.info-table th,
-.info-table td {
+.info-table th, .info-table td {
 	padding: 14px 10px;
 	border-bottom: 1px solid #ececec;
 	text-align: left;
@@ -125,9 +124,7 @@
 	align-items: center;
 }
 
-.btn-main,
-.btn-sub,
-.btn-done {
+.btn-main, .btn-sub, .btn-done {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -154,8 +151,7 @@
 	color: #fff;
 }
 
-.btn-main:hover,
-.btn-sub:hover {
+.btn-main:hover, .btn-sub:hover {
 	text-decoration: none;
 	opacity: 0.93;
 	color: inherit;
@@ -164,101 +160,112 @@
 </head>
 <body>
 
-<div class="view-page">
-	<div class="view-card">
+	<div class="view-page">
+		<div class="view-card">
 
-		<c:if test="${empty vo}">
-			<div class="alert alert-warning">존재하지 않는 핫딜 상품입니다.</div>
-			<a href="${pageContext.request.contextPath}/hotdeal/list.do" class="btn btn-secondary">목록</a>
-		</c:if>
+			<c:if test="${empty vo}">
+				<div class="alert alert-warning">존재하지 않는 핫딜 상품입니다.</div>
+				<a href="${pageContext.request.contextPath}/hotdeal/list.do"
+					class="btn btn-secondary">목록</a>
+			</c:if>
 
-		<c:if test="${!empty vo}">
-			<div class="view-grid">
+			<c:if test="${!empty vo}">
+				<div class="view-grid">
 
-				<div class="view-thumb">
-					<c:choose>
-						<c:when test="${!empty vo.imageUrl}">
-							<img src="${vo.imageUrl}" alt="${vo.title}">
-						</c:when>
-						<c:otherwise>
-							<img src="${pageContext.request.contextPath}/images/no-image.png" alt="이미지 없음">
-						</c:otherwise>
-					</c:choose>
-				</div>
-
-				<div>
-					<div class="view-title">${vo.title}</div>
-
-					<div class="meta-badge">${vo.shopName}</div>
-
-					<div class="price-row">
-						<div class="price-main">${vo.price}원</div>
-						<div class="price-original">${vo.originalPrice}원</div>
-					</div>
-
-					<div class="discount-badge">${vo.discountRate}% 할인</div>
-
-					<table class="info-table">
-						<tr>
-							<th>카테고리</th>
-							<td>${vo.categoryName}</td>
-						</tr>
-						<tr>
-							<th>판매처</th>
-							<td>${vo.shopName}</td>
-						</tr>
-						<tr>
-							<th>판매자</th>
-							<td>${vo.sellerName}</td>
-						</tr>
-						<tr>
-							<th>종료일</th>
-							<td>${vo.endDate}</td>
-						</tr>
-						<tr>
-							<th>조회수</th>
-							<td>${vo.viewCount}</td>
-						</tr>
-					</table>
-
-					<div class="view-desc">
+					<div class="view-thumb">
 						<c:choose>
-							<c:when test="${!empty vo.description}">
-								${vo.description}
+							<c:when test="${!empty vo.imageUrl}">
+								<img
+									src="${pageContext.request.contextPath}/upload/hotdeal/${vo.imageUrl}"
+									alt="${vo.title}"
+									onerror="this.src='${pageContext.request.contextPath}/upload/hotdeal/default.png'">
 							</c:when>
 							<c:otherwise>
-								상품 설명이 없습니다.
+								<img
+									src="${pageContext.request.contextPath}/upload/hotdeal/default.png"
+									alt="기본 이미지">
 							</c:otherwise>
 						</c:choose>
 					</div>
 
-					<div class="bottom-btns">
-						<div>
+					<div>
+						<div class="view-title">${vo.title}</div>
+
+						<div class="meta-badge">${vo.shopName}</div>
+
+						<div class="price-row">
+							<div class="price-main">${vo.price}원</div>
+							<div class="price-original">${vo.originalPrice}원</div>
+						</div>
+
+						<div class="discount-badge">
+							<fmt:formatNumber value="${vo.discountRate}" pattern="0" />
+							% 할인
+						</div>
+						<table class="info-table">
+							<tr>
+								<th>카테고리</th>
+								<td>${vo.categoryName}</td>
+							</tr>
+							<tr>
+								<th>판매처</th>
+								<td>${vo.shopName}</td>
+							</tr>
+							<tr>
+								<th>판매자</th>
+								<td>${vo.sellerName}</td>
+							</tr>
+							<tr>
+								<th>종료일</th>
+								<td>${vo.endDate}</td>
+							</tr>
+							<tr>
+								<th>조회수</th>
+								<td>${vo.viewCount}</td>
+							</tr>
+						</table>
+
+						<div class="view-desc">
 							<c:choose>
-								<c:when test="${vo.addedToShopping eq 'Y'}">
-									<span class="btn-done">추가완료</span>
-								</c:when>
+								<c:when test="${!empty vo.description}">
+								${vo.description}
+							</c:when>
 								<c:otherwise>
-									<a href="${pageContext.request.contextPath}/hotdeal/addShopping.do?dealId=${vo.dealId}"
-									   class="btn-main">+ 장보기 추가</a>
-								</c:otherwise>
+								상품 설명이 없습니다.
+							</c:otherwise>
 							</c:choose>
-
-							<a href="${vo.dealUrl}" target="_blank" class="btn-main">구매하러 가기</a>
 						</div>
 
-						<div>
-							<a href="${pageContext.request.contextPath}/hotdeal/list.do" class="btn-sub">목록</a>
+						<div class="bottom-btns">
+							<div>
+								<c:choose>
+									<c:when test="${vo.addedToShopping eq 'Y'}">
+										<span class="btn-done">추가완료</span>
+									</c:when>
+									<c:otherwise>
+										<a
+											href="${pageContext.request.contextPath}/hotdeal/addShopping.do?dealId=${vo.dealId}"
+											class="btn-main">+ 장보기 추가</a>
+									</c:otherwise>
+								</c:choose>
+
+								<a href="${vo.dealUrl}" target="_blank" class="btn-main">구매하러
+									가기</a>
+							</div>
+
+							<div>
+								<a href="${pageContext.request.contextPath}/hotdeal/list.do"
+									class="btn-sub">목록</a>
+							</div>
 						</div>
+
 					</div>
 
 				</div>
+			</c:if>
 
-			</div>
-		</c:if>
-
+		</div>
 	</div>
-</div>
 
 </body>
 </html>
