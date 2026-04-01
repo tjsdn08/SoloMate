@@ -262,9 +262,9 @@ public class Init extends HttpServlet {
 
 
 		// -- Service에 DAO를 조립 (의존성 주입)
-		serviceMap.get("/boardbookmark/list.do").setDAO(daoMap.get("boardBookmarkDAO"));
-		serviceMap.get("/boardbookmark/write.do").setDAO(daoMap.get("boardBookmarkDAO"));
-		serviceMap.get("/boardbookmark/delete.do").setDAO(daoMap.get("boardBookmarkDAO"));
+		serviceMap.get("/boardbookmark/list.do").setDAO(daoMap.get("boardbookmarkDAO"));
+		serviceMap.get("/boardbookmark/write.do").setDAO(daoMap.get("boardbookmarkDAO"));
+		serviceMap.get("/boardbookmark/delete.do").setDAO(daoMap.get("boardbookmarkDAO"));
 
 		
 		
