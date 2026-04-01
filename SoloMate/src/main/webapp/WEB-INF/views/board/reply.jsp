@@ -55,8 +55,8 @@ $(function(){
     });
 
     $("#replyBody").on("click","#replyUpdateBtn", function(){
-        $("#modalReplyRno").val($(this).closest(".reply-item").find(".rno").text());
-        $("#modalReplyContent").val($(this).closest(".reply-item").find(".reply-content").text());
+		$("#modalReplyRno").val($(this).closest(".dataRow").find(".rno").text());
+		$("#modalReplyContent").val($(this).closest(".dataRow").find(".content>pre").text());
 
         $("#modalReplyWriteBtn").hide();
         $("#modalReplyUpdateBtn").show();
@@ -68,7 +68,7 @@ $(function(){
         let content = $("#modalReplyContent").val();
 
         let replyObj={"rno":rno, "content":content};
-
+        console.log("replyObj = "+JSON.stringify(replyObj));
         reply.update(replyObj);
 
         $("#replyWriteModal").modal("hide");
@@ -77,14 +77,14 @@ $(function(){
     });
 
     $("#replyBody").on("click", "#replyDeleteBtn", function(){
-        let rno=$(this).closest(".reply-item").find(".rno").text();
+		let rno=$(this).closest(".dataRow").find(".rno").text();
 
         if(!confirm("댓글을 삭제하시겠습니까?")) return;
 
         page=reply.delete(rno, page);
         reply.list(no, page);
     });
-});
+})
 </script>
 
 <div class="card mt-5">
