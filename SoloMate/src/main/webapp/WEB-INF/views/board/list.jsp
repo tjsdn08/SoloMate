@@ -121,6 +121,7 @@
 				<th>작성자</th>
 				<th>작성일</th>
 				<th>조회수</th>
+				<th>댓글</th>
 				<th>북마크</th>
 			</tr>
 		</thead>
@@ -128,7 +129,7 @@
 		<tbody>
 			<c:if test="${empty list }">
 				<tr>
-					<td colspan="6">데이터가 존재하지 않습니다</td>
+					<td colspan="7">데이터가 존재하지 않습니다</td>
 				</tr>
 			</c:if>
 			<c:if test="${!empty list }">
@@ -139,6 +140,7 @@
 						<td>${vo.writer }</td>
 						<td>${vo.writeDate }</td>
 						<td>${vo.hit }</td>
+						<td>${vo.replyCnt}</td>
 						<td>${vo.bookmark }</td>
 					</tr>
 				</c:forEach>

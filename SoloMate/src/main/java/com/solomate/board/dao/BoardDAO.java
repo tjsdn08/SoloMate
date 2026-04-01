@@ -15,18 +15,29 @@ public class BoardDAO extends DAO{
 	public List<BoardVO> list(PageObject pageObject) throws Exception {
 		List<BoardVO> list=new ArrayList<>();
 		con=DB.getConnection();
-		String sql = "select b.no, b.title, b.writer, "
-		        + " to_char(b.writeDate, 'yyyy-mm-dd') writeDate, "
-		        + " b.hit, NVL(count(m.bookmarkNo),0) bookmark "
-		        + " from board b "
-		        + " left join board_bookmark m on b.no = m.boardNo ";
+		// 1. 가장 안쪽의 원본 데이터 추출 쿼리 (조인 및 집계)
+		String sql = "select b.no, b.title, b.writer, b.writeDate, b.hit, "
+		           + " count(distinct m.bookmarkNo) bookmark, " // 북마크 개수 (중복방지)
+		           + " count(distinct r.rno) replyCnt "         // 댓글 개수 (중복방지)
+		           + " from board b "
+		           + " left join board_bookmark m on b.no = m.boardNo "
+		           + " left join board_reply r on b.no = r.no ";
+
+		// 2. 검색 조건 추가 (search 메서드 호출)
 		sql += search(pageObject);
+
+		// 3. 그룹화 및 정렬
 		sql += " group by b.no, b.title, b.writer, b.writeDate, b.hit ";
 		sql += " order by b.no desc";
-		sql = "select rownum rnum, no, title, writer, writeDate, hit, bookmark " 
-			+ " from(" + sql + ")";
-		sql = "select rnum, no, title, writer, writeDate, hit, bookmark "
-			+ " from(" + sql + ") where rnum between ? and ?";
+
+		// 4. 페이징 처리를 위한 2단계 (rownum 부여)
+		sql = "select rownum rnum, no, title, writer, writeDate, hit, bookmark, replyCnt " 
+		    + " from (" + sql + ")";
+
+		// 5. 페이징 처리를 위한 3단계 (페이지 범위 필터링 및 날짜 포맷)
+		sql = "select rnum, no, title, writer, "
+		    + " to_char(writeDate, 'yyyy-mm-dd') writeDate, hit, bookmark, replyCnt "
+		    + " from (" + sql + ") where rnum between ? and ?";
 		pstmt = con.prepareStatement(sql);
 		int idx = 1;
 		idx = searchDataSet(pstmt, idx, pageObject);
@@ -42,6 +53,7 @@ public class BoardDAO extends DAO{
 				vo.setWriteDate(rs.getString("writeDate"));
 				vo.setHit(rs.getLong("hit"));
 				vo.setBookmark(rs.getLong("bookmark"));
+				vo.setReplyCnt(rs.getInt("replyCnt"));
 				list.add(vo);
 			} // while() 끝
 		} // if의 끝
