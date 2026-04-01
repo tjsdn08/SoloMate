@@ -5,125 +5,172 @@
 <head>
 <meta charset="UTF-8">
 <title>회원 가입</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+$(function(){
+    let idCheck = false;  // 아이디 중복 체크 통과 여부
+    let pwCheck = false;  // 비밀번호 양식 및 일치 여부
+    let telCheck = false; // 연락처 체크 통과 여부
+    
+    // 1. 등록 폼 제출 전 최종 검사
+    $("#writeForm").submit(function(){
+        if(!idCheck){
+            alert("아이디 중복 확인을 완료해야 합니다.");
+            $("#checkIdBtn").focus(); 
+            return false;
+        }
+        if(!pwCheck){
+            alert("비밀번호 양식(4~20자)과 일치 여부를 확인하세요.");
+            $("#pw").focus();
+            return false;
+        }
+        if(!telCheck){
+            alert("연락처를 형식(010-0000-0000)에 맞게 입력하세요.");
+            $("#tel").focus();
+            return false;
+        }
+    });
+
+    // 2. 아이디 중복 확인 버튼 클릭 이벤트
+    $("#checkIdBtn").click(function(){
+        let id = $("#id").val();
+        
+        let idReg = /^[a-zA-Z][a-zA-Z0-9]{3,19}$/;
+        
+        if(!idReg.test(id)) {
+            alert("아이디는 영문으로 시작하는 4~20자 영숫자여야 합니다.");
+            $("#id").focus();
+            return;
+        }
+
+        $.ajax({
+            url: "checkId.do?id=" + id,
+            success: function(result){ 
+                console.log("서버 결과: [" + result + "]");
+                if(result.trim() == "1" || result.trim() == "true"){ 
+                     $("#idMsg").removeClass("alert-success alert-secondary").addClass("alert-danger")
+                                .text("이미 사용 중인 아이디입니다.");
+                     idCheck = false;
+                } else { 
+                     $("#idMsg").removeClass("alert-danger alert-secondary").addClass("alert-success")
+                                .text("사용 가능한 아이디입니다.");
+                     idCheck = true;
+                }
+            }
+        });
+    });
+
+    // 3. 아이디를 수정하면 다시 중복 체크를 하도록 리셋
+    $("#id").on("input", function(){
+        idCheck = false; // 체크 상태 해제
+        $("#idMsg").removeClass("alert-success alert-danger").addClass("alert-secondary")
+                   .text("아이디가 변경되었습니다. 다시 중복 확인을 해주세요.");
+    });
+
+    // 4. 비밀번호 실시간 체크
+    function checkPassword() {
+        let pw = $("#pw").val();
+        let pw2 = $("#pw2").val();
+        let pwReg = /^.{4,20}$/; 
+
+        if(!pwReg.test(pw)) {
+            $("#pwMsg").removeClass("alert-success").addClass("alert-danger").text("비밀번호는 4~20자 사이여야 합니다.");
+            pwCheck = false;
+        } else {
+            $("#pwMsg").removeClass("alert-danger").addClass("alert-success").text("사용 가능한 비밀번호 양식입니다.");
+            
+            // 비밀번호 확인 칸에 입력이 있을 때만 일치 여부 표시
+            if(pw2.length > 0) {
+                if(pw !== pw2) {
+                    $("#pw2Msg").removeClass("alert-success").addClass("alert-danger").text("비밀번호가 일치하지 않습니다.");
+                    pwCheck = false;
+                } else {
+                    $("#pw2Msg").removeClass("alert-danger").addClass("alert-success").text("비밀번호가 일치합니다.");
+                    pwCheck = true;
+                }
+            }
+        }
+    }
+
+    $("#pw, #pw2").on("keyup input", function(){
+        checkPassword();
+    });
+
+    // 5. 연락처 유효성 검사
+    $("#tel").on("keyup input", function(){
+        let tel = $(this).val();
+        let telReg = /^010-\d{3,4}-\d{4}$/;
+
+        if(!telReg.test(tel)) {
+            $("#telMsg").removeClass("alert-success").addClass("alert-danger")
+                        .text("형식에 맞지 않습니다. (010-0000-0000)");
+            telCheck = false;
+        } else {
+            $("#telMsg").removeClass("alert-danger").addClass("alert-success")
+                        .text("올바른 연락처 형식입니다.");
+            telCheck = true;
+        }
+    });
+
+    $(".cancelBtn").click(function(){ history.back(); });
+});
+</script>
 </head>
-  <script type="text/javascript">
-  $(function(){
-	    let idCheck = false; // 중복 체크 통과 여부
-	    
-	    $("#writeForm").submit(function(){
-	        if($("#pw").val() !== $("#pw2").val()){
-	            alert("비밀번호와 비밀번호 확인이 같지 않습니다.");
-	            $("#pw, #pw2").val("").focus();
-	            return false;
-	        }
-	        if(!idCheck){
-	            alert("아이디 중복 체크를 통과해야 합니다.");
-	            $("#id").focus();
-	            return false;
-	        }
-	    });
+<body class="container">
+    <h2 class="mt-5 pt-5 mb-4">🍯 회원 가입</h2>
 
-	    $(".cancelBtn").click(function(){
-	        history.back();
-	    });
-		  $("#id").keyup(function(){
-			  idCheck = false;
-			 // alert($("#id").val());
-			 let id = $(this).val();
-			 let len = id.length;
-			 // alert(len);
-			 if(len == 0) { // 아무 것도 입력을 안한 경우
-				 $("#idMsg").removeClass("alert-danger alert-success");
-				 $("#idMsg").addClass("alert-danger");
-				 $("#idMsg").text(" 아이디를 반드시 입력하셔야 합니다.");
-			 } else if(len < 4) { // 1~3 까지의 처리
-				 $("#idMsg").removeClass("alert-danger alert-success");
-				 $("#idMsg").addClass("alert-danger");
-				 $("#idMsg").text(" 아이디는 4자 이상 입력하셔야 합니다.");
-			 } else { // 4자 이상이므로 서버에 갔다가 와야한다. - ajax(비동식) 처리를 한다.
-				  $.ajax(
-					// JSON 데이터 ->
-					{
-						url: "checkId.do?id=" + id, // 서버에 비동기식으로 요청 URI
-						// 서버가 정상적으로 동작했을 때 처리 메서드
-						success: function(result){ 
-							// 데이터를 확인하기 위해서 출력하는 방법 2가지. alert() - 경고 창, console.log() - F12 : console 탭에 출력 
-					    	// alert(result);
-							console.log("[" + result + "]");
-					    	if(result){ // id가 중복이 된경우 lenth가 0보다 크다.
-								 $("#idMsg").removeClass("alert-danger alert-success");
-								 $("#idMsg").addClass("alert-danger");
-								 $("#idMsg").text(" 아이디(" + id + ")는 중복된 아이디입니다. 사용할 수 없습니다.");
-					    	} else { // 중복되지 않은 id 인 경우 lenth가 0이 나온다.
-								 $("#idMsg").removeClass("alert-danger alert-success");
-								 $("#idMsg").addClass("alert-success");
-								 $("#idMsg").text(" 아이디(" + id + ")는 사용 가능합니다.");
-								 idCheck = true;
-					    	}
-					    	
-					  	}, // success의 끝
-						// 서버가 오류가 나면 처리 메서드
-					  	error: function(xhr,status,error){
-					  		console.log("xhr=" + xhr + ", status=" + status + ", error=" + error);
-					  	} // error의 끝
-					} // JSON 데이터 끝
-				); // $.ajax의 끝
-			 } // if else의 끝
-			 
-		  }); //$("#id").keyup() 의 끝
-  </script>
-<body>
-<h2>회원 가입</h2>
-	<form action="write.do" method="post" id="writeForm">
-	  <div class="mb-3 mt-3">
-	    <label for="id" class="form-label">아이디</label>
-	    <input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요." name="id"
-	     title="아이디는 영문부터 영숫자만 4~20 사이로 입력하셔야 합니다." required autofocus maxlength="20"
-	     pattern="[a-zA-Z][a-zA-Z0-9]{3,19}" >
-	    <div class="alert alert-danger" id="idMsg">
-		  아이디는 필수 입력 사항입니다.
-		</div>
-	  </div>
-	  
- 	  <div class="mb-3">
-	    <label for="pw" class="form-label">비밀번호</label>
-	    <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력하세요."
-	     title="비밀번호는 4~20자 사이로 입력하셔야 합니다." maxlength="20"
-	     name="pw" required pattern=".{4,20}">
-	  </div>
-	  
-	  <div class="mb-3">
-	    <label for="pw2" class="form-label">비밀번호 확인</label>
-	    <input type="password" class="form-control" id="pw2" placeholder="비밀번호 확인을 입력하세요."
-	     title="비밀번호확인은 4~20자 사이로 입력하셔야 합니다." maxlength="20"
-	     required pattern=".{4,20}">
-	  </div>	
-	  
-	
-	  <div class="mb-3 mt-3">
-	    <label for="name" class="form-label">이름</label>
-	    <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요."
-	     title = "이름은 2~10자 한글로 입력하세요." pattern="[가-힣]{2,10}"
-	     maxlength="10" name="name" required>
-	  </div>
-	  
-	  <div class="mb-3 mt-3">
-	    <label for="tel" class="form-label">연락처</label>
-	    <input type="tel" class="form-control" id="tel" placeholder="연락처를 입력하세요."
-	     title="02-xxx-xxxx 또는 010-xxxx-xxxx 형식으로 입력하세요."
-	     name="tel" pattern="0\d{1,2}-\d{3,4}-\d{4}">
-	  </div>
-	  
-	<div class="mb-3 mt-3">
-	  <label for="address" class="form-label">주소</label>
-	  <input type="text" class="form-control" id="address" placeholder="주소를 입력하세요."
-	   title="주소는 상세 주소를 포함하여 100자 이내로 입력하세요."
-	   maxlength="100" name="address" required>
+    <form action="write.do" method="post" id="writeForm" class="card p-4 shadow-sm">
+	<div class="mb-3">
+	    <label for="id" class="form-label fw-bold">아이디</label>
+	    <div class="input-group">
+	        <input type="text" class="form-control" id="id" name="id" 
+	               placeholder="4~20자 영문, 숫자" required maxlength="20" 
+	               pattern="[a-zA-Z][a-zA-Z0-9]{3,19}">
+	        <button class="btn btn-outline-dark" type="button" id="checkIdBtn">중복 확인</button>
+	    </div>
+	    <div class="alert alert-secondary mt-2 py-2" id="idMsg">
+	        아이디 중복 확인을 해주세요.
+	    </div>
 	</div>
+      
+      <div class="mb-3">
+        <label for="pw" class="form-label fw-bold">비밀번호</label>
+        <input type="password" class="form-control" id="pw" name="pw" required maxlength="20">
+        <div class="alert alert-danger mt-2 py-2" id="pwMsg">비밀번호는 4~20자 사이여야 합니다.</div>
+      </div>
+      
+      <div class="mb-3">
+        <label for="pw2" class="form-label fw-bold">비밀번호 확인</label>
+        <input type="password" class="form-control" id="pw2" required maxlength="20">
+        <div class="alert alert-danger mt-2 py-2" id="pw2Msg">비밀번호를 한 번 더 입력하세요.</div>
+      </div>    
+      
+      <div class="mb-3">
+        <label for="name" class="form-label fw-bold">이름</label>
+        <input type="text" class="form-control" id="name" name="name" required pattern="[가-힣]{2,10}">
+      </div>
+      
+	<div class="mb-3">
+	    <label for="tel" class="form-label fw-bold">연락처</label>
+	    <input type="tel" class="form-control" id="tel" name="tel" 
+	           placeholder="010-0000-0000" required 
+	           title="010-xxxx-xxxx 형식으로 입력하세요."
+	           maxlength="13">
+	    <div class="alert alert-danger mt-2 py-2" id="telMsg">연락처는 필수 입력 사항입니다.</div>
+	</div>
+	
+      <div class="mb-4">
+        <label for="address" class="form-label fw-bold">주소</label>
+        <input type="text" class="form-control" id="address" name="address" required>
+      </div>
 
-	  <button type="submit" class="btn btn-primary">등록</button>
-	  <button type="reset" class="btn btn-warning">초기화</button>
-	  <button type="button" class="cancelBtn btn btn-secondary">취소</button>
-	</form>
+      <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-dark px-4">등록</button>
+          <button type="reset" class="btn btn-outline-secondary">초기화</button>
+          <button type="button" class="cancelBtn btn btn-link text-decoration-none text-muted">취소</button>
+      </div>
+    </form>
 </body>
 </html>

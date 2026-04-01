@@ -69,6 +69,11 @@ public class MemberController implements Controller {
 					session.setAttribute("msg", "회원 가입이 완료되었습니다. 로그인 해주세요.");
 					return "redirect:/member/loginForm.do";
 
+				case "/member/checkId.do":
+				    Integer idCount = (Integer) Execute.execute(Init.getService(uri), request.getParameter("id"));
+				    request.setAttribute("result", idCount);
+				    return "member/checkId"; // checkId.jsp로 보냄
+					
 				// 관리자 회원리스트
 				case "/member/list.do":
 					if (loginVO == null || loginVO.getGradeNo() != 9) {
