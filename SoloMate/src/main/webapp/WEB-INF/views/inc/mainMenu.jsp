@@ -10,20 +10,23 @@
 		</button>
 		<div class="collapse navbar-collapse" id="mynavbar">
 			<ul class="navbar-nav me-auto">
-				<li class="nav-item"><a class="nav-link" href="/food/list.do">식품 관리</a>
-				</li>
-				<li class="nav-item"><a class="nav-link" href="/shopping/list.do">장보기 계획</a>
-				</li>
-				<li class="nav-item"><a class="nav-link" href="/board/list.do">꿀팁 아카이브</a>
-				</li>
-				<li class="nav-item"><a class="nav-link" href="/hotdeal/list.do">핫딜 관리</a>
-				</li>
-				<li class="nav-item"><a class="nav-link" href="/folder/list.do">식품 폴더 관리</a>
-				</li>
-				<li class="nav-item"><a class="nav-link" href="/recipes/list.do">레시피 아카이브</a>
-				</li>
+				<li class="nav-item"><a class="nav-link" href="/food/list.do">식품
+						관리</a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="/shopping/list.do">장보기 계획</a></li>
+				<li class="nav-item"><a class="nav-link" href="/board/list.do">꿀팁
+						아카이브</a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="/hotdeal/list.do">핫딜 관리</a></li>
+				<li class="nav-item"><a class="nav-link" href="/folder/list.do">식품
+						폴더 관리</a></li>
+				<li class="nav-item"><a class="nav-link"
+					href="/recipes/list.do">레시피 아카이브</a></li>
 				<c:if test="${!empty login && login.gradeNo == 9 }">
 					<!-- 관리자 메뉴 -->
+					<li class="nav-item"><a class="nav-link"
+						href="${pageContext.request.contextPath}/adminHotDeal/list.do">핫딜
+							관리</a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="/member/list.do">회원관리</a></li>
 				</c:if>
@@ -45,11 +48,9 @@
 				<!-- empty는 객체가 null이거나 length나 size가 0인 상태 -->
 				<c:if test="${!empty login }">
 					<!-- 로그인을 한 경우의 메뉴 시작 -->
-					<li class="nav-item">
-					    <a class="nav-link" href="/member/view.do?id=${login.id}">
-					        ${login.name}(${login.gradeName})
-					    </a>
-					</li>
+					<li class="nav-item"><a class="nav-link"
+						href="/member/view.do?id=${login.id}">
+							${login.name}(${login.gradeName}) </a></li>
 					<li class="nav-item"><a class="nav-link"
 						href="/member/logout.do">로그아웃</a></li>
 					<li class="nav-item"><a class="nav-link"
