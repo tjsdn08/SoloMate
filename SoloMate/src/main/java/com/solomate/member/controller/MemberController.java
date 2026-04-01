@@ -70,9 +70,9 @@ public class MemberController implements Controller {
 					return "redirect:/member/loginForm.do";
 
 				case "/member/checkId.do":
-				    Integer idCount = (Integer) Execute.execute(Init.getService(uri), request.getParameter("id"));
-				    request.setAttribute("result", idCount);
-				    return "member/checkId"; // checkId.jsp로 보냄
+				    Integer idResult = (Integer) Execute.execute(Init.getService(uri), request.getParameter("id"));
+				    request.setAttribute("result", idResult);
+				    return "member/checkId";
 					
 				// 관리자 회원리스트
 				case "/member/list.do":

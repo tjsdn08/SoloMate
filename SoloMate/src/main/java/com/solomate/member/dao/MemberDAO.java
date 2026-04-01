@@ -149,26 +149,23 @@ public class MemberDAO extends DAO{
 		return result;
 	}
 	
-	// 아이디 중복 체크
-	public String checkId(String inId) throws Exception {
-		String id = null;
-		
-		// 1.2.
-		con = DB.getConnection();
-		// 3
-		String sql = "select id from member where id = ?";
-		//4. 
-		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, inId);
-		// 5. 
-		rs = pstmt.executeQuery();
-		// 6.
-		if(rs != null && rs.next())
-			id = rs.getString("id");
-		// 7.
-		DB.close(con, pstmt, rs);
-		
-		return id;
+	// MemberDAO.java
+	public Integer checkId(String id) throws Exception {
+	    int result = 0; 
+	    try {
+	        con = DB.getConnection();
+	        String sql = "SELECT COUNT(*) FROM member WHERE id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        rs = pstmt.executeQuery();
+	        
+	        if(rs.next()) {
+	            result = rs.getInt(1);
+	        }
+	    } finally {
+	        DB.close(con, pstmt, rs);
+	    }
+	    return result; 
 	}
 	
 	
