@@ -11,6 +11,7 @@ public class BoardVO {
 	private long bookmark;
 	private String category;
 	private long bookmarked;
+	private int replyCnt;
 	public long getNo() {
 		return no;
 	}
@@ -65,11 +66,17 @@ public class BoardVO {
 	public void setBookmarked(long bookmarked) {
 		this.bookmarked = bookmarked;
 	}
+	public int getReplyCnt() {
+        return replyCnt;
+    }
+    public void setReplyCnt(int replyCnt) {
+        this.replyCnt = replyCnt;
+    }
 	@Override
 	public String toString() {
 		return "BoardVO [no=" + no + ", title=" + title + ", content=" + content + ", writer=" + writer + ", writeDate="
 				+ writeDate + ", hit=" + hit + ", bookmark=" + bookmark + ", category=" + category + ", bookmarked="
-				+ bookmarked + "]";
+				+ bookmarked + ", replyCnt=" + replyCnt + "]";
 	}
 	
 }

@@ -9,6 +9,7 @@ public class AccountVO {
 	private String content;
 	private String regDate;
 	private String type;
+	private String category;
 	public long getNo() {
 		return no;
 	}
@@ -51,11 +52,16 @@ public class AccountVO {
 	public void setType(String type) {
 		this.type = type;
 	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
 	@Override
 	public String toString() {
 		return "AccountVO [no=" + no + ", id=" + id + ", amount=" + amount + ", cno=" + cno + ", content=" + content
-				+ ", regDate=" + regDate + ", type=" + type + "]";
+				+ ", regDate=" + regDate + ", type=" + type + ", category=" + category + "]";
 	}
-	
 	
 }
