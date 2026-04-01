@@ -156,7 +156,8 @@ $(function(){
 
 <form id="bookmarkWriteForm" action="/boardbookmark/write.do" method="post">
     <input type="hidden" name="no" value="${vo.no}">
-    <input type="hidden" name="from" value="${param.from}">
+    <input type="hidden" name="from" value="${from}">
+	<input type="hidden" name="action" value="view">
     
     <input type="hidden" name="page" value="${param.page}">
     <input type="hidden" name="perPageNum" value="${param.perPageNum}">
@@ -164,7 +165,8 @@ $(function(){
 
 <form id="bookmarkDeleteForm" action="/boardbookmark/delete.do" method="post">
     <input type="hidden" name="no" value="${vo.no}">
-    <input type="hidden" name="from" value="${param.from}">
+    <input type="hidden" name="from" value="${from}">
+	<input type="hidden" name="action" value="view">
     
     <input type="hidden" name="page" value="${param.page}">
     <input type="hidden" name="perPageNum" value="${param.perPageNum}">

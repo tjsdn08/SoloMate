@@ -101,10 +101,10 @@
 				<td>${vo.regDate}</td>
 
 				<td>
-					<a href="${pageContext.request.contextPath}/boardbookmark/delete.do?no=${vo.boardNo}"
+					<a href="${pageContext.request.contextPath}/boardbookmark/delete.do?no=${vo.boardNo}&from=bookmark&page=${pageObject.page}&perPageNum=${pageObject.perPageNum}"
 					   class="btn btn-outline-dark btn-sm"
 					   onclick="event.stopPropagation(); return confirm('북마크 리스트에서 삭제하시겠습니까?');">
-						삭제
+					    삭제
 					</a>
 				</td>
 

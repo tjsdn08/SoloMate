@@ -77,35 +77,40 @@ public class BoardBookmarkController implements Controller {
 			    return "redirect:/board/view.do?" + query;
 			    
 			case "/boardbookmark/delete.do":
-			    // 1. 데이터 수집
 			    no = Long.parseLong(request.getParameter("no"));
-			    from = request.getParameter("from");
+			    from = request.getParameter("from");     // 어디서 왔는지
+			    String action = request.getParameter("action"); // 어디서 눌렀는지
 
 			    vo = new BoardBookmarkVO();
 			    vo.setBoardNo(no);
-			    vo.setId(id); // 세션의 로그인 ID
+			    vo.setId(id);
 
-			    // 2. 서비스 실행
 			    Execute.execute(Init.getService(uri), vo);
 
-			    // 3. 페이지 정보 수집 (리스트든 글보기든 공통으로 필요)
 			    String page = request.getParameter("page");
 			    String perPageNum = request.getParameter("perPageNum");
-			    
-			    // 4. 목적지 결정 (분기 처리)
-			    if ("bookmark".equals(from)) {
-			        // [케이스 A] 북마크 리스트에서 삭제한 경우 -> 다시 북마크 리스트로
-			        return "redirect:list.do?page=" + page + "&perPageNum=" + perPageNum;
-			    } else {
-			        // [케이스 B] 일반 글보기에서 북마크 취소한 경우 -> 다시 해당 글보기로
-			        query = "no=" + no + "&inc=0&page=" + page + "&perPageNum=" + perPageNum;
-			        
-			        // 만약 다른 곳에서 넘어온 from 정보가 있다면 유지
-			        if (from != null && !from.isEmpty()) {
+
+			    // 🔥 핵심 분기
+			    if ("view".equals(action)) {
+			        // 👉 글보기에서 클릭 → 다시 글보기
+			        query = "no=" + no 
+			                     + "&inc=0"
+			                     + "&page=" + page 
+			                     + "&perPageNum=" + perPageNum;
+
+			        // ⭐ from 유지 (이게 버튼 살리는 핵심)
+			        if(from != null && !from.isEmpty()) {
 			            query += "&from=" + from;
 			        }
+
 			        return "redirect:/board/view.do?" + query;
+			    } 
+			    else {
+			        // 👉 리스트에서 클릭 → 리스트
+			        return "redirect:/boardbookmark/list.do?page=" 
+			                + page + "&perPageNum=" + perPageNum;
 			    }
+			    
 				
 			default:
 				break;

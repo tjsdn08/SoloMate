@@ -206,10 +206,26 @@ public class BoardDAO extends DAO{
 	public Integer delete(BoardVO vo) throws Exception {
 		Integer result=0;
 		con=DB.getConnection();
-		String sql="delete from board where no=? and writer=?";
-		pstmt = con.prepareStatement(sql);
-		pstmt.setLong(1, vo.getNo());
-		pstmt.setString(2, vo.getWriter());
+		String sqlReply = "delete from board_reply where no = ?";
+        pstmt = con.prepareStatement(sqlReply);
+        pstmt.setLong(1, vo.getNo());
+        pstmt.executeUpdate();
+        pstmt.close();
+
+        // 2. 북마크 삭제 (board_bookmark)
+        String sqlBookmark = "delete from board_bookmark where boardNo = ?";
+        pstmt = con.prepareStatement(sqlBookmark);
+        pstmt.setLong(1, vo.getNo());
+        pstmt.executeUpdate();
+        pstmt.close();
+
+        // 3. 게시글 원본 삭제 (board) - 작성자 본인 확인 포함
+        // 보내주신 SQL 스타일처럼 변수를 활용해 깔끔하게 작성
+        String sqlBoard = "delete from board where no = ? and writer = ?";
+        
+        pstmt = con.prepareStatement(sqlBoard);
+        pstmt.setLong(1, vo.getNo());
+        pstmt.setString(2, vo.getWriter());
 		result=pstmt.executeUpdate();
 		DB.close(con, pstmt);
 		return result;

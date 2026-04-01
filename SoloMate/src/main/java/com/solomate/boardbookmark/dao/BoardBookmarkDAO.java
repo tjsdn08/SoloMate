@@ -59,7 +59,7 @@ public class BoardBookmarkDAO extends DAO{
 		return list;
 	}
 	
-	public long getTotalRow(String id) throws Exception {
+	public long getTotalRow(PageObject pageObject, String id) throws Exception {
 		long totalRow = 0;
 
 		con = DB.getConnection();
