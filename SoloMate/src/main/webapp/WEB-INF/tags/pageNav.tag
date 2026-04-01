@@ -46,22 +46,21 @@
 	</li>
 	
 	
-	<li data-page="${pageObject.startPage -1 }"  class="page-item">
-		<c:if test="${pageObject.startPage > 1 }">
-	  		<a href="${listURI }?page=${pageObject.startPage - 1 }&${pageObject.notPageQuery}${query}"
-	  		  title="click to move previous page group!" ${tooltip } 
-	  		  class="page-link">
-	  			<i class="fa fa-caret-left"></i>
-	  		</a>
-	  	</c:if>
-	  	<!--  li, a tag에 class를 disabled라고 붙이면 클릭이 안된다.(페이지 이동 불가) -->
-		<c:if test="${pageObject.startPage == 1 }">
-	  		<a href="#"  class="page-link disabled"
-	  		 ${noMove } ${tooltip }>
-	  			<i class="fa fa-caret-left" style="color: ${noLinkColor};"></i>
-	  		</a>
-	  	</c:if>
-  	</li>
+	<li data-page="${pageObject.page - 1 }" class="page-item">
+	    <c:if test="${pageObject.page > 1 }">
+	        <a href="${listURI }?page=${pageObject.page - 1 }&${pageObject.notPageQuery}${query}"
+	          title="click to move previous page!" ${tooltip } 
+	          class="page-link">
+	            <i class="fa fa-caret-left"></i>
+	        </a>
+	    </c:if>
+	    <c:if test="${pageObject.page == 1 }">
+	        <a href="#" class="page-link disabled"
+	         ${noMove } ${tooltip }>
+	            <i class="fa fa-caret-left" style="color: ${noLinkColor};"></i>
+	        </a>
+	    </c:if>
+	</li>
 	<c:forEach begin="${pageObject.startPage }" end="${pageObject.endPage }" var="cnt">
   	<li ${(pageObject.page == cnt)?"class=\"active page-item\"":" class=\"page-item\"" } 
   	 data-page=${cnt } >
@@ -78,21 +77,21 @@
   		</c:if>
   	</li>
 	</c:forEach>
-  	<li data-page="${pageObject.endPage + 1 }"  class="page-item">
-	<c:if test="${pageObject.endPage < pageObject.totalPage }">
-  		<a href="${listURI }?page=${pageObject.endPage + 1 }&${pageObject.notPageQuery}${query}"
-  		  title="click to move next page group!" ${tooltip }
-  		  class="page-link">
-  			<i class="fa fa-caret-right"></i>
-  		</a>
-  	</c:if>
-	<c:if test="${pageObject.endPage == pageObject.totalPage }">
-  		<a href="" onclick="return false" class="page-link"
-  		 ${noMove }  ${tooltip } >
-  			<i class="fa fa-caret-right" style="color: ${noLinkColor};"></i>
-  		</a>
-  	</c:if>
-  	</li>
+  	<li data-page="${pageObject.page + 1 }" class="page-item">
+	    <c:if test="${pageObject.page < pageObject.totalPage }">
+	        <a href="${listURI }?page=${pageObject.page + 1 }&${pageObject.notPageQuery}${query}"
+	          title="click to move next page!" ${tooltip }
+	          class="page-link">
+	            <i class="fa fa-caret-right"></i>
+	        </a>
+	    </c:if>
+	    <c:if test="${pageObject.page == pageObject.totalPage }">
+	        <a href="" onclick="return false" class="page-link"
+	         ${noMove } ${tooltip } >
+	            <i class="fa fa-caret-right" style="color: ${noLinkColor};"></i>
+	        </a>
+	    </c:if>
+	</li>
   	<li data-page="${pageObject.totalPage }"  class="page-item">
 	<c:if test="${pageObject.page < pageObject.totalPage }">
   		<a href="${listURI }?page=${pageObject.totalPage }&${pageObject.notPageQuery}${query}"
