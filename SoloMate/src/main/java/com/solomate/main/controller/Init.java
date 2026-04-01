@@ -70,6 +70,7 @@ import com.solomate.member.service.MemberReactivateService;
 import com.solomate.member.service.MemberSearchIdService;
 import com.solomate.member.service.MemberUpdateService;
 import com.solomate.member.service.MemberViewService;
+import com.solomate.member.service.MemberWriteService;
 import com.solomate.recipes.controller.RecipesController;
 import com.solomate.recipes.dao.RecipesDAO;
 import com.solomate.recipes.service.RecipesListService;
@@ -285,6 +286,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/member/delete.do", new MemberDeleteService());
 		serviceMap.put("/member/reactivate.do", new MemberReactivateService());
 		serviceMap.put("/member/checkId.do", new MemberCheckIdService());
+		serviceMap.put("/member/write.do", new MemberWriteService());
 
 //		// -- DAO 저장
 		daoMap.put("memberDAO", new MemberDAO());
@@ -301,6 +303,7 @@ public class Init extends HttpServlet {
 		serviceMap.get("/member/delete.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/reactivate.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
+		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
 
 		// 고승희 - 레시피 아카이브
 

@@ -119,7 +119,7 @@ $(function(){
 </script>
 </head>
 <body class="container">
-    <h2 class="mt-5 pt-5 mb-4">🍯 회원 가입</h2>
+    <h2 class="mt-5 pt-5 mb-4">👤 회원 가입</h2>
 
     <form action="write.do" method="post" id="writeForm" class="card p-4 shadow-sm">
 	<div class="mb-3">
