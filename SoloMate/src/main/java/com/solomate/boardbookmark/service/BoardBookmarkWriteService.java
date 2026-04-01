@@ -17,7 +17,8 @@ public class BoardBookmarkWriteService implements Service {
 
     @Override
     public Object service(Object obj) throws Exception {
-        BoardBookmarkVO vo = (BoardBookmarkVO) obj;
+    	Object[] objs = (Object[]) obj; 
+        BoardBookmarkVO vo = (BoardBookmarkVO) objs[0];
         
         // 1. 존재 여부 확인 (있으면 1 이상, 없으면 0)
         int check = dao.check(vo);
