@@ -69,6 +69,9 @@ import com.solomate.member.service.MemberReactivateService;
 import com.solomate.member.service.MemberSearchIdService;
 import com.solomate.member.service.MemberUpdateService;
 import com.solomate.member.service.MemberViewService;
+import com.solomate.recipes.controller.RecipesController;
+import com.solomate.recipes.dao.RecipesDAO;
+import com.solomate.recipes.service.RecipesListService;
 import com.solomate.shopping.controller.ShoppingController;
 import com.solomate.shopping.dao.ShoppingDAO;
 import com.solomate.shopping.service.ShoppingCancelService;
@@ -297,10 +300,10 @@ public class Init extends HttpServlet {
 
 		// 고승희 - 레시피 아카이브
 
-		// controllerMap.put("/recipes", new MemberRecipesController());
+		 controllerMap.put("/recipes", new RecipesController());
 
 		// -- Service 저장
-		// serviceMap.put("/recipes/list.do", new RecipesListService());
+		 serviceMap.put("/recipes/list.do", new RecipesListService());
 		// serviceMap.put("/recipes/view.do", new RecipesViewService());
 		// serviceMap.put("/recipes/update.do", new RecipesUpdateService());
 		// serviceMap.put("/recipes/write.do", new RecipesWriteService());
@@ -308,9 +311,9 @@ public class Init extends HttpServlet {
 		// serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
 
 		// -- DAO 저장
-//		daoMap.put("recipesDAO", new recipesDAO());
+		daoMap.put("recipesDAO", new RecipesDAO());
 //		 -- service
-//		serviceMap.get("/recipes/list.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/list.do").setDAO(daoMap.get("recipesDAO"));
 //		serviceMap.get("/recipes/view.do").setDAO(daoMap.get("recipesDAO"));
 //		serviceMap.get("/recipes/update.do").setDAO(daoMap.get("recipesDAO"));
 //		serviceMap.get("/recipes/write.do").setDAO(daoMap.get("recipesDAO"));

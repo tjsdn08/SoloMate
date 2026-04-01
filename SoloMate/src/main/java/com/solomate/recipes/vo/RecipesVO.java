@@ -9,10 +9,11 @@ public class RecipesVO {
 	private String food;
 	private String description;
 	private Integer recipes_time;
-	private Integer recipes_level;
+	private String recipes_level;
 	private String recipes_content;
 	private String recipes_writeDate;
 	private String recipes_updateDate;
+	private Long bookmark;
 	public Long getRecipes_no() {
 		return recipes_no;
 	}
@@ -55,10 +56,11 @@ public class RecipesVO {
 	public void setRecipes_time(Integer recipes_time) {
 		this.recipes_time = recipes_time;
 	}
-	public Integer getRecipes_level() {
+
+	public String getRecipes_level() {
 		return recipes_level;
 	}
-	public void setRecipes_level(Integer recipes_level) {
+	public void setRecipes_level(String recipes_level) {
 		this.recipes_level = recipes_level;
 	}
 	public String getRecipes_content() {
@@ -79,13 +81,22 @@ public class RecipesVO {
 	public void setRecipes_updateDate(String recipes_updateDate) {
 		this.recipes_updateDate = recipes_updateDate;
 	}
+	
+	public Long getBookmark() {
+		return bookmark;
+	}
+	public void setBookmark(Long bookmark) {
+		this.bookmark = bookmark;
+	}
 	@Override
 	public String toString() {
 		return "RecipesVO [recipes_no=" + recipes_no + ", recipes_title=" + recipes_title + ", id=" + id + ", name="
 				+ name + ", food=" + food + ", description=" + description + ", recipes_time=" + recipes_time
 				+ ", recipes_level=" + recipes_level + ", recipes_content=" + recipes_content + ", recipes_writeDate="
-				+ recipes_writeDate + ", recipes_updateDate=" + recipes_updateDate + "]";
+				+ recipes_writeDate + ", recipes_updateDate=" + recipes_updateDate + ", bookmark=" + bookmark + "]";
 	}
+
+	
 	
 	
 	
