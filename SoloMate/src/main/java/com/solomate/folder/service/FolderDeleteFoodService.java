@@ -1,11 +1,10 @@
 package com.solomate.folder.service;
 
 import com.solomate.folder.dao.FolderDAO;
-import com.solomate.folder.vo.FolderVO;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
 
-public class FolderUpdateService implements Service{
+public class FolderDeleteFoodService implements Service{
 	
 	private FolderDAO dao;
 
@@ -19,7 +18,12 @@ public class FolderUpdateService implements Service{
 	@Override
 	public Object service(Object obj) throws Exception {
 		// TODO Auto-generated method stub
-		return dao.update((FolderVO) obj);
+		Long[] arr = (Long[]) obj;
+		
+		Long folderNo = arr[0];
+		Long foodNo = arr[1];
+		
+		return dao.deleteFood(folderNo, foodNo);
 	}
 
 }

@@ -205,5 +205,51 @@ public class FolderDAO extends DAO{
 		
 	}
 	
+	// 폴더에서 식품 매핑 삭제
+	public Integer deleteFood(Long folderNo, Long foodNo) throws Exception{
+		Integer result = 0;
+		
+		con = DB.getConnection();
+		
+		String sql = "delete from folder_food where folderNo = ? and foodNo = ?";
+		
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, folderNo);
+		pstmt.setLong(2, foodNo);
+		
+		result = pstmt.executeUpdate();
+		
+		System.out.println(result);
+		
+		DB.close(con, pstmt);
+		
+		return result;
+	}
+	
+	// 폴더 수정
+	public Integer update(FolderVO vo) throws Exception {
+		Integer result = 0;
+		
+		con = DB.getConnection();
+		
+		// 수정 해주라...............
+        String sql = "UPDATE folder SET "
+                + "name = ?, "
+                + "updatedAt = SYSDATE "
+                + "WHERE no = ?";
+		
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getName());
+		pstmt.setLong(2, vo.getNo());
+		
+		result = pstmt.executeUpdate();
+		
+		DB.close(con, pstmt);
+		
+		return result;
+		
+	}
+	
+	
 
 }

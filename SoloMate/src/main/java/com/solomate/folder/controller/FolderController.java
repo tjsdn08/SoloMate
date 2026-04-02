@@ -59,6 +59,38 @@ public class FolderController implements Controller{
 				Execute.execute(Init.getService(uri), vo);
 				
 				return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+				
+			case "/folder/updateForm.do":
+
+				no = Long.parseLong(request.getParameter("no"));
+				request.setAttribute("vo", Execute.execute(Init.getService("/folder/view.do"), no)); // FolderVO
+				
+				
+				return "folder/updateForm";
+				
+			case "/folder/update.do":
+				
+				pageObject = PageObject.getInstance(request);
+			    // 1. 데이터 수집
+			    no = Long.parseLong(request.getParameter("no"));
+			    String name = request.getParameter("name");
+			    
+			    vo = new FolderVO();
+			    vo.setNo(no);
+			    vo.setName(name);
+			    
+			    Execute.execute(Init.getService(uri), vo);
+
+				return "redirect:view.do?no=" + no + "&" + pageObject.getPageQuery();
+				
+			case "/folder/deleteFood.do":
+				Long folderNo = Long.parseLong(request.getParameter("folderNo"));
+				Long foodNo = Long.parseLong(request.getParameter("foodNo"));
+				
+				int result = (int) Execute.execute(Init.getService(uri), new Long[] {folderNo, foodNo});
+				request.setAttribute("result", result);
+				
+				return "folder/result";
 
 			default:
 				return "error/noPage";
