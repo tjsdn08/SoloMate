@@ -20,8 +20,8 @@ public class HotDealDAO extends DAO {
 		con = DB.getConnection();
 
 		String orderSql = " order by hd.created_at desc ";
-		if ("popular".equals(searchVO.getSort())) {
-			orderSql = " order by hd.view_count desc, hd.deal_id desc ";
+		if ("endSoon".equals(searchVO.getSort())) {
+			orderSql = " order by hd.end_date asc, hd.created_at desc ";
 		}
 
 		String sql = ""

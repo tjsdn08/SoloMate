@@ -29,6 +29,7 @@ public class HotDealVO {
 	private String word;
 	private String sort;
 	private String addedToShopping;
+
 	public Long getDealId() {
 		return dealId;
 	}
@@ -71,6 +72,12 @@ public class HotDealVO {
 	public void setDiscountRate(Double discountRate) {
 		this.discountRate = discountRate;
 	}
+
+	public int getDiscountRateInt() {
+		if (discountRate == null) return 0;
+		return (int) Math.round(discountRate);
+	}
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -173,6 +180,7 @@ public class HotDealVO {
 	public void setAddedToShopping(String addedToShopping) {
 		this.addedToShopping = addedToShopping;
 	}
+
 	@Override
 	public String toString() {
 		return "HotDealVO [dealId=" + dealId + ", categoryId=" + categoryId + ", categoryName=" + categoryName
@@ -180,7 +188,8 @@ public class HotDealVO {
 				+ discountRate + ", imageUrl=" + imageUrl + ", imageName=" + imageName + ", thumbName=" + thumbName
 				+ ", shopName=" + shopName + ", sellerName=" + sellerName + ", dealUrl=" + dealUrl + ", description="
 				+ description + ", endDate=" + endDate + ", viewCount=" + viewCount + ", status=" + status
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", isDeleted=" + isDeleted + ", pageObject="
-				+ pageObject + ", word=" + word + ", sort=" + sort + ", addedToShopping=" + addedToShopping + "]";
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", isDeleted=" + isDeleted
+				+ ", pageObject=" + pageObject + ", word=" + word + ", sort=" + sort
+				+ ", addedToShopping=" + addedToShopping + "]";
 	}
 }

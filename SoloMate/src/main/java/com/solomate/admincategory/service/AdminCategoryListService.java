@@ -8,10 +8,12 @@ public class AdminCategoryListService implements Service {
 
 	private HotDealCategoryDAO dao;
 
+	@Override
 	public void setDAO(DAO dao) {
 		this.dao = (HotDealCategoryDAO) dao;
 	}
 
+	@Override
 	public Object service(Object obj) throws Exception {
 		return dao.list();
 	}

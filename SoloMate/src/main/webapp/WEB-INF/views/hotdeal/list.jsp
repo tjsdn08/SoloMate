@@ -115,12 +115,12 @@
 }
 
 .hotdeal-title {
-	font-size: 17px;
+	font-size: 22px;
 	font-weight: 700;
 	color: #222;
-	margin-bottom: 8px;
-	min-height: 48px;
-	line-height: 1.4;
+	margin-bottom: 4px;
+	min-height: auto;
+	line-height: 1.5;
 }
 
 .hotdeal-shop {
@@ -231,18 +231,13 @@
 		$("#sort").val("${searchVO.sort}");
 		$("#word").val("${searchVO.word}");
 
-		$(".hotdeal-item")
-				.click(
-						function(e) {
-							if ($(e.target).closest(".add-btn").length > 0)
-								return;
-							if ($(e.target).closest(".add-done").length > 0)
-								return;
+		$(".hotdeal-item").click(function(e) {
+			if ($(e.target).closest(".add-btn").length > 0) return;
+			if ($(e.target).closest(".add-done").length > 0) return;
 
-							let dealId = $(this).data("id");
-							location = "${pageContext.request.contextPath}/hotdeal/view.do?dealId="
-									+ dealId;
-						});
+			let dealId = $(this).data("id");
+			location = "${pageContext.request.contextPath}/hotdeal/view.do?dealId=" + dealId;
+		});
 	});
 </script>
 </head>
@@ -251,16 +246,16 @@
 	<div class="hotdeal-page">
 		<div class="hotdeal-wrap">
 
-			<form action="${pageContext.request.contextPath}/hotdeal/list.do"
-				method="get">
+			<form action="${pageContext.request.contextPath}/hotdeal/list.do" method="get">
 				<div class="hotdeal-search-bar">
 
 					<div class="hotdeal-search-input">
-						<span class="hotdeal-search-icon"><svg
-								xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-								viewBox="0 0 24 24">
+						<span class="hotdeal-search-icon">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 								<path fill="currentColor"
-									d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" /></svg></span>
+									d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.1-.35 2.075T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
+							</svg>
+						</span>
 						<input type="text" name="word" id="word" placeholder="상품명 검색">
 					</div>
 
@@ -269,9 +264,11 @@
 						<option value="1">식품</option>
 						<option value="2">생활용품</option>
 						<option value="3">가전</option>
-					</select> <select name="sort" id="sort" class="hotdeal-select">
+					</select>
+
+					<select name="sort" id="sort" class="hotdeal-select">
 						<option value="">최신순</option>
-						<option value="popular">인기순</option>
+						<option value="endSoon">종료임박순</option>
 					</select>
 
 					<button type="submit" class="hotdeal-search-btn">검색</button>
@@ -304,7 +301,6 @@
 
 							<div class="hotdeal-body">
 								<div class="hotdeal-title">${vo.title}</div>
-
 								<div class="hotdeal-shop">${vo.shopName}</div>
 
 								<div class="hotdeal-price-row">
@@ -313,10 +309,8 @@
 								</div>
 
 								<div class="hotdeal-bottom">
-									<div class="discount-badge">
-										<fmt:formatNumber value="${vo.discountRate}" pattern="0" />
-										%할인
-									</div>
+									<div class="discount-badge">${vo.discountRateInt}%할인</div>
+
 									<c:choose>
 										<c:when test="${vo.addedToShopping eq 'Y'}">
 											<span class="add-done">추가완료</span>

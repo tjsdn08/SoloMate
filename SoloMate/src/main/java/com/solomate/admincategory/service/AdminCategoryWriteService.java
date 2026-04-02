@@ -9,11 +9,13 @@ public class AdminCategoryWriteService implements Service {
 
 	private HotDealCategoryDAO dao;
 
+	@Override
 	public void setDAO(DAO dao) {
 		this.dao = (HotDealCategoryDAO) dao;
 	}
 
+	@Override
 	public Object service(Object obj) throws Exception {
-		return dao.write((HotDealCategoryVO)obj);
+		return dao.write((HotDealCategoryVO) obj);
 	}
 }

@@ -104,11 +104,16 @@
 					<td>
 						<div class="thumb-box">
 							<c:choose>
-								<c:when test="${!empty vo.imageUrl}">
-									<img src="${vo.imageUrl}" alt="${vo.title}">
+								<c:when test="${not empty vo.imageUrl}">
+									<img
+										src="${pageContext.request.contextPath}/upload/hotdeal/${vo.imageUrl}"
+										alt="${vo.title}"
+										onerror="this.src='${pageContext.request.contextPath}/upload/hotdeal/default.png'">
 								</c:when>
 								<c:otherwise>
-									<img src="${pageContext.request.contextPath}/images/no-image.png" alt="이미지 없음">
+									<img
+										src="${pageContext.request.contextPath}/upload/hotdeal/default.png"
+										alt="기본 이미지">
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -132,7 +137,7 @@
 				</tr>
 				<tr>
 					<th>할인율</th>
-					<td>${vo.discountRate}%</td>
+					<td>${vo.discountRateInt}%</td>
 				</tr>
 				<tr>
 					<th>판매처</th>
@@ -145,7 +150,14 @@
 				<tr>
 					<th>구매 링크</th>
 					<td>
-						<a href="${vo.dealUrl}" target="_blank">${vo.dealUrl}</a>
+						<c:choose>
+							<c:when test="${not empty vo.dealUrl}">
+								<a href="${vo.dealUrl}" target="_blank" rel="noopener noreferrer">${vo.dealUrl}</a>
+							</c:when>
+							<c:otherwise>
+								구매 링크 없음
+							</c:otherwise>
+						</c:choose>
 					</td>
 				</tr>
 				<tr>

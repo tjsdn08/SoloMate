@@ -113,7 +113,7 @@ public class AdminHotDealController implements Controller {
 				request.getSession().setAttribute("msg",
 						statusResult == 1 ? "상태가 변경되었습니다." : "상태 변경 실패");
 
-				return "redirect:view.do?dealId=" + statusVO.getDealId();
+				return "redirect:list.do";
 
 			default:
 				return "error/noPage";

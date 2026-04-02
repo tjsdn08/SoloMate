@@ -18,15 +18,15 @@ public class HotDealCategoryDAO extends DAO {
 
 		String sql = ""
 				+ " select category_id, category_name, status, "
-				+ "        to_char(created_at,'yyyy-mm-dd') created_at "
+				+ "        to_char(created_at, 'yyyy-mm-dd') created_at "
 				+ " from hot_deal_category "
 				+ " where is_deleted = 'N' "
-				+ " order by category_id desc ";
+				+ " order by category_id asc ";
 
 		pstmt = con.prepareStatement(sql);
 		rs = pstmt.executeQuery();
 
-		while(rs.next()) {
+		while (rs.next()) {
 			HotDealCategoryVO vo = new HotDealCategoryVO();
 			vo.setCategoryId(rs.getLong("category_id"));
 			vo.setCategoryName(rs.getString("category_name"));
@@ -42,6 +42,8 @@ public class HotDealCategoryDAO extends DAO {
 	// 등록
 	public Integer write(HotDealCategoryVO vo) throws Exception {
 
+		Integer result = 0;
+
 		con = DB.getConnection();
 
 		String sql = ""
@@ -53,7 +55,7 @@ public class HotDealCategoryDAO extends DAO {
 		pstmt.setString(1, vo.getCategoryName());
 		pstmt.setString(2, vo.getStatus());
 
-		int result = pstmt.executeUpdate();
+		result = pstmt.executeUpdate();
 
 		DB.close(con, pstmt);
 		return result;
@@ -62,45 +64,54 @@ public class HotDealCategoryDAO extends DAO {
 	// 수정
 	public Integer update(HotDealCategoryVO vo) throws Exception {
 
+		Integer result = 0;
+
 		con = DB.getConnection();
 
 		String sql = ""
 				+ " update hot_deal_category "
-				+ " set category_name = ?, status = ?, updated_at = sysdate "
-				+ " where category_id = ? ";
+				+ " set category_name = ?, "
+				+ "     status = ?, "
+				+ "     updated_at = sysdate "
+				+ " where category_id = ? "
+				+ "   and is_deleted = 'N' ";
 
 		pstmt = con.prepareStatement(sql);
 		pstmt.setString(1, vo.getCategoryName());
 		pstmt.setString(2, vo.getStatus());
 		pstmt.setLong(3, vo.getCategoryId());
 
-		int result = pstmt.executeUpdate();
+		result = pstmt.executeUpdate();
 
 		DB.close(con, pstmt);
 		return result;
 	}
 
 	// 삭제 (soft delete)
-	public Integer delete(Long id) throws Exception {
+	public Integer delete(Long categoryId) throws Exception {
+
+		Integer result = 0;
 
 		con = DB.getConnection();
 
 		String sql = ""
 				+ " update hot_deal_category "
-				+ " set is_deleted = 'Y' "
+				+ " set is_deleted = 'Y', updated_at = sysdate "
 				+ " where category_id = ? ";
 
 		pstmt = con.prepareStatement(sql);
-		pstmt.setLong(1, id);
+		pstmt.setLong(1, categoryId);
 
-		int result = pstmt.executeUpdate();
+		result = pstmt.executeUpdate();
 
 		DB.close(con, pstmt);
 		return result;
 	}
-	
+
 	// 상태 변경
 	public Integer changeStatus(HotDealCategoryVO vo) throws Exception {
+
+		Integer result = 0;
 
 		con = DB.getConnection();
 
@@ -114,7 +125,7 @@ public class HotDealCategoryDAO extends DAO {
 		pstmt.setString(1, vo.getStatus());
 		pstmt.setLong(2, vo.getCategoryId());
 
-		int result = pstmt.executeUpdate();
+		result = pstmt.executeUpdate();
 
 		DB.close(con, pstmt);
 		return result;

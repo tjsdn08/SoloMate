@@ -21,20 +21,15 @@ public class AdminCategoryController implements Controller {
 				request.setAttribute("list", Execute.execute(Init.getService(uri), null));
 				return "adminCategory/list";
 
-			case "/adminCategory/writeForm.do":
-				return "adminCategory/writeForm";
-
 			case "/adminCategory/write.do":
 				HotDealCategoryVO wvo = new HotDealCategoryVO();
 				wvo.setCategoryName(request.getParameter("categoryName"));
 				wvo.setStatus(request.getParameter("status"));
 
 				Execute.execute(Init.getService(uri), wvo);
+				request.getSession().setAttribute("msg", "카테고리가 등록되었습니다.");
 				return "redirect:list.do";
 
-			case "/adminCategory/updateForm.do":
-				return "adminCategory/updateForm";
-				
 			case "/adminCategory/update.do":
 				HotDealCategoryVO uvo = new HotDealCategoryVO();
 				uvo.setCategoryId(Long.parseLong(request.getParameter("categoryId")));
@@ -42,11 +37,13 @@ public class AdminCategoryController implements Controller {
 				uvo.setStatus(request.getParameter("status"));
 
 				Execute.execute(Init.getService(uri), uvo);
+				request.getSession().setAttribute("msg", "카테고리가 수정되었습니다.");
 				return "redirect:list.do";
 
 			case "/adminCategory/delete.do":
-				Long id = Long.parseLong(request.getParameter("categoryId"));
-				Execute.execute(Init.getService(uri), id);
+				Long deleteId = Long.parseLong(request.getParameter("categoryId"));
+				Execute.execute(Init.getService(uri), deleteId);
+				request.getSession().setAttribute("msg", "카테고리가 삭제되었습니다.");
 				return "redirect:list.do";
 
 			case "/adminCategory/status.do":
@@ -55,14 +52,16 @@ public class AdminCategoryController implements Controller {
 				svo.setStatus(request.getParameter("status"));
 
 				Execute.execute(Init.getService(uri), svo);
+				request.getSession().setAttribute("msg", "상태가 변경되었습니다.");
 				return "redirect:list.do";
-				
+
 			default:
 				return "error/noPage";
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			request.setAttribute("e", e);
 			return "error/err_500";
 		}
 	}

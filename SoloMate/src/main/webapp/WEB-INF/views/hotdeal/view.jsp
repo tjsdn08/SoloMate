@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -198,10 +199,8 @@
 							<div class="price-original">${vo.originalPrice}원</div>
 						</div>
 
-						<div class="discount-badge">
-							<fmt:formatNumber value="${vo.discountRate}" pattern="0" />
-							% 할인
-						</div>
+						<div class="discount-badge">${vo.discountRateInt}%할인</div>
+
 						<table class="info-table">
 							<tr>
 								<th>카테고리</th>
@@ -228,11 +227,11 @@
 						<div class="view-desc">
 							<c:choose>
 								<c:when test="${!empty vo.description}">
-								${vo.description}
-							</c:when>
+									${vo.description}
+								</c:when>
 								<c:otherwise>
-								상품 설명이 없습니다.
-							</c:otherwise>
+									상품 설명이 없습니다.
+								</c:otherwise>
 							</c:choose>
 						</div>
 
@@ -249,8 +248,15 @@
 									</c:otherwise>
 								</c:choose>
 
-								<a href="${vo.dealUrl}" target="_blank" class="btn-main">구매하러
-									가기</a>
+								<c:choose>
+									<c:when test="${not empty vo.dealUrl}">
+										<a href="${vo.dealUrl}" target="_blank"
+											rel="noopener noreferrer" class="btn-main"> 쿠팡에서 구매하기 </a>
+									</c:when>
+									<c:otherwise>
+										<span class="btn-done">구매 링크 없음</span>
+									</c:otherwise>
+								</c:choose>
 							</div>
 
 							<div>
