@@ -37,6 +37,7 @@ import com.solomate.boardreply.service.BoardReplyUpdateService;
 import com.solomate.boardreply.service.BoardReplyWriteService;
 import com.solomate.folder.controller.FolderController;
 import com.solomate.folder.dao.FolderDAO;
+import com.solomate.folder.service.FolderDeleteFoodService;
 import com.solomate.folder.service.FolderDeleteService;
 import com.solomate.folder.service.FolderListService;
 import com.solomate.folder.service.FolderUpdateService;
@@ -194,7 +195,8 @@ public class Init extends HttpServlet {
 		serviceMap.get("/food/write.do").setDAO(daoMap.get("foodDAO"));
 		serviceMap.get("/food/update.do").setDAO(daoMap.get("foodDAO"));
 		serviceMap.get("/food/delete.do").setDAO(daoMap.get("foodDAO"));
-
+		
+		
 		// *** 폴더 생성 / 저장 / 조립
 		// == controller는 모듈명으로 저장
 		controllerMap.put("/folder", new FolderController());
@@ -204,6 +206,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/folder/write.do", new FolderWriteService());
 		serviceMap.put("/folder/update.do", new FolderUpdateService());
 		serviceMap.put("/folder/delete.do", new FolderDeleteService());
+		serviceMap.put("/folder/deleteFood.do", new FolderDeleteFoodService());
 		// == dao는 클래스 이름으로 저장. 맨 앞자를 소문자로 바꾼다.
 		daoMap.put("folderDAO", new FolderDAO());
 		// 조립 service <- dao : service를 꺼내서 setter를 이용해서 dao를 꺼내서 넣는다.
@@ -212,6 +215,7 @@ public class Init extends HttpServlet {
 		serviceMap.get("/folder/write.do").setDAO(daoMap.get("folderDAO"));
 		serviceMap.get("/folder/update.do").setDAO(daoMap.get("folderDAO"));
 		serviceMap.get("/folder/delete.do").setDAO(daoMap.get("folderDAO"));
+		serviceMap.get("/folder/deleteFood.do").setDAO(daoMap.get("folderDAO"));
 
 		// ------------------------------박현정--------------------------------
 		// *** 일반 게시판 생성 / 저장 / 조립
