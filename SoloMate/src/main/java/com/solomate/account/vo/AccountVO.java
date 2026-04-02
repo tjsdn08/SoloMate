@@ -6,6 +6,7 @@ public class AccountVO {
 	private String id;
 	private long amount;
 	private long cno;
+	private String title;
 	private String content;
 	private String regDate;
 	private String type;
@@ -34,6 +35,12 @@ public class AccountVO {
 	public void setCno(long cno) {
 		this.cno = cno;
 	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 	public String getContent() {
 		return content;
 	}
@@ -60,8 +67,8 @@ public class AccountVO {
 	}
 	@Override
 	public String toString() {
-		return "AccountVO [no=" + no + ", id=" + id + ", amount=" + amount + ", cno=" + cno + ", content=" + content
-				+ ", regDate=" + regDate + ", type=" + type + ", category=" + category + "]";
+		return "AccountVO [no=" + no + ", id=" + id + ", amount=" + amount + ", cno=" + cno + ", title=" + title
+				+ ", content=" + content + ", regDate=" + regDate + ", type=" + type + ", category=" + category + "]";
 	}
 	
 }
