@@ -16,6 +16,6 @@ public class AdminCategoryStatusService implements Service {
 
 	@Override
 	public Object service(Object obj) throws Exception {
-		return dao.changeStatus((HotDealCategoryVO) obj);
+		return dao.status((HotDealCategoryVO) obj);
 	}
 }

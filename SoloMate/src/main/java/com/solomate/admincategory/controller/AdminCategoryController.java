@@ -12,6 +12,8 @@ public class AdminCategoryController implements Controller {
 	@Override
 	public String execute(HttpServletRequest request) {
 
+		request.setAttribute("url", request.getRequestURL());
+
 		try {
 			String uri = request.getServletPath();
 
@@ -21,20 +23,44 @@ public class AdminCategoryController implements Controller {
 				request.setAttribute("list", Execute.execute(Init.getService(uri), null));
 				return "adminCategory/list";
 
+			case "/adminCategory/writeForm.do":
+				return "adminCategory/writeForm";
+
 			case "/adminCategory/write.do":
 				HotDealCategoryVO wvo = new HotDealCategoryVO();
 				wvo.setCategoryName(request.getParameter("categoryName"));
-				wvo.setStatus(request.getParameter("status"));
+
+				String writeStatus = request.getParameter("status");
+				if (writeStatus == null || writeStatus.trim().equals("")) {
+					writeStatus = "ACTIVE";
+				}
+				wvo.setStatus(writeStatus);
 
 				Execute.execute(Init.getService(uri), wvo);
 				request.getSession().setAttribute("msg", "카테고리가 등록되었습니다.");
 				return "redirect:list.do";
 
+			case "/adminCategory/updateForm.do":
+				Long categoryId = Long.parseLong(request.getParameter("categoryId"));
+				request.setAttribute("vo",
+						Execute.execute(Init.getService("/adminCategory/view.do"), categoryId));
+				return "adminCategory/updateForm";
+
+			case "/adminCategory/view.do":
+				Long viewId = Long.parseLong(request.getParameter("categoryId"));
+				request.setAttribute("vo", Execute.execute(Init.getService(uri), viewId));
+				return "adminCategory/updateForm";
+
 			case "/adminCategory/update.do":
 				HotDealCategoryVO uvo = new HotDealCategoryVO();
 				uvo.setCategoryId(Long.parseLong(request.getParameter("categoryId")));
 				uvo.setCategoryName(request.getParameter("categoryName"));
-				uvo.setStatus(request.getParameter("status"));
+
+				String updateStatus = request.getParameter("status");
+				if (updateStatus == null || updateStatus.trim().equals("")) {
+					updateStatus = "ACTIVE";
+				}
+				uvo.setStatus(updateStatus);
 
 				Execute.execute(Init.getService(uri), uvo);
 				request.getSession().setAttribute("msg", "카테고리가 수정되었습니다.");

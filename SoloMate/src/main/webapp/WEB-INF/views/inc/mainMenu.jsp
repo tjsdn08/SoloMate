@@ -29,6 +29,9 @@
 						href="${pageContext.request.contextPath}/adminHotDeal/list.do">핫딜
 							관리</a></li>
 					<li class="nav-item"><a class="nav-link"
+						href="${pageContext.request.contextPath}/adminCategory/list.do">카테고리
+							관리</a></li>
+					<li class="nav-item"><a class="nav-link"
 						href="/member/list.do">회원관리</a></li>
 				</c:if>
 			</ul>
