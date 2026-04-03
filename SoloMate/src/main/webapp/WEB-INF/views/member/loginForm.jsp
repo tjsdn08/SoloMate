@@ -173,5 +173,14 @@
 		</div>
 	</div>
 
+<c:if test="${not empty msg}">
+    <script>
+        alert("${msg}");
+    </script>
+    <c:remove var="msg" scope="session" />
+    <c:remove var="msg" scope="request" />
+</c:if>
+
+
 </body>
 </html>

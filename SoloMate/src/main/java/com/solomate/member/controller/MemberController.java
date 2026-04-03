@@ -29,25 +29,23 @@ public class MemberController implements Controller {
 				    userVO.setId(request.getParameter("id"));
 				    userVO.setPw(request.getParameter("pw"));
 				    
-				    // 1. 로그인 시도
-				    loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
-				    
-				    if (loginVO != null) {
-				        //status가 잘 찍히는지 확인용
-				        System.out.println("로그인 직후 상태: " + loginVO.getStatus());
-
+				    try {
+				        loginVO = (LoginVO) Execute.execute(Init.getService(uri), userVO);
+				        
 				        if ("탈퇴".equals(loginVO.getStatus())) {
-				            // 1. DB 상태를 '정상'으로 변경
 				            Execute.execute(Init.getService("/member/reactivate.do"), loginVO.getId());
-				            // 2. 현재 로그인 객체의 상태도 '정상'으로 변경
 				            loginVO.setStatus("정상");
 				            session.setAttribute("msg", loginVO.getName() + "님, 탈퇴 계정이 복구되었습니다.");
 				        }
 				        session.setAttribute("login", loginVO);
-				        // 마지막 접속일 업데이트
 				        Execute.execute(Init.getService("/member/changeCon.do"), loginVO.getId());
 				        return "redirect:/";
+				        
+				    } catch (Exception e) {
+				        request.setAttribute("msg", e.getMessage()); 
+				        return "member/loginForm"; 
 				    }
+
 				// 로그아웃
 				case "/member/logout.do":
 					session.removeAttribute("login");

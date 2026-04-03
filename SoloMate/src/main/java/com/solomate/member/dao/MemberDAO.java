@@ -13,27 +13,33 @@ import com.solomate.util.page.PageObject;
 public class MemberDAO extends DAO{
 
 	public LoginVO login(LoginVO vo) throws Exception {
-	        con = DB.getConnection();
-	        String sql = "select m.id, m.name, m.gradeNo, g.gradeName, m.status "
-	                   + " from member m, grade g "
-	                   + " where (id = ? and pw = ?) and (m.gradeNo = g.gradeNo)";
-	        
-	        pstmt = con.prepareStatement(sql);
-	        pstmt.setString(1, vo.getId());
-	        pstmt.setString(2, vo.getPw());
-	        
-	        rs = pstmt.executeQuery();
-	        
-	        if(rs != null && rs.next()) {
-	            vo = new LoginVO();
-	            vo.setId(rs.getString("id"));
-	            vo.setName(rs.getString("name"));
-	            vo.setGradeNo(rs.getInt("gradeNo"));
-	            vo.setGradeName(rs.getString("gradeName"));
-	            vo.setStatus(rs.getString("status"));
-	        }
-	    return vo;
+	    con = DB.getConnection();
+	    String sql = "select m.id, m.name, m.gradeNo, g.gradeName, m.status "
+	               + " from member m, grade g "
+	               + " where (id = ? and pw = ?) and (m.gradeNo = g.gradeNo)";
+	    
+	    pstmt = con.prepareStatement(sql);
+	    pstmt.setString(1, vo.getId());
+	    pstmt.setString(2, vo.getPw());
+	    
+	    rs = pstmt.executeQuery();
+	    
+	    // 로그인 실패 시 null을 반환하기 위해 초기화
+	    LoginVO loginVO = null; 
+	    
+	    if(rs != null && rs.next()) {
+	        loginVO = new LoginVO();
+	        loginVO.setId(rs.getString("id"));
+	        loginVO.setName(rs.getString("name"));
+	        loginVO.setGradeNo(rs.getInt("gradeNo"));
+	        loginVO.setGradeName(rs.getString("gradeName"));
+	        loginVO.setStatus(rs.getString("status"));
+	    }
+	    
+	    DB.close(con, pstmt, rs);
+	    return loginVO; // 성공 시 loginVO, 실패 시 null 반환
 	}
+
 	
 	// 1-1-1 최근 접속일 변경(U) - id
 	public Integer changeConDate(String id) throws Exception {

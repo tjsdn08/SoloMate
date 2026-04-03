@@ -19,7 +19,14 @@ public class LoginService implements Service{
 	public Object service(Object obj) throws Exception {
 	    LoginVO vo = (LoginVO) obj; 
 	    
-	    return dao.login(vo); 
+	    LoginVO loginVO = dao.login(vo);
+	    
+	    if (loginVO == null) {
+	        throw new Exception("아이디나 비밀번호가 올바르지 않습니다.");
+	    }
+	    
+	    return loginVO; 
 	}
+
 
 }
