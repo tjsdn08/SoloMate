@@ -49,6 +49,7 @@
 
     @media (max-width: 768px) { .summary-dashboard, .quick-access-container { grid-template-columns: 1fr; } }
 </style>
+<title>메인 페이지</title>
 </head>
 <body>
 
