@@ -25,7 +25,7 @@
 		<div class="mb-3 mt-3">
 			<label for="name" class="form-label">폴더명</label>
 			<input type="text" class="form-control" id="name" placeholder="폴더명을 입력하세요" name="name"
-			 title="폴더명은 필수 입력 항목 입니다." required>
+			 title="폴더명은 필수 입력 항목 입니다." maxlength="30" required>
 		</div>
 		
 	

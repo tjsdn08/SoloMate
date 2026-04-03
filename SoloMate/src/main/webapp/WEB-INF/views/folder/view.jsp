@@ -39,11 +39,12 @@
 		</tbody>
 	</table>
 	
-	
-	<a href="updateForm.do?no=${param.no }&page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }" class="btn btn-success">
-	폴더 수정 하기</a>
-	<a href="delete.do" class="btn btn-warning">폴더 삭제 하기</a>
-	<a href="list.do" class="btn btn-primary">폴더 목록 보기</a>
+	<div class="d-flex flex-row-reverse gap-2">
+		<a href="updateForm.do?no=${param.no }&page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }" class="btn btn-success">
+		폴더 수정 하기</a>
+		<a href="delete.do" class="btn btn-warning">폴더 삭제 하기</a>
+		<a href="list.do" class="btn btn-primary">폴더 목록 보기</a>
+	</div>
 
 </body>
 </html>

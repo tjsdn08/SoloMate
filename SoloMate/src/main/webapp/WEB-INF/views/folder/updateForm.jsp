@@ -58,6 +58,12 @@
 		<!-- foodDelete  -->
 	  }); 
 	</script>
+	
+	<style type="text/css">
+		input#createdAt {
+			background-color: rgb(233, 233, 233); 
+		}
+	</style>
 </head>
 <body>
 
@@ -73,7 +79,7 @@
 		<div class="mb-3 mt-3">
 			<label for="name" class="form-label">폴더명</label>
 			<input type="text" class="form-control" id="name" name="name"
-			 value="${vo.name }" required>
+			 value="${vo.name }" maxlength="30"  required>
 		</div>
 		
 		<div class="mb-3 mt-3">
@@ -109,7 +115,7 @@
 								<td>${foodVO.quantity }</td>
 								<td>${foodVO.storageType }</td>
 								<td>
-									<button class="foodDeleteBtn" type="button">
+									<button class="foodDeleteBtn btn btn-danger" type="button">
 										삭제
 									</button>
 								</td>

@@ -12,8 +12,23 @@
 			 // alert("취소 버튼 클릭~~~!");
 			 history.back();
 		  });
+		  // datepicker 적용
+		  $(".datepicker").datepicker(
+			{
+			   changeMonth: true,
+			   changeYear: true,
+			   dateFormat: "yy-mm-dd",
+			   dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+			   monthNamesShort: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+		  	}
+		  );
 	  }); 
 	</script>
+	<style type="text/css">
+		input#name {
+			background-color: rgb(233, 233, 233);
+		}
+	</style>
 </head>
 <body>
 
@@ -28,20 +43,20 @@
 		
 		<div class="mb-3 mt-3">
 			<label for="name" class="form-label">식품명</label>
-			<input type="text" class="form-control" id="name" placeholder="식품명을 입력하세요" name="name"
+			<input type="text" class="form-control" id="name" name="name"
 			 value="${vo.name }" readonly>
 		</div>
 	
 		<div class="mb-3 mt-3">
 			<label for="expiryDate" class="form-label">유통기한</label>
-			<input type="text" class="form-control" id="expiryDate" placeholder="yyyy-mm-dd" name="expiryDate"
-			 value="${vo.expiryDate }" required>
+			<input type="date" class="form-control" id="expiryDate" placeholder="yyyy-mm-dd" name="expiryDate"
+			 value="${vo.expiryDate }" pattern="^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$" min="2020-01-01" max="9999-12-31" required >
 		</div>
 	
 		<div class="mb-3 mt-3">
 			<label for="quantity" class="form-label">수량</label>
-			<input type="text" class="form-control" id="quantity" placeholder="수량을 입력하세요" name="quantity"
-			 value="${vo.quantity }" required>			
+			<input type="number" class="form-control" id="quantity" placeholder="수량을 입력하세요" name="quantity"
+			 value="${vo.quantity }" autocomplete="off" max="99" min="1" required>			
 		</div>
 	
 		<div class="mb-3 mt-3">
@@ -56,7 +71,7 @@
 		<div class="mb-3 mt-3">
 			<label for="memo" class="form-label">메모</label>
 		      <textarea class="form-control" rows="5" id="memo" name="memo"
-		       placeholder="내용을 입력하세요.">${vo.memo }</textarea>
+		       placeholder="내용을 입력하세요." maxlength="100">${vo.memo }</textarea>
 		</div>
 		
 		<div class="mb-3 mt-3">
