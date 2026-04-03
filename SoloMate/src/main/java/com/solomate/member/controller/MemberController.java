@@ -5,6 +5,7 @@ import com.solomate.main.controller.Init;
 import com.solomate.main.service.Execute;
 import com.solomate.member.vo.LoginVO;
 import com.solomate.member.vo.MemberVO;
+import com.solomate.util.page.PageObject;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -76,13 +77,13 @@ public class MemberController implements Controller {
 					
 				// 관리자 회원리스트
 				case "/member/list.do":
-					if (loginVO == null || loginVO.getGradeNo() != 9) {
-						session.setAttribute("msg", "접근 권한이 없습니다.");
-						return "redirect:/";
-					}
-					request.setAttribute("list", Execute.execute(Init.getService(uri), null));
-					return "member/list";
-
+				    PageObject pageObject = PageObject.getInstance(request);
+				    
+				    request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
+				    
+				    request.setAttribute("pageObject", pageObject);
+				    
+				    return "member/list";
 				// 관리자 회원 리스트- 회원 상태 수정
 				case "/member/changeStatus.do":
 					vo = new MemberVO();

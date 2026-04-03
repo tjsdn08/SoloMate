@@ -1,5 +1,6 @@
 package com.solomate.member.dao;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import com.solomate.main.dao.DAO;
 import com.solomate.member.vo.LoginVO;
 import com.solomate.member.vo.MemberVO;
 import com.solomate.util.db.DB;
+import com.solomate.util.page.PageObject;
 
 public class MemberDAO extends DAO{
 
@@ -73,42 +75,96 @@ public class MemberDAO extends DAO{
 		return result;
 	} // write()의 끝
 	
-	public List<MemberVO> list() throws Exception {
-		List<MemberVO> list = null;
-		
-		list = new ArrayList<>();
-		
-		// 1. 드라이버 확인 & 2. 연결 객체
-		con = DB.getConnection();
-		
-		// 3. 실행할 쿼리 작성
-		String sql = "select m.id, m.name, m.tel, m.address, m.status, m.gradeNo, g.gradeName "
-				+ " from member m, grade g where (m.gradeNo = g.gradeNo) order by id";
-		
-		// 4. 실행 객체 & 데이터 세팅
-		pstmt = con.prepareStatement(sql);
-		
-		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
-		rs = pstmt.executeQuery();
-		
-		// 6. DB에서 가져온 데이터 채우기
-		if(rs != null) {
-			while(rs.next()) { // 데이터가 있는 만큼 반복 실행
-				// 저장할 객체를 생성한다.
-				MemberVO vo = new MemberVO();
-				vo.setId(rs.getString("id"));
-				vo.setName(rs.getString("name"));
-				vo.setTel(rs.getString("tel"));
-				vo.setAddress(rs.getString("address"));
-				vo.setStatus(rs.getString("status"));
-				vo.setGradeNo(rs.getInt("gradeNo"));
-				vo.setGradeName(rs.getString("gradeName"));
-				
-				list.add(vo);
-			}// while의 끝
+	// 1. 회원 리스트 조회
+		public List<MemberVO> list(PageObject pageObject) throws Exception {
+			List<MemberVO> list = new ArrayList<>();
+			con = DB.getConnection();
+			
+			String sql = "select m.id, m.name, m.tel, m.address, m.status, m.gradeNo, g.gradeName "
+					   + " from member m, grade g where (m.gradeNo = g.gradeNo) ";
+			
+			String search = getSearchSQL(pageObject);
+			if(!search.isEmpty()) {
+				sql += search.replace("where", "and");
+			}
+			
+			sql += " order by id";
+			
+			sql = "select rnum, id, name, tel, address, status, gradeNo, gradeName from ("
+				+ " select rownum rnum, id, name, tel, address, status, gradeNo, gradeName from ("
+				+ sql + ") ) where rnum between ? and ?";
+			
+			pstmt = con.prepareStatement(sql);
+			
+			int idx = 1;
+			idx = setSearchData(pstmt, pageObject, idx); // 검색어 세팅
+			pstmt.setLong(idx++, pageObject.getStartRow());
+			pstmt.setLong(idx++, pageObject.getEndRow());
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs != null) {
+				while(rs.next()) {
+					MemberVO vo = new MemberVO();
+					vo.setId(rs.getString("id"));
+					vo.setName(rs.getString("name"));
+					vo.setTel(rs.getString("tel"));
+					vo.setAddress(rs.getString("address"));
+					vo.setStatus(rs.getString("status"));
+					vo.setGradeNo(rs.getInt("gradeNo"));
+					vo.setGradeName(rs.getString("gradeName"));
+					list.add(vo);
+				}
+			}
+			DB.close(con, pstmt, rs);
+			return list;
 		}
-		return list;
-	}
+
+		// 2. 전체 데이터 개수 구하기
+		public Long getTotalRow(PageObject pageObject) throws Exception {
+			Long totalRow = 0L;
+			con = DB.getConnection();
+			String sql = "select count(*) from member ";
+			sql += getSearchSQL(pageObject);
+			
+			pstmt = con.prepareStatement(sql);
+			setSearchData(pstmt, pageObject, 1);
+			
+			rs = pstmt.executeQuery();
+			if (rs != null && rs.next()) {
+				totalRow = rs.getLong(1);
+			}
+			DB.close(con, pstmt, rs);
+			return totalRow;
+		}
+		
+		// 3. 검색 SQL 조립
+		private String getSearchSQL(PageObject pageObject) {
+			String sql = "";
+			String key = pageObject.getKey();
+			String word = pageObject.getWord();
+			
+			if (word != null && !word.isEmpty()) {
+				sql += " where ( 1=0 ";
+				if (key.contains("i")) sql += " or id like ? ";
+				if (key.contains("n")) sql += " or name like ? ";
+				sql += " ) ";
+			}
+			return sql;
+		}
+
+		// 4. 검색 데이터 세팅
+		private int setSearchData(PreparedStatement pstmt, PageObject pageObject, int idx) throws Exception {
+			String key = pageObject.getKey();
+			String word = pageObject.getWord();
+			
+			if (word != null && !word.isEmpty()) {
+				if (key.contains("i")) pstmt.setString(idx++, "%" + word + "%");
+				if (key.contains("n")) pstmt.setString(idx++, "%" + word + "%");
+			}
+			return idx;
+		}    
+	        
 	public Integer changeStatus(MemberVO vo) throws Exception {
 		Integer result = 0;
 		

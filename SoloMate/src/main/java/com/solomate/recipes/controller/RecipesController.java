@@ -108,10 +108,10 @@ public class RecipesController implements Controller{
 					
 					
 	 			case "/recipes/updateForm.do":
-	 			    System.out.println("recipes/updateForm.do - 수정 폼 이동");
 	 			    no = Long.parseLong(request.getParameter("no"));
-	 			    
-	 			    vo = (RecipesVO) Execute.execute(Init.getService("/recipes/view.do"), new Object[]{no, 0});
+
+	 			    vo = (RecipesVO) Execute.execute(Init.getService("/recipes/view.do"), new Object[]{no, null});
+
 	 			    request.setAttribute("vo", vo);
 	 			    
 	 			    return "recipes/updateForm";
@@ -140,12 +140,12 @@ public class RecipesController implements Controller{
 	 			    
 	 			    
 	 			case "/recipes/imageChangeForm.do":
-	 			    System.out.println("recipes/imageChangeForm.do - 이미지 변경 폼으로 이동");
 	 			    no = Long.parseLong(request.getParameter("no"));
-	 			    // 기존 이미지를 보여주기
-	 			    vo = (RecipesVO) Execute.execute(Init.getService("/recipes/view.do"), new Object[]{no, 0});
+	 			    
+	 			    vo = (RecipesVO) Execute.execute(Init.getService("/recipes/view.do"), new Object[]{no, null});
+	 			    
 	 			    request.setAttribute("vo", vo);
-	 			    return "recipes/imageChangeForm"; // JSP로 이동
+	 			    return "recipes/imageChangeForm";
 
 				case "/recipes/imageChange.do":
 					System.out.println("recipes/imageChange.do - 이미지 변경 처리");
