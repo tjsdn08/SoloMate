@@ -140,4 +140,94 @@ public class RecipesDAO extends DAO{
         DB.close(con, pstmt, rs);
 	    return vo;
 	}
+	
+	
+	// 레시피 등록
+	public int write(RecipesVO vo) throws Exception {
+	    int result = 0;
+
+        con = DB.getConnection();
+
+        String sql = "insert into recipes(recipes_no, recipes_title, description, recipes_content, "
+                   + " recipes_img, recipes_time, recipes_level, food, id, name) "
+                   + " values(recipes_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, vo.getRecipes_title());
+        pstmt.setString(2, vo.getDescription());
+        pstmt.setString(3, vo.getRecipes_content());
+        pstmt.setString(4, vo.getRecipes_img());
+        pstmt.setInt(5, vo.getRecipes_time());
+        pstmt.setString(6, vo.getRecipes_level());
+        pstmt.setString(7, vo.getFood());
+        pstmt.setString(8, vo.getId());
+        pstmt.setString(9, vo.getName()); // 작성자 이름
+
+        result = pstmt.executeUpdate();
+        
+        System.out.println("RecipesDAO.write() - 레시피 등록 완료");
+
+        DB.close(con, pstmt);
+
+	    return result;
+	}
+	
+		public Integer delete(Long no) throws Exception {
+			Integer result = 0;
+			
+			con = DB.getConnection();
+			
+			String sql = "delete from recipes where recipes_no = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setLong(1, no);
+			
+			result = pstmt.executeUpdate();
+			
+			DB.close(con, pstmt);
+			
+			return result;
+		} // delete()의 끝
+	
+		
+		public Integer update(RecipesVO vo) throws Exception {
+			Integer result = 0;
+			con = DB.getConnection();
+			
+			String sql = "update recipes set recipes_title = ?, description = ?, "
+					   + " recipes_content = ?, recipes_time = ?, recipes_level = ?, food = ? "
+					   + " where recipes_no = ? and id = ?"; 
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, vo.getRecipes_title());
+			pstmt.setString(2, vo.getDescription());
+			pstmt.setString(3, vo.getRecipes_content());
+			pstmt.setInt(4, vo.getRecipes_time());
+			pstmt.setString(5, vo.getRecipes_level());
+			pstmt.setString(6, vo.getFood());
+			pstmt.setLong(7, vo.getRecipes_no());
+			pstmt.setString(8, vo.getId()); // 본인 확인용
+			
+			result = pstmt.executeUpdate();
+			DB.close(con, pstmt);
+			return result;
+		}
+		
+		public Integer changeImage(RecipesVO vo) throws Exception {
+			Integer result = 0;
+			con = DB.getConnection();
+			
+			String sql = "update recipes set recipes_img = ? where recipes_no = ? and id = ?";
+			
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, vo.getRecipes_img());
+			pstmt.setLong(2, vo.getRecipes_no());
+			pstmt.setString(3, vo.getId()); // 본인 확인
+			
+			result = pstmt.executeUpdate();
+			DB.close(con, pstmt);
+			return result;
+		}
+		
+		
 }

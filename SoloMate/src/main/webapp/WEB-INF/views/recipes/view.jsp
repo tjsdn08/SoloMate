@@ -95,15 +95,13 @@ $(function(){
 
 	<div class="card p-4 mb-4 shadow-sm bg-light">
 	        <div class="row m-0">
-	            <div class="col-md-8 border-end pe-4">
-	                <div class="d-flex align-items-center mb-4">
-	                    <span class="fw-bold me-3" style="font-size: 1.2rem;">👨‍🍳 레시피 상세 내용</span>
-	                </div>
-	                
-	                <div class="recipes-content-body fs-5 text-secondary" style="white-space: pre-wrap; line-height: 1.8;">
-	                    ${vo.recipes_content}
-	                </div>
-	            </div>
+			<div class="col-md-8 border-end pe-4">
+			    <div class="d-flex align-items-center mb-4">
+			        <span class="fw-bold me-3" style="font-size: 1.2rem;">👨‍🍳 레시피 상세 내용</span>
+			    </div>
+			    
+			    <div class="recipes-content-body fs-5 text-secondary" style="white-space: pre-wrap; line-height: 1.8;">${vo.recipes_content}</div>
+			</div>
 	            
 	            <div class="col-md-4 d-flex align-items-center justify-content-center ps-4">
 	                <div class="recipe-img-container text-center w-100">
@@ -117,23 +115,22 @@ $(function(){
 	                        </c:otherwise>
 	                    </c:choose>
 	                    
-	                    <c:if test="${login.id == vo.id}">
-	                        <div class="mt-3">
-	                            <a href="imageChange.do?no=${vo.recipes_no}" class="btn btn-sm btn-outline-secondary">이미지 변경</a>
-	                        </div>
-	                    </c:if>
+						<c:if test="${login.id == vo.id}">
+						    <div class="mt-3">
+						        <a href="imageChangeForm.do?no=${vo.recipes_no}" class="btn btn-sm btn-outline-secondary">이미지 변경</a>
+						    </div>
+						</c:if>
 	                </div>
 	            </div>
 	        </div>
 	    </div>
 
-    <div class="d-flex justify-content-end gap-2 mt-4">
-        <c:if test="${login.id == vo.id}">
-            <a href="recipeUpdate.do?no=${vo.recipes_no}" class="btn btn-dark">수정</a>
-            <button type="button" id="deleteBtn" class="btn btn-danger">삭제</button>
-        </c:if>
-        <a href="list.do?${pageObject.pageQuery}" class="btn btn-outline-dark">리스트</a>
-    </div>
+<div class="d-flex justify-content-end gap-2 mt-4">
+    <c:if test="${login.id == vo.id}">
+        <a href="updateForm.do?no=${vo.recipes_no}&perPageNum=${pageObject.perPageNum}" class="btn btn-dark">수정</a>
+        <button type="button" id="deleteBtn" class="btn btn-danger">삭제</button>
+    </c:if>
+    <a href="list.do?${pageObject.pageQuery}" class="btn btn-outline-dark">리스트</a>
 </div>
 
 <form id="deleteForm" action="delete.do" method="post">

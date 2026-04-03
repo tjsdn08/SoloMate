@@ -75,8 +75,12 @@ import com.solomate.member.service.MemberViewService;
 import com.solomate.member.service.MemberWriteService;
 import com.solomate.recipes.controller.RecipesController;
 import com.solomate.recipes.dao.RecipesDAO;
+import com.solomate.recipes.service.RecipesDeleteService;
+import com.solomate.recipes.service.RecipesImageChangeService;
 import com.solomate.recipes.service.RecipesListService;
+import com.solomate.recipes.service.RecipesUpdateService;
 import com.solomate.recipes.service.RecipesViewService;
+import com.solomate.recipes.service.RecipesWriteService;
 import com.solomate.shopping.controller.ShoppingController;
 import com.solomate.shopping.dao.ShoppingDAO;
 import com.solomate.shopping.service.ShoppingCancelService;
@@ -318,20 +322,19 @@ public class Init extends HttpServlet {
 		// -- Service 저장
 		 serviceMap.put("/recipes/list.do", new RecipesListService());
 		 serviceMap.put("/recipes/view.do", new RecipesViewService());
-		// serviceMap.put("/recipes/update.do", new RecipesUpdateService());
-		// serviceMap.put("/recipes/write.do", new RecipesWriteService());
-		// serviceMap.put("/recipes/changeImg.do", new RecipesChangeImgService());
-		// serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
-
+		  serviceMap.put("/recipes/write.do", new RecipesWriteService());
+		  serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
+		 serviceMap.put("/recipes/update.do", new RecipesUpdateService());
+		 serviceMap.put("/recipes/imageChange.do", new RecipesImageChangeService());
 		// -- DAO 저장
 		daoMap.put("recipesDAO", new RecipesDAO());
 //		 -- service
 		serviceMap.get("/recipes/list.do").setDAO(daoMap.get("recipesDAO"));
 		serviceMap.get("/recipes/view.do").setDAO(daoMap.get("recipesDAO"));
-//		serviceMap.get("/recipes/update.do").setDAO(daoMap.get("recipesDAO"));
-//		serviceMap.get("/recipes/write.do").setDAO(daoMap.get("recipesDAO"));
-//		serviceMap.get("/recipes/changeImg.do").setDAO(daoMap.get("recipesDAO"));
-//		serviceMap.get("/recipes/delete.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/write.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/delete.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/update.do").setDAO(daoMap.get("recipesDAO"));
+		serviceMap.get("/recipes/imageChange.do").setDAO(daoMap.get("recipesDAO"));
 
 		// 고승희 - 레시피 아카이브 북마크 처리
 
