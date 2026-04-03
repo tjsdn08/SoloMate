@@ -32,7 +32,7 @@ public class FolderController implements Controller{
 			case "/folder/list.do":
 				PageObject pageObject = PageObject.getInstance(request);
 				// 아이디를 pageObject에 넣기
-				pageObject.setAccepter("test");
+				pageObject.setAccepter(loginId);
 				
 				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
 				System.out.println("FoodController.execute().pageObject - " + pageObject);
@@ -54,7 +54,7 @@ public class FolderController implements Controller{
 			case "/folder/write.do":
 				
 				vo = new FolderVO();
-				vo.setMemberId("test"); // 더미 데이터 !!!!!!!!!!
+				vo.setMemberId(loginId); // id
 				vo.setName(request.getParameter("name"));
 				Execute.execute(Init.getService(uri), vo);
 				

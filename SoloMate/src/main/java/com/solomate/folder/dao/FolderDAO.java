@@ -1,5 +1,6 @@
 package com.solomate.folder.dao;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class FolderDAO extends DAO{
 	    String sql = "SELECT no, name, TO_CHAR(createdAt, 'yyyy-mm-dd') createdAt FROM folder WHERE memberId = ? order by createdAt desc ";
 
 	    pstmt = con.prepareStatement(sql);
-	    pstmt.setString(1, "test"); // -> 나중엔 로그인값
+	    pstmt.setString(1, memberId); // id
 
 	    rs = pstmt.executeQuery();
 
@@ -113,7 +114,10 @@ public class FolderDAO extends DAO{
 		
 		con = DB.getConnection();
 		
-		String sql = "SELECT no, name, TO_CHAR(createdAt, 'yyyy-mm-dd') createdAt FROM folder WHERE memberId = ? order by createdAt desc ";
+		String sql = "SELECT no, name, TO_CHAR(createdAt, 'yyyy-mm-dd') createdAt FROM folder WHERE memberId = ? ";
+				
+		// 검색 조건 추가
+		sql += search(pageObject);
 		
 		sql = "SELECT rownum rnum, no, name, createdAt "
 				+ " FROM(" + sql + ")";
@@ -122,9 +126,12 @@ public class FolderDAO extends DAO{
 		
 		// 4. 
 		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, pageObject.getAccepter()); // -> 나중엔 로그인값!!!!!!!
-		pstmt.setLong(2, pageObject.getStartRow());
-		pstmt.setLong(3, pageObject.getEndRow());
+		int idx = 1;
+		// 검색 데이터 세팅
+		pstmt.setString(idx++, pageObject.getAccepter()); // id
+		idx = searchDataSet(pstmt, idx, pageObject);
+		pstmt.setLong(idx++, pageObject.getStartRow());
+		pstmt.setLong(idx++, pageObject.getEndRow());
 		
 		rs = pstmt.executeQuery();
 		
@@ -153,18 +160,19 @@ public class FolderDAO extends DAO{
 		String sql = "select count(*) from folder where memberId = ? ";
 		
 		// 검색 처리를 한다. -> list()의 검색 처리와 같다. -> 반복이 된다. 메서드를 만든다.
-		// sql += search(pageObject);
+		sql += search(pageObject);
 		
 		// 4. 실행 객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
-		// 하드코딩 !!!!!!!!
-		pstmt.setString(1, pageObject.getAccepter());
 		
 		// - 검색 처리를 하면 데이터 세팅이 필요하다. ?가 생긴다.
 		// 순서 번호의 변수 선언해서 사용한다.
-		// int idx = 1;
+		int idx = 1;
 		// 검색 데이터 세팅을 한다. - ?가 생길 수도 있다.
-		// idx = searchDataSet(pstmt, idx, pageObject); // pstmt 데이터 메서드 안에서 변경하면 밖에서 변경된 상태 : 참조형 변수 - 주소 전달
+		
+		// id
+		pstmt.setString(idx++, pageObject.getAccepter());
+		idx = searchDataSet(pstmt, idx, pageObject); // pstmt 데이터 메서드 안에서 변경하면 밖에서 변경된 상태 : 참조형 변수 - 주소 전달
 		
 		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
 		rs = pstmt.executeQuery();
@@ -181,8 +189,31 @@ public class FolderDAO extends DAO{
 		return totalRow;
 	} // getTotalRow()의 끝	
 	
-	// 폴더 상세 보기
+
 	
+	// 검색 조건 생성 메서드
+	public String search(PageObject pageObject) {
+		String sql = " and 1=1";
+		
+		// 1. 검색어 조건 추가
+		String word = pageObject.getWord();
+		if(word != null && word.length() != 0) {
+			sql += " and name like ? ";
+		}
+		return sql;
+	}
+	
+	// 검색 세팅 메서드
+	public Integer searchDataSet(PreparedStatement pstmt, int idx, PageObject pageObject) 
+	 throws Exception {
+		
+		// 1. 검색어 데이터 세팅
+		String word = pageObject.getWord();
+		if(word != null && word.length() != 0) {
+			pstmt.setString(idx++, "%" + word + "%");
+		}
+		return idx;
+	}
 	
 	
 	// 폴더 등록

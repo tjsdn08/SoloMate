@@ -36,6 +36,7 @@ public class FoodController implements Controller {
 			case "/food/list.do":
 				
 				PageObject pageObject = PageObject.getInstance(request);
+				pageObject.setAccepter(loginId); // 로그인 아이디를 accepter에 넘김
 				
 				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
 				System.out.println("FoodController.execute().pageObject - " + pageObject);
@@ -52,9 +53,9 @@ public class FoodController implements Controller {
 			case "/food/writeForm.do":
 				
 				// 선택 용 폴더 
-				// 폴더 목록 추가 test 임시 데이터 !!!!
+				// id
 				FolderDAO dao = new FolderDAO();
-				request.setAttribute("folderList", dao.listAll("test"));
+				request.setAttribute("folderList", dao.listAll(loginId));
 				
 				return "food/writeForm";
 			
@@ -66,7 +67,7 @@ public class FoodController implements Controller {
 				vo.setQuantity(Long.parseLong(request.getParameter("quantity")));
 				vo.setStorageType(request.getParameter("storageType"));
 				vo.setMemo(request.getParameter("memo"));
-				vo.setMemberId("test");       // test" 임시 로 !!!!
+				vo.setMemberId(loginId);       // id
 				
 				// 폴더
 				String[] folderNoArr = request.getParameterValues("folderNos");
@@ -89,9 +90,9 @@ public class FoodController implements Controller {
 				// 식품 정보
 				request.setAttribute("vo", Execute.execute(Init.getService("/food/view.do"), no));
 				
-				// 폴더 목록 추가 test 임시 데이터 !!!!
+				// id
 				dao = new FolderDAO();
-				request.setAttribute("folderList", dao.listAll("test"));
+				request.setAttribute("folderList", dao.listAll(loginId));
 				return "food/updateForm";		
 			
 			case "/food/update.do":

@@ -1,10 +1,12 @@
 package com.solomate.food.dao;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.opensymphony.module.sitemesh.Page;
 import com.solomate.food.vo.FoodVO;
 import com.solomate.main.dao.DAO;
 import com.solomate.util.db.DB;
@@ -23,8 +25,10 @@ public class FoodDAO extends DAO{
 		String sql = "select no, memberId, name, to_char(expiryDate, 'yyyy-mm-dd') expiryDate, quantity, storageType from food"
 				+ " where memberId = ? ";
 		
-//		sql += search(pageObject);  검색처리
+		sql += search(pageObject);
 		sql += " order by expiryDate ";
+		
+		System.out.println(sql);
 		
 		// 순서번호
 		sql = "select rownum rnum, no, memberId, name, expiryDate, quantity, storageType from(" + sql + ")";
@@ -35,11 +39,12 @@ public class FoodDAO extends DAO{
 		
 		int idx = 1; //검색 처리
 		
-//		idx = searchDataSet(pstmt, idx, pageObject); 검색 처리
-		// 아이디 하드코딩함. LoginVO loginvo를 받아야함. !!!!!!! 
-		pstmt.setString(idx++, "test");
+		pstmt.setString(idx++, pageObject.getAccepter());
+		idx = searchDataSet(pstmt, idx, pageObject); // 검색 처리 
 		pstmt.setLong(idx++, pageObject.getStartRow()); // 검색처리시 수정해야댐
 		pstmt.setLong(idx++, pageObject.getEndRow()); // 검색처리시 수정해야댐
+		
+		System.out.println(sql);
 		
 		rs = pstmt.executeQuery();
 		
@@ -71,18 +76,18 @@ public class FoodDAO extends DAO{
 		String sql = "select count(*) from food where memberId = ? ";
 		
 		// 검색 처리를 한다. -> list()의 검색 처리와 같다. -> 반복이 된다. 메서드를 만든다.
-//		sql += search(pageObject);
+		sql += search(pageObject);
 		
 		// 4. 실행 객체 & 데이터 세팅
 		pstmt = con.prepareStatement(sql);
-		// 하드코딩
-		pstmt.setString(1, "test");
 		
 		// - 검색 처리를 하면 데이터 세팅이 필요하다. ?가 생긴다.
 		// 순서 번호의 변수 선언해서 사용한다.
-//		int idx = 1;
+		int idx = 1;
+		// 하드코딩
+		pstmt.setString(idx++, pageObject.getAccepter());
 		// 검색 데이터 세팅을 한다. - ?가 생길 수도 있다.
-//		idx = searchDataSet(pstmt, idx, pageObject); // pstmt 데이터 메서드 안에서 변경하면 밖에서 변경된 상태 : 참조형 변수 - 주소 전달
+		idx = searchDataSet(pstmt, idx, pageObject); // pstmt 데이터 메서드 안에서 변경하면 밖에서 변경된 상태 : 참조형 변수 - 주소 전달
 		
 		// 5. 실행 : select :executeQuery() -> rs, insert / update / delete :executeUpdate() -> Integer
 		rs = pstmt.executeQuery();
@@ -98,6 +103,49 @@ public class FoodDAO extends DAO{
 		
 		return totalRow;
 	} // getTotalRow()의 끝	
+	
+	//검색 조건을 검색하는 메서드
+	public String search(PageObject pageObject) {
+		String sql = " and 1=1 ";
+		
+		// 1. 보관방법 조건 추가 key를 검색에서 안쓰기 때문에 보관방법=key 로 쓸게영
+		String key = pageObject.getKey();
+		if(key != null && key != "") {
+			if (key.indexOf("냉동") >= 0) sql += " and storageType = ? ";
+			if (key.indexOf("냉장") >= 0) sql += " and storageType = ? ";
+			if (key.indexOf("실온") >= 0) sql += " and storageType = ? ";
+		}
+		
+		// 2. 검색어 조건 추가
+		String word = pageObject.getWord();
+		if(word != null && word.length() != 0) {
+			sql += " and name like ? ";
+		}
+		System.out.println(sql);
+		return sql;
+	}
+	
+	// 검색어 데이터 세팅 메서드 
+	public Integer searchDataSet(PreparedStatement pstmt, int idx, PageObject pageObject) 
+	 throws Exception {
+		
+		// 1. 보관방법 epdlxj tpxld
+		String key = pageObject.getKey();
+		if(key != null && !key.equals("")) {
+			System.out.println("나오세요");
+			pstmt.setString(idx++, key);
+			System.out.println("나와야해" + key);
+		}
+		
+		// 2. 검색어 데이터 세팅 
+		String word = pageObject.getWord();
+		if(word != null && word.length() != 0) {
+			System.out.println("나와요");
+			pstmt.setString(idx++, "%" + word + "%");
+		}
+		
+		return idx;
+	}
 	
 	
 	// .D-Day 를 반환하는 메서드
