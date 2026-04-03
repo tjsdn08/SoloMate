@@ -138,13 +138,18 @@ $(function(){
     <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">
 </form>
 
-<form id="bookmarkWriteForm" action="/recipesbookmark/write.do" method="post">
+<form id="bookmarkWriteForm" action="${pageContext.request.contextPath}/recipesbookmark/write.do" method="post">
     <input type="hidden" name="no" value="${vo.recipes_no}">
+    <input type="hidden" name="page" value="${pageObject.page}">
+    <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">
+    <input type="hidden" name="action" value="view">
 </form>
 
-<form id="bookmarkDeleteForm" action="/recipesbookmark/delete.do" method="post">
+<form id="bookmarkDeleteForm" action="${pageContext.request.contextPath}/recipesbookmark/delete.do" method="post">
     <input type="hidden" name="no" value="${vo.recipes_no}">
+    <input type="hidden" name="page" value="${pageObject.page}">
+    <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">
+    <input type="hidden" name="action" value="view">
 </form>
-
 </body>
 </html>

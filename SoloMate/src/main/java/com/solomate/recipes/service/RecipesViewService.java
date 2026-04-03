@@ -3,6 +3,7 @@ package com.solomate.recipes.service;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
 import com.solomate.recipes.dao.RecipesDAO;
+import com.solomate.recipes.vo.RecipesVO;
 
 public class RecipesViewService implements Service {
 
@@ -14,9 +15,11 @@ public class RecipesViewService implements Service {
     }
 
     @Override
-    public Object service(Object obj) throws Exception {
+    public RecipesVO service(Object obj) throws Exception {
         Object[] objs = (Object[]) obj;
         Long no = (Long) objs[0];
-        return dao.view(no);
+        String id = (String) objs[1]; 
+
+        return dao.view(no, id);
     }
 }

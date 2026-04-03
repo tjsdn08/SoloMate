@@ -38,15 +38,17 @@ public class RecipesController implements Controller{
 			
 			case "/recipes/view.do":
 			    no = Long.parseLong(request.getParameter("no"));
-			    int inc = Integer.parseInt(request.getParameter("inc"));
+			    
+			    // 로그인 아이디 가져오기 (북마크 여부 확인용)
+			    String loginId = null;
+			    LoginVO loginForBookmark = (LoginVO) session.getAttribute("login");
+			    if (loginForBookmark != null) loginId = loginForBookmark.getId();
 
-			    vo = (RecipesVO) Execute.execute(Init.getService(uri), new Object[]{no, inc});
+			    vo = (RecipesVO) Execute.execute(Init.getService(uri), new Object[]{no, loginId});
 
 			    request.setAttribute("vo", vo);
-
 			    request.setAttribute("pageObject", PageObject.getInstance(request));
 
-			    // 5. JSP 경로 리턴
 			    return "recipes/view";
 			    
 	 			case "/recipes/writeForm.do":

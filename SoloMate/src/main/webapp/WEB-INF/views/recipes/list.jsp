@@ -128,8 +128,8 @@
 		    <a href="writeForm.do?perPageNum=${pageObject.perPageNum}" class="btn btn-dark">글등록</a>
 		    <a href="list.do" class="btn btn-outline-dark">새로고침</a>
 		    <c:if test="${not empty login}">
-			    <a href="${pageContext.request.contextPath}/recipesbookmark/list.do" class="btn btn-dark">북마크 리스트</a>
-			</c:if>
+		        <a href="${pageContext.request.contextPath}/recipesbookmark/list.do" class="btn btn-dark">북마크 리스트</a>
+		    </c:if>
 		</div>
 	</div>
 

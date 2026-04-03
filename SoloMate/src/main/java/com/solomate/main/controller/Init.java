@@ -81,6 +81,11 @@ import com.solomate.recipes.service.RecipesListService;
 import com.solomate.recipes.service.RecipesUpdateService;
 import com.solomate.recipes.service.RecipesViewService;
 import com.solomate.recipes.service.RecipesWriteService;
+import com.solomate.recipesbookmark.controller.RecipesBookmarkController;
+import com.solomate.recipesbookmark.dao.RecipesBookmarkDAO;
+import com.solomate.recipesbookmark.service.RecipesBookmarkDeleteService;
+import com.solomate.recipesbookmark.service.RecipesBookmarkListService;
+import com.solomate.recipesbookmark.service.RecipesBookmarkWriteService;
 import com.solomate.shopping.controller.ShoppingController;
 import com.solomate.shopping.dao.ShoppingDAO;
 import com.solomate.shopping.service.ShoppingCancelService;
@@ -315,8 +320,9 @@ public class Init extends HttpServlet {
 		serviceMap.get("/member/checkId.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/write.do").setDAO(daoMap.get("memberDAO"));
 		serviceMap.get("/member/findPw.do").setDAO(daoMap.get("memberDAO"));
+		
+		
 		// 고승희 - 레시피 아카이브
-
 		 controllerMap.put("/recipes", new RecipesController());
 
 		// -- Service 저장
@@ -336,19 +342,18 @@ public class Init extends HttpServlet {
 		serviceMap.get("/recipes/update.do").setDAO(daoMap.get("recipesDAO"));
 		serviceMap.get("/recipes/imageChange.do").setDAO(daoMap.get("recipesDAO"));
 
-		// 고승희 - 레시피 아카이브 북마크 처리
+		// --- 고승희 - 레시피 아카이브 북마크 처리 ---
+		controllerMap.put("/recipesbookmark", new RecipesBookmarkController());
 
-		// controllerMap.put("/recipesBookmarks", new RecipesBookmarksController());
+		daoMap.put("recipesBookmarkDAO", new RecipesBookmarkDAO());
 
-		// -- Service 저장
-		// serviceMap.put("/recipesBookmarks/list.do", new RecipesBookmarksListService());
-		// serviceMap.put("/recipesBookmarks/update.do", new RecipesBookmarksUpdateService());
-		// serviceMap.put("/recipesBookmarks/delete.do", new RecipesBookmarksDeleteService());
-		// -- DAO 저장
-		// daoMap.put("recipesBookmarksDAO", new recipesBookmarksDAO());
-		// -- service
-//		serviceMap.get("/recipesBookmarks/list.do").setDAO(daoMap.get("recipesBookmarksDAO"));
-//		serviceMap.get("/recipesBookmarks/update.do").setDAO(daoMap.get("recipesBookmarksDAO"));
-//		serviceMap.get("/recipesBookmarks/delete.do").setDAO(daoMap.get("recipesBookmarksDAO"));
+		serviceMap.put("/recipesbookmark/list.do", new RecipesBookmarkListService());
+		serviceMap.put("/recipesbookmark/write.do", new RecipesBookmarkWriteService());
+		serviceMap.put("/recipesbookmark/delete.do", new RecipesBookmarkDeleteService());
+
+		serviceMap.get("/recipesbookmark/list.do").setDAO(daoMap.get("recipesBookmarkDAO"));
+		serviceMap.get("/recipesbookmark/write.do").setDAO(daoMap.get("recipesBookmarkDAO"));
+		serviceMap.get("/recipesbookmark/delete.do").setDAO(daoMap.get("recipesBookmarkDAO"));
+
 	}
 }

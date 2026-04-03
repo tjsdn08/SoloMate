@@ -107,40 +107,44 @@ public class RecipesDAO extends DAO{
 	}
 	
 	
-	public RecipesVO view(Long no) throws Exception {
+	public RecipesVO view(Long no, String id) throws Exception {
 	    RecipesVO vo = null;
-        con = DB.getConnection();
-        
-        String sql = "SELECT r.recipes_no, r.recipes_title, r.id, r.name, r.food, "
-                   + " r.description, r.recipes_time, r.recipes_level, r.recipes_img, "
-                   + " r.recipes_content, "
-                   + " TO_CHAR(r.recipes_writeDate, 'yyyy-mm-dd') recipes_writeDate, " 
-                   + " (SELECT COUNT(*) FROM recipes_bookmark rb WHERE rb.recipes_no = r.recipes_no) recipes_bookmark "
-                   + " FROM recipes r WHERE r.recipes_no = ?";
-        
-        pstmt = con.prepareStatement(sql);
-        pstmt.setLong(1, no);
-        rs = pstmt.executeQuery();
-        
-        if(rs != null && rs.next()) {
-            vo = new RecipesVO();
-            vo.setRecipes_no(rs.getLong("recipes_no"));
-            vo.setRecipes_title(rs.getString("recipes_title"));
-            vo.setId(rs.getString("id"));
-            vo.setName(rs.getString("name"));
-            vo.setFood(rs.getString("food"));
-            vo.setDescription(rs.getString("description"));
-            vo.setRecipes_time(rs.getInt("recipes_time"));
-            vo.setRecipes_level(rs.getString("recipes_level"));
-            vo.setRecipes_img(rs.getString("recipes_img"));
-            vo.setRecipes_content(rs.getString("recipes_content"));
-            vo.setRecipes_writeDate(rs.getString("recipes_writeDate")); 
-            vo.setRecipes_bookmark(rs.getLong("recipes_bookmark"));
-        }
-        DB.close(con, pstmt, rs);
+	        con = DB.getConnection();
+
+	        String sql = "select r.recipes_no, r.recipes_title, r.id, m.name, r.food, "
+	                   + " r.description, r.recipes_time, r.recipes_level, r.recipes_img, "
+	                   + " r.recipes_content, TO_CHAR(r.recipes_writeDate, 'yyyy-mm-dd') recipes_writeDate, "
+	                   + " (select count(*) from recipes_bookmark where recipes_no = r.recipes_no) recipes_bookmark, "
+	                   + " (select count(*) from recipes_bookmark rb where rb.recipes_no = r.recipes_no and rb.id = ?) bookmarked "
+	                   + " from recipes r, member m "
+	                   + " where (r.id = m.id) and (r.recipes_no = ?)";
+
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id); 
+	        pstmt.setLong(2, no);
+
+	        rs = pstmt.executeQuery();
+
+	        if (rs != null && rs.next()) {
+	            vo = new RecipesVO();
+	            vo.setRecipes_no(rs.getLong("recipes_no"));
+	            vo.setRecipes_title(rs.getString("recipes_title"));
+	            vo.setId(rs.getString("id"));
+	            vo.setName(rs.getString("name"));
+	            vo.setFood(rs.getString("food"));
+	            vo.setDescription(rs.getString("description"));
+	            vo.setRecipes_time(rs.getInt("recipes_time"));
+	            vo.setRecipes_level(rs.getString("recipes_level"));
+	            vo.setRecipes_img(rs.getString("recipes_img"));
+	            vo.setRecipes_content(rs.getString("recipes_content"));
+	            vo.setRecipes_writeDate(rs.getString("recipes_writeDate"));
+	            
+	            vo.setRecipes_bookmark(rs.getLong("recipes_bookmark"));
+	            vo.setBookmarked(rs.getInt("bookmarked"));
+	        }
+	        DB.close(con, pstmt, rs);
 	    return vo;
 	}
-	
 	
 	// 레시피 등록
 	public int write(RecipesVO vo) throws Exception {
