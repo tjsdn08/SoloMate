@@ -8,7 +8,6 @@
 <title>회원 관리 리스트</title>
 
 <style>
-/* 핫딜 리스트와 동일한 레이아웃 설정 */
 .admin-page {
 	padding: 30px;
 	background-color: #fff;

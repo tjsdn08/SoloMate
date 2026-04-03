@@ -1,12 +1,160 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>회원 가입</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+.admin-page {
+	padding: 80px 30px 30px 30px;
+	background-color: #fff;
+	min-height: 100vh;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	box-sizing: border-box;
+}
+.admin-card {
+	background: #fff;
+	border-radius: 18px;
+	padding: 40px 30px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+	width: 100%;
+	max-width: 500px;
+}
+
+.top-bar {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.top-title {
+	font-size: 28px;
+	font-weight: 800;
+	color: #111;
+	margin: 0;
+}
+
+/* 폼 전용 스타일 */
+.form-group {
+	margin-bottom: 24px;
+}
+
+.form-label {
+	display: block;
+	font-size: 14px;
+	font-weight: 600;
+	color: #4b5563;
+	margin-bottom: 8px;
+}
+
+.form-input {
+	width: 100%;
+	height: 48px;
+	border: 1px solid #ddd;
+	border-radius: 12px;
+	padding: 0 14px;
+	font-size: 15px;
+	outline: none;
+	box-sizing: border-box;
+	transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+	border-color: #111;
+}
+
+/* 인풋 곁에 버튼이 있는 경우 (아이디 중복 확인) */
+.input-with-btn {
+	display: flex;
+	gap: 8px;
+}
+
+.input-with-btn .form-input {
+	flex: 1;
+}
+
+.input-with-btn .btn-sub {
+	width: auto;
+	padding: 0 16px;
+	white-space: nowrap;
+}
+
+/* 상태 메시지 알림 박스 (기존 jQuery 로직과 연동되는 클래스) */
+.alert {
+	padding: 12px 14px;
+	margin-top: 10px;
+	border-radius: 10px;
+	font-size: 13px;
+	font-weight: 500;
+	display: block;
+}
+
+.alert-secondary {
+	background-color: #f8f9fa;
+	color: #6c757d;
+	border: 1px solid #e9ecef;
+}
+
+.alert-danger {
+	background-color: #fff5f5;
+	color: #c92a2a;
+	border: 1px solid #ffe3e3;
+}
+
+.alert-success {
+	background-color: #f0fdf4;
+	color: #15803d;
+	border: 1px solid #dcfce7;
+}
+
+/* 하단 버튼 영역 */
+.btn-main, .btn-sub {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 48px;
+	border-radius: 12px;
+	border: none;
+	font-size: 15px;
+	font-weight: 700;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background 0.2s ease;
+	box-sizing: border-box;
+}
+
+.btn-main {
+	background: #111827;
+	color: #fff;
+	flex: 2; /* 메인 버튼 강조 */
+}
+
+.btn-main:hover {
+	background: #374151;
+	color: #fff;
+}
+
+.btn-sub {
+	background: #eef0f4;
+	color: #333;
+	flex: 1;
+}
+
+.btn-sub:hover {
+	background: #e5e7eb;
+}
+
+.bottom-buttons {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	margin-top: 32px;
+}
+</style>
 
 <script type="text/javascript">
 $(function(){
@@ -118,59 +266,67 @@ $(function(){
 });
 </script>
 </head>
-<body class="container">
-    <h2 class="mt-5 pt-5 mb-4">👤 회원 가입</h2>
+<body>
 
-    <form action="write.do" method="post" id="writeForm" class="card p-4 shadow-sm">
-	<div class="mb-3">
-	    <label for="id" class="form-label fw-bold">아이디</label>
-	    <div class="input-group">
-	        <input type="text" class="form-control" id="id" name="id" 
-	               placeholder="4~20자 영문, 숫자" required maxlength="20" 
-	               pattern="[a-zA-Z][a-zA-Z0-9]{3,19}">
-	        <button class="btn btn-outline-dark" type="button" id="checkIdBtn">중복 확인</button>
-	    </div>
-	    <div class="alert alert-secondary mt-2 py-2" id="idMsg">
-	        아이디 중복 확인을 해주세요.
-	    </div>
-	</div>
-      
-      <div class="mb-3">
-        <label for="pw" class="form-label fw-bold">비밀번호</label>
-        <input type="password" class="form-control" id="pw" name="pw" required maxlength="20">
-        <div class="alert alert-danger mt-2 py-2" id="pwMsg">비밀번호는 4~20자 사이여야 합니다.</div>
-      </div>
-      
-      <div class="mb-3">
-        <label for="pw2" class="form-label fw-bold">비밀번호 확인</label>
-        <input type="password" class="form-control" id="pw2" required maxlength="20">
-        <div class="alert alert-danger mt-2 py-2" id="pw2Msg">비밀번호를 한 번 더 입력하세요.</div>
-      </div>    
-      
-      <div class="mb-3">
-        <label for="name" class="form-label fw-bold">이름</label>
-        <input type="text" class="form-control" id="name" name="name" required pattern="[가-힣]{2,10}">
-      </div>
-      
-	<div class="mb-3">
-	    <label for="tel" class="form-label fw-bold">연락처</label>
-	    <input type="tel" class="form-control" id="tel" name="tel" 
-	           placeholder="010-0000-0000" required 
-	           title="010-xxxx-xxxx 형식으로 입력하세요."
-	           maxlength="13">
-	    <div class="alert alert-danger mt-2 py-2" id="telMsg">연락처는 필수 입력 사항입니다.</div>
-	</div>
-	
-      <div class="mb-4">
-        <label for="address" class="form-label fw-bold">주소</label>
-        <input type="text" class="form-control" id="address" name="address" required>
-      </div>
+	<div class="admin-page">
+		<form action="write.do" method="post" id="writeForm" class="admin-card">
+			
+			<div class="top-bar">
+				<h2 class="top-title">회원 가입</h2>
+			</div>
 
-      <div class="d-flex gap-2">
-          <button type="submit" class="btn btn-dark px-4">등록</button>
-          <button type="reset" class="btn btn-outline-secondary">초기화</button>
-          <button type="button" class="cancelBtn btn btn-link text-decoration-none text-muted">취소</button>
-      </div>
-    </form>
+			<div class="form-group">
+				<label for="id" class="form-label">아이디</label>
+				<div class="input-with-btn">
+					<input type="text" class="form-input" id="id" name="id" 
+						   placeholder="4~20자 영문, 숫자" required maxlength="20" 
+						   pattern="[a-zA-Z][a-zA-Z0-9]{3,19}">
+					<button class="btn-sub" type="button" id="checkIdBtn">중복 확인</button>
+				</div>
+				<div class="alert alert-secondary" id="idMsg">
+					아이디 중복 확인을 해주세요.
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="pw" class="form-label">비밀번호</label>
+				<input type="password" class="form-input" id="pw" name="pw" required maxlength="20">
+				<div class="alert alert-danger" id="pwMsg">비밀번호는 4~20자 사이여야 합니다.</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="pw2" class="form-label">비밀번호 확인</label>
+				<input type="password" class="form-input" id="pw2" required maxlength="20">
+				<div class="alert alert-danger" id="pw2Msg">비밀번호를 한 번 더 입력하세요.</div>
+			</div>    
+			
+			<div class="form-group">
+				<label for="name" class="form-label">이름</label>
+				<input type="text" class="form-input" id="name" name="name" required pattern="[가-힣]{2,10}">
+			</div>
+			
+			<div class="form-group">
+				<label for="tel" class="form-label">연락처</label>
+				<input type="tel" class="form-input" id="tel" name="tel" 
+					   placeholder="010-0000-0000" required 
+					   title="010-xxxx-xxxx 형식으로 입력하세요."
+					   maxlength="13">
+				<div class="alert alert-danger" id="telMsg">연락처는 필수 입력 사항입니다.</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="address" class="form-label">주소</label>
+				<input type="text" class="form-input" id="address" name="address" required>
+			</div>
+
+			<div class="bottom-buttons">
+				<button type="submit" class="btn-main">등록</button>
+				<button type="reset" class="btn-sub">초기화</button>
+				<button type="button" class="btn-sub cancelBtn">취소</button>
+			</div>
+			
+		</form>
+	</div>
+
 </body>
 </html>
