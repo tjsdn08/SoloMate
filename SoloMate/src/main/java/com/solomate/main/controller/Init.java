@@ -57,6 +57,8 @@ import com.solomate.hotdeal.service.HotDealAddShoppingService;
 import com.solomate.hotdeal.service.HotDealListService;
 import com.solomate.hotdeal.service.HotDealViewService;
 import com.solomate.main.dao.DAO;
+import com.solomate.main.dao.MainDAO;
+import com.solomate.main.service.MainSummaryService;
 import com.solomate.main.service.Service;
 import com.solomate.member.controller.MemberController;
 import com.solomate.member.dao.MemberDAO;
@@ -117,6 +119,14 @@ public class Init extends HttpServlet {
 	}
 
 	public void init(ServletConfig config) throws ServletException {
+		
+		 // 고승희 - 메인
+		// == controller는 모듈명으로 저장
+		controllerMap.put("/main", new MainController());
+		// 메인 요약 카드 서비스 등록
+		daoMap.put("mainDAO", new MainDAO());
+		serviceMap.put("/main/summary.do", new MainSummaryService());
+		serviceMap.get("/main/summary.do").setDAO(daoMap.get("mainDAO"));
 
 		// ------------------------------장선우--------------------------------
 		// shopping
@@ -331,8 +341,8 @@ public class Init extends HttpServlet {
 		// -- Service 저장
 		 serviceMap.put("/recipes/list.do", new RecipesListService());
 		 serviceMap.put("/recipes/view.do", new RecipesViewService());
-		  serviceMap.put("/recipes/write.do", new RecipesWriteService());
-		  serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
+		 serviceMap.put("/recipes/write.do", new RecipesWriteService());
+		 serviceMap.put("/recipes/delete.do", new RecipesDeleteService());
 		 serviceMap.put("/recipes/update.do", new RecipesUpdateService());
 		 serviceMap.put("/recipes/imageChange.do", new RecipesImageChangeService());
 		// -- DAO 저장
@@ -358,5 +368,8 @@ public class Init extends HttpServlet {
 		serviceMap.get("/recipesbookmark/write.do").setDAO(daoMap.get("recipesBookmarkDAO"));
 		serviceMap.get("/recipesbookmark/delete.do").setDAO(daoMap.get("recipesBookmarkDAO"));
 
+
+
+		
 	}
 }

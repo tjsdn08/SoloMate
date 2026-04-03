@@ -35,8 +35,15 @@ public class BoardController implements Controller {
 			    return "board/list";
 				
 			case "/board/view.do":
-			    no = Long.parseLong(request.getParameter("no"));
-			    int inc = Integer.parseInt(request.getParameter("inc"));
+			    String noStr = request.getParameter("no");
+			    String incStr = request.getParameter("inc");
+
+			    no = (noStr != null && !noStr.isEmpty()) ? Long.parseLong(noStr) : 0L;
+			    int inc = (incStr != null && !incStr.isEmpty()) ? Integer.parseInt(incStr) : 0;
+
+			    if (no == 0) {
+			        throw new Exception("게시글 번호가 올바르지 않습니다.");
+			    }
 
 			    HttpSession session = request.getSession();
 			    com.solomate.member.vo.LoginVO login = (com.solomate.member.vo.LoginVO) session.getAttribute("login");
@@ -46,16 +53,14 @@ public class BoardController implements Controller {
 			        id = login.getId(); 
 			    }
 
-			    // 💡 수정된 부분: new Object[] { no, (long)inc, id } 로 3개를 보냅니다.
 			    vo = (BoardVO) Execute.execute(Init.getService(uri), new Object[]{no, (long)inc, id});
 			    
-			    // (이전 코드에서 에러를 냈던 vo.setBookmarked 부분은 서비스로 옮겨갔으니 지우셔도 됩니다.)
-
 			    request.setAttribute("vo", vo);
 			    
 			    String from = request.getParameter("from");
-			    request.setAttribute("from", request.getParameter("from"));
+			    request.setAttribute("from", from);
 			    return "board/view";
+
 				
 			case "/board/writeForm.do":
 				return "board/writeForm";
