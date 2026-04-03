@@ -8,52 +8,61 @@
 <title>카테고리 관리</title>
 
 <style>
-.page {
-	padding: 40px;
+.admin-page {
+	padding: 30px;
 }
 
-.wrap {
-	max-width: 1100px;
-	margin: auto;
+.admin-card {
 	background: #fff;
-	border-radius: 24px;
-	padding: 32px;
-	box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+	border-radius: 18px;
+	padding: 24px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.top {
+.top-bar {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 24px;
+	margin-bottom: 20px;
 }
 
-.title {
-	font-size: 38px;
+.top-title {
+	font-size: 28px;
 	font-weight: 800;
-	margin: 0;
+	color: #111;
 }
 
-.btn-add {
+.btn-main, .btn-sub, .btn-icon {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	gap: 8px;
-	height: 50px;
+	height: 48px;
 	padding: 0 18px;
 	border-radius: 12px;
 	border: none;
-	background: #111827;
-	color: #fff;
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: 700;
+	text-decoration: none;
 	cursor: pointer;
 }
 
-.table-box {
-	border: 1px solid #e5e7eb;
-	border-radius: 20px;
-	overflow: hidden;
+.btn-main {
+	background: #111827;
+	color: #fff;
+}
+
+.btn-sub {
+	background: #eef0f4;
+	color: #333;
+}
+
+.btn-icon {
+	width: 42px;
+	height: 42px;
+	padding: 0;
+	background: #eef0f4;
+	color: #333;
+	font-size: 16px;
 }
 
 .table-custom {
@@ -63,7 +72,7 @@
 
 .table-custom th,
 .table-custom td {
-	padding: 20px 22px;
+	padding: 16px 14px;
 	text-align: left;
 	border-bottom: 1px solid #f0f1f3;
 	vertical-align: middle;
@@ -72,312 +81,191 @@
 .table-custom thead th {
 	background: #f8f9fa;
 	color: #666;
-	font-size: 17px;
+	font-size: 14px;
 	font-weight: 700;
 }
 
 .table-custom tbody td {
-	font-size: 19px;
-	font-weight: 600;
+	font-size: 15px;
+	font-weight: 500;
 }
 
-.table-custom tbody tr:last-child td {
-	border-bottom: none;
-}
-
-.badge-status {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 98px;
-	height: 36px;
-	padding: 0 14px;
+.status-badge {
+	display: inline-block;
+	padding: 6px 10px;
 	border-radius: 999px;
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 700;
-	background: #eef0f4;
-	color: #333;
 }
 
-.actions {
+.status-active {
+	background: #e8f6ea;
+	color: #2e7d32;
+}
+
+.status-inactive {
+	background: #fdecec;
+	color: #c62828;
+}
+
+.manage-box {
 	display: flex;
-	gap: 10px;
-}
-
-.icon-btn {
-	width: 42px;
-	height: 42px;
-	border-radius: 10px;
-	background: #f3f4f6;
-	border: 1px solid #e5e7eb;
-	display: inline-flex;
+	gap: 8px;
 	align-items: center;
-	justify-content: center;
-	text-decoration: none;
-	color: #222;
-	font-size: 18px;
-	cursor: pointer;
 }
 
-.icon-btn:hover {
-	background: #e9ecef;
-	color: #111;
-	text-decoration: none;
-}
-
-/* 모달 */
-.modal {
-	display: none;
-	position: fixed;
-	left: 0;
-	top: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(0,0,0,0.45);
-	z-index: 999;
-	align-items: center;
-	justify-content: center;
-}
-
-.modal-card {
-	width: 560px;
-	background: #fff;
-	border-radius: 22px;
-	padding: 26px;
-	box-shadow: 0 18px 50px rgba(0,0,0,0.2);
-}
-
-.modal-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin-bottom: 20px;
-}
-
-.modal-title {
-	font-size: 30px;
-	font-weight: 800;
+.manage-box form {
 	margin: 0;
-}
-
-.modal-close {
-	border: none;
-	background: none;
-	font-size: 28px;
-	cursor: pointer;
-	color: #777;
-}
-
-.form-group {
-	margin-bottom: 20px;
-}
-
-.form-label {
-	display: block;
-	font-size: 16px;
-	font-weight: 700;
-	color: #444;
-	margin-bottom: 10px;
-}
-
-.form-input,
-.form-select {
-	width: 100%;
-	height: 54px;
-	border-radius: 14px;
-	border: 1px solid #d1d5db;
-	padding: 0 16px;
-	font-size: 16px;
-	outline: none;
-}
-
-.form-input:focus,
-.form-select:focus {
-	border-color: #888;
-	box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
-}
-
-.submit-btn {
-	width: 100%;
-	height: 54px;
-	border: none;
-	border-radius: 14px;
-	background: #111827;
-	color: #fff;
-	font-size: 19px;
-	font-weight: 800;
-	cursor: pointer;
 }
 
 .empty-row td {
 	text-align: center;
 	color: #777;
-	font-size: 17px;
-	font-weight: 500;
 	padding: 40px 20px;
+}
+
+.bottom-row {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-top: 20px;
 }
 </style>
 
 <script type="text/javascript">
-function openWriteModal() {
-	document.getElementById("writeModal").style.display = "flex";
-}
+	$(function() {
+		$(".status-btn").click(function() {
+			const currentStatus = $(this).data("status");
+			const nextStatus = currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+			return confirm("상태를 " + nextStatus + " 로 변경하시겠습니까?");
+		});
 
-function openUpdateModal(id, name, status) {
-	document.getElementById("updateModal").style.display = "flex";
-	document.getElementById("u_categoryId").value = id;
-	document.getElementById("u_categoryName").value = name;
-	document.getElementById("u_status").value = status;
-}
-
-function closeModal(id) {
-	const modal = document.getElementById(id);
-	if (modal) {
-		modal.style.display = "none";
-	}
-}
-
-window.addEventListener("DOMContentLoaded", function() {
-
-	document.querySelectorAll(".modal-close").forEach(function(btn) {
-		btn.addEventListener("click", function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			const modalId = this.getAttribute("data-close");
-			closeModal(modalId);
+		$(".delete-btn").click(function() {
+			return confirm("삭제하시겠습니까?");
 		});
 	});
-
-	document.querySelectorAll(".modal").forEach(function(modal) {
-		modal.addEventListener("click", function() {
-			modal.style.display = "none";
-		});
-	});
-});
 </script>
 </head>
 <body>
 
-<div class="page">
-	<div class="wrap">
+<div class="admin-page">
+	<div class="admin-card">
 
-		<div class="top">
-			<h2 class="title">카테고리 관리</h2>
-			<button type="button" class="btn-add" onclick="openWriteModal()">＋ 카테고리 등록</button>
+		<div class="top-bar">
+			<div class="top-title">카테고리 관리</div>
+			<a href="${pageContext.request.contextPath}/adminCategory/writeForm.do" class="btn-main">+ 등록</a>
 		</div>
 
-		<div class="table-box">
-			<table class="table-custom">
-				<thead>
-					<tr>
-						<th style="width: 90px;">번호</th>
-						<th>카테고리명</th>
-						<th style="width: 180px;">상태</th>
-						<th style="width: 180px;">등록일</th>
-						<th style="width: 220px;">관리</th>
+		<table class="table-custom">
+			<thead>
+				<tr>
+					<th style="width: 90px;">번호</th>
+					<th>카테고리명</th>
+					<th style="width: 140px;">상태</th>
+					<th style="width: 160px;">등록일</th>
+					<th style="width: 160px;">관리</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:if test="${empty list}">
+					<tr class="empty-row">
+						<td colspan="5">등록된 카테고리가 없습니다.</td>
 					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty list}">
-						<tr class="empty-row">
-							<td colspan="5">등록된 카테고리가 없습니다.</td>
-						</tr>
-					</c:if>
+				</c:if>
 
-					<c:forEach items="${list}" var="vo">
-						<tr>
-							<td>${vo.categoryId}</td>
-							<td>${vo.categoryName}</td>
-							<td>
-								<span class="badge-status">${vo.status}</span>
-							</td>
-							<td>${vo.createdAt}</td>
-							<td>
-								<div class="actions">
-									<c:choose>
-										<c:when test="${vo.status eq 'ACTIVE'}">
-											<a href="${pageContext.request.contextPath}/adminCategory/status.do?categoryId=${vo.categoryId}&status=INACTIVE"
-											   class="icon-btn" title="비활성화">✕</a>
-										</c:when>
-										<c:otherwise>
-											<a href="${pageContext.request.contextPath}/adminCategory/status.do?categoryId=${vo.categoryId}&status=ACTIVE"
-											   class="icon-btn" title="활성화">✓</a>
-										</c:otherwise>
-									</c:choose>
+				<c:forEach items="${list}" var="vo">
+					<tr>
+						<td>${vo.categoryId}</td>
+						<td>${vo.categoryName}</td>
+						<td>
+							<c:choose>
+								<c:when test="${vo.status eq 'ACTIVE'}">
+									<span class="status-badge status-active">ACTIVE</span>
+								</c:when>
+								<c:otherwise>
+									<span class="status-badge status-inactive">INACTIVE</span>
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>${vo.createdAt}</td>
+						<td>
+							<div class="manage-box">
+								<form action="${pageContext.request.contextPath}/adminCategory/status.do" method="post">
+									<input type="hidden" name="categoryId" value="${vo.categoryId}">
+									<input type="hidden" name="status"
+										value="${vo.status eq 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'}">
+									<button type="submit" class="btn-icon status-btn"
+										data-status="${vo.status}" title="상태 변경">
+										<c:choose>
+											<c:when test="${vo.status eq 'ACTIVE'}"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+														height="24" viewBox="0 0 24 24">
+														<g fill="none">
+														<path
+															d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z" />
+														<path fill="currentColor"
+															d="M3.05 9.31a1 1 0 1 1 1.914-.577c2.086 6.986 11.982 6.987 14.07.004a1 1 0 1 1 1.918.57a9.5 9.5 0 0 1-1.813 3.417L20.414 14A1 1 0 0 1 19 15.414l-1.311-1.311a9.1 9.1 0 0 1-2.32 1.269l.357 1.335a1 1 0 1 1-1.931.518l-.364-1.357c-.947.14-1.915.14-2.862 0l-.364 1.357a1 1 0 1 1-1.931-.518l.357-1.335a9.1 9.1 0 0 1-2.32-1.27l-1.31 1.312A1 1 0 0 1 3.585 14l1.275-1.275c-.784-.936-1.41-2.074-1.812-3.414Z" /></g></svg></c:when>
+											<c:otherwise><svg xmlns="http://www.w3.org/2000/svg" width="24"
+														height="24" viewBox="0 0 24 24">
+														<g fill="none" stroke="currentColor"
+															stroke-linecap="round" stroke-linejoin="round"
+															stroke-width="2">
+														<path
+															d="M21.257 10.962c.474.62.474 1.457 0 2.076C19.764 14.987 16.182 19 12 19s-7.764-4.013-9.257-5.962a1.69 1.69 0 0 1 0-2.076C4.236 9.013 7.818 5 12 5s7.764 4.013 9.257 5.962" />
+														<circle cx="12" cy="12" r="3" /></g></svg></c:otherwise>
+										</c:choose>
+									</button>
+								</form>
 
-									<button type="button"
-											class="icon-btn"
-											title="수정"
-											onclick="openUpdateModal('${vo.categoryId}','${vo.categoryName}','${vo.status}')">✎</button>
+								<a href="${pageContext.request.contextPath}/adminCategory/updateForm.do?categoryId=${vo.categoryId}"
+								   class="btn-icon" title="수정"><svg
+											xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+											viewBox="0 0 24 24">
+											<g fill="none" stroke="currentColor" stroke-linecap="round"
+												stroke-linejoin="round" stroke-width="1">
+											<g stroke-width="2">
+											<path stroke-dasharray="56"
+												d="M3 21l2 -6l11 -11c1 -1 3 -1 4 0c1 1 1 3 0 4l-11 11l-6 2">
+											<animate fill="freeze" attributeName="stroke-dashoffset"
+												dur="0.6s" values="56;0" /></path>
+											<path stroke-dasharray="8" stroke-dashoffset="8"
+												d="M15 5l4 4">
+											<animate fill="freeze" attributeName="stroke-dashoffset"
+												begin="0.6s" dur="0.2s" to="0" /></path></g>
+											<path stroke-dasharray="8" stroke-dashoffset="8"
+												d="M6 15l3 3">
+											<animate fill="freeze" attributeName="stroke-dashoffset"
+												begin="0.8s" dur="0.2s" to="0" /></path></g></svg></a>
 
-									<a href="${pageContext.request.contextPath}/adminCategory/delete.do?categoryId=${vo.categoryId}"
-									   class="icon-btn"
-									   title="삭제"
-									   onclick="return confirm('삭제하시겠습니까?');">🗑</a>
-								</div>
-							</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+								<form action="${pageContext.request.contextPath}/adminCategory/delete.do" method="post">
+									<input type="hidden" name="categoryId" value="${vo.categoryId}">
+									<button type="submit" class="btn-icon delete-btn" title="삭제"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+												height="24" viewBox="0 0 24 24">
+												<g fill="none" stroke="currentColor" stroke-linecap="round"
+													stroke-linejoin="round" stroke-width="2">
+												<path stroke-dasharray="24"
+													d="M12 20h5c0.5 0 1 -0.5 1 -1v-14M12 20h-5c-0.5 0 -1 -0.5 -1 -1v-14">
+												<animate fill="freeze" attributeName="stroke-dashoffset"
+													dur="0.5s" values="24;0" /></path>
+												<path stroke-dasharray="18" stroke-dashoffset="18"
+													d="M4 5h16">
+												<animate fill="freeze" attributeName="stroke-dashoffset"
+													begin="0.5s" dur="0.3s" to="0" /></path>
+												<path stroke-dasharray="10" stroke-dashoffset="10"
+													d="M10 4h4M10 9v7M14 9v7">
+												<animate fill="freeze" attributeName="stroke-dashoffset"
+													begin="0.8s" dur="0.2s" to="0" /></path></g></svg></button>
+								</form>
+							</div>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+
+		<div class="bottom-row">
+			<a href="${pageContext.request.contextPath}/adminCategory/list.do" class="btn-sub">새로고침</a>
 		</div>
 
-	</div>
-</div>
-
-<!-- 등록 모달 -->
-<div id="writeModal" class="modal">
-	<div class="modal-card" onclick="event.stopPropagation();">
-		<div class="modal-header">
-			<h3 class="modal-title">카테고리 등록</h3>
-			<button type="button" class="modal-close" data-close="writeModal">×</button>
-		</div>
-
-		<form action="${pageContext.request.contextPath}/adminCategory/write.do" method="post">
-			<div class="form-group">
-				<label class="form-label">카테고리명</label>
-				<input type="text" name="categoryName" class="form-input" placeholder="예: 식품" required>
-			</div>
-
-			<div class="form-group">
-				<label class="form-label">상태</label>
-				<select name="status" class="form-select" required>
-					<option value="ACTIVE">ACTIVE</option>
-					<option value="INACTIVE">INACTIVE</option>
-				</select>
-			</div>
-
-			<button type="submit" class="submit-btn">등록하기</button>
-		</form>
-	</div>
-</div>
-
-<!-- 수정 모달 -->
-<div id="updateModal" class="modal">
-	<div class="modal-card" onclick="event.stopPropagation();">
-		<div class="modal-header">
-			<h3 class="modal-title">카테고리 수정</h3>
-			<button type="button" class="modal-close" data-close="updateModal">×</button>
-		</div>
-
-		<form action="${pageContext.request.contextPath}/adminCategory/update.do" method="post">
-			<input type="hidden" name="categoryId" id="u_categoryId">
-
-			<div class="form-group">
-				<label class="form-label">카테고리명</label>
-				<input type="text" name="categoryName" id="u_categoryName" class="form-input" required>
-			</div>
-
-			<div class="form-group">
-				<label class="form-label">상태</label>
-				<select name="status" id="u_status" class="form-select" required>
-					<option value="ACTIVE">ACTIVE</option>
-					<option value="INACTIVE">INACTIVE</option>
-				</select>
-			</div>
-
-			<button type="submit" class="submit-btn">수정하기</button>
-		</form>
 	</div>
 </div>
 
