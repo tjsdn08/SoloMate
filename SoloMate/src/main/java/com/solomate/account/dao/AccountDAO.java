@@ -13,100 +13,105 @@ public class AccountDAO extends DAO{
 
 	public List<AccountVO> list(PageObject pageObject, String id) throws Exception {
 	    List<AccountVO> list = new ArrayList<>();
-	    con = DB.getConnection();
-
-	    // 1. SQL 수정: a.title 컬럼을 명시적으로 추가합니다.
-	    String sql = "select a.no, a.amount, ac.cname, ac.type, a.title, a.content, " // title 추가
-	            + " to_char(a.regDate, 'yyyy-mm-dd') regDate "
-	            + " from account a, account_category ac "
-	            + " where (a.id = ?) and (a.cno = ac.cno) ";
-
-	    // 카테고리 필터링 로직 (기존과 동일)
-	    String category = pageObject.getCategory();
-	    if (category != null && !category.equals("")) {
-	        if (category.equals("income")) {
-	            sql += " and ac.type = 'income' ";
-	        } else if (category.equals("expense")) {
-	            sql += " and ac.type = 'expense' ";
-	        } else {
-	            sql += " and ac.cname = ? ";
-	        }
-	    }
-
-	    // 2. 페이징 처리를 위한 래퍼 쿼리 (title 컬럼 추가)
-	    sql = "select rownum rnum, no, amount, cname, type, title, content, regDate "
-	        + " from (" + sql + " order by no desc)";
-
-	    sql = "select rnum, no, amount, cname, type, title, content, regDate "
-	        + " from (" + sql + ") where rnum between ? and ?";
-
-	    pstmt = con.prepareStatement(sql);
 	    
-	    // 파라미터 바인딩 순서 체크
-	    int idx = 1;
-	    pstmt.setString(idx++, id);
+	    try {
+	        con = DB.getConnection();
 
-	    // 카테고리 검색어 바인딩
-	    if (category != null && !category.equals("") 
-	        && !category.equals("income") && !category.equals("expense")) {
-	        pstmt.setString(idx++, category);
+	        // 1. 기본 SQL 작성 (정렬 기준을 regDate 최신순으로 설정)
+	        // 정렬을 위해 서브쿼리 안에서는 to_char 처리 전의 원본 regDate를 사용하거나, 
+	        // 전체를 감싸는 쿼리에서 정렬해야 합니다.
+	        String sql = "select a.no, a.amount, ac.cname, ac.type, a.title, a.content, a.regDate "
+	                + " from account a, account_category ac "
+	                + " where (a.id = ?) and (a.cno = ac.cno) ";
+
+	        // 카테고리 필터링 (기존 로직 유지)
+	        String category = pageObject.getCategory();
+	        if (category != null && !category.equals("")) {
+	            if (category.equals("income")) {
+	                sql += " and ac.type = 'income' ";
+	            } else if (category.equals("expense")) {
+	                sql += " and ac.type = 'expense' ";
+	            } else {
+	                sql += " and ac.cname = ? ";
+	            }
+	        }
+
+	        // 2. 정렬 및 페이징 처리 
+	        // [중요] regDate DESC(최신날짜순), no DESC(같은 날짜면 최신글순)
+	        sql = "select no, amount, cname, type, title, content, to_char(regDate, 'yyyy-mm-dd') regDate "
+	            + " from (" + sql + " order by a.regDate desc, a.no desc)";
+
+	        // 3. ROWNUM을 이용한 페이징 래퍼
+	        sql = "select rownum rnum, no, amount, cname, type, title, content, regDate "
+	            + " from (" + sql + ")";
+	        
+	        sql = "select no, amount, cname, type, title, content, regDate "
+	            + " from (" + sql + ") where rnum between ? and ?";
+
+	        pstmt = con.prepareStatement(sql);
+	        
+	        int idx = 1;
+	        pstmt.setString(idx++, id);
+
+	        // 카테고리 파라미터 바인딩
+	        if (category != null && !category.equals("") 
+	            && !category.equals("income") && !category.equals("expense")) {
+	            pstmt.setString(idx++, category);
+	        }
+
+	        pstmt.setLong(idx++, pageObject.getStartRow());
+	        pstmt.setLong(idx++, pageObject.getEndRow());
+
+	        rs = pstmt.executeQuery();
+
+	        while(rs.next()) {
+	            AccountVO vo = new AccountVO();
+	            vo.setNo(rs.getLong("no"));
+	            vo.setAmount(rs.getLong("amount"));
+	            vo.setCategory(rs.getString("cname")); 
+	            vo.setType(rs.getString("type"));      
+	            vo.setTitle(rs.getString("title"));  
+	            vo.setContent(rs.getString("content"));  
+	            vo.setRegDate(rs.getString("regDate")); 
+
+	            list.add(vo);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        throw e;
+	    } finally {
+	        DB.close(con, pstmt, rs);
 	    }
-
-	    pstmt.setLong(idx++, pageObject.getStartRow());
-	    pstmt.setLong(idx++, pageObject.getEndRow());
-
-	    rs = pstmt.executeQuery();
-
-	    while(rs.next()) {
-	        AccountVO vo = new AccountVO();
-	        
-	        vo.setNo(rs.getLong("no"));
-	        vo.setAmount(rs.getLong("amount")); // VO가 long이면 getLong 권장
-	        vo.setCategory(rs.getString("cname")); 
-	        vo.setType(rs.getString("type"));      
-	        
-	        // ⭐ 매핑 수정: DB의 title을 VO의 title에 넣습니다.
-	        vo.setTitle(rs.getString("title"));  
-	        // 필요하다면 리스트에서도 상세내용을 볼 수 있게 세팅합니다.
-	        vo.setContent(rs.getString("content"));  
-	        
-	        vo.setRegDate(rs.getString("regDate")); 
-
-	        list.add(vo);
-	    }
-
-	    DB.close(con, pstmt, rs);
 	    return list;
 	}
 	
 	// 글 개수
-	public long getTotalRow(PageObject pageObject, String id) throws Exception {
-	    long totalRow = 0;
-	    con = DB.getConnection();
-	    
-	    String sql = "select count(*) from account a, account_category ac "
-	               + " where (a.id = ?) and (a.cno = ac.cno) ";
-	    
-	    // 🚩 list() 메서드와 동일한 필터링 조건이 들어가야 합니다!
-	    String category = pageObject.getCategory();
-	    if (category != null && !category.equals("")) {
-	        if (category.equals("income")) sql += " and ac.type = 'income' ";
-	        else if (category.equals("expense")) sql += " and ac.type = 'expense' ";
-	        else sql += " and ac.cname = ? ";
+	public Long getTotalRow(PageObject pageObject, String id) throws Exception {
+	    Long totalRow = 0L;
+	    try {
+	        con = DB.getConnection();
+	        // 로그인한 아이디(id)의 데이터만 세어야 합니다.
+	        String sql = "select count(*) from account where id = ?";
+	        
+	        // 카테고리 선택 시 개수도 같이 줄어들게 처리
+	        String category = pageObject.getCategory();
+	        if (category != null && !category.equals("")) {
+	            if (category.equals("income")) sql += " and cno in (1,2,3)"; // 예시 cno
+	            else if (category.equals("expense")) sql += " and cno in (4,5,6,7,8,9)";
+	            else sql += " and cno = (select cno from account_category where cname = ?)";
+	        }
+
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        if (category != null && !category.equals("") && !category.equals("income") && !category.equals("expense")) {
+	            pstmt.setString(2, category);
+	        }
+
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) totalRow = rs.getLong(1);
+	    } finally {
+	        DB.close(con, pstmt, rs);
 	    }
-	    
-	    pstmt = con.prepareStatement(sql);
-	    int idx = 1;
-	    pstmt.setString(idx++, id);
-	    if (category != null && !category.equals("") 
-	        && !category.equals("income") && !category.equals("expense")) {
-	        pstmt.setString(idx++, category);
-	    }
-	    
-	    rs = pstmt.executeQuery();
-	    if(rs.next()) totalRow = rs.getLong(1);
-	    
-	    DB.close(con, pstmt, rs);
 	    return totalRow;
 	}
 	
