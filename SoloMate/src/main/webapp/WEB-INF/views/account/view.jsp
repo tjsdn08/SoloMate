@@ -38,6 +38,11 @@
         margin-top: 30px;
         margin-bottom: 50px;
     }
+    .top-title {
+		font-size: 28px;
+		font-weight: 800;
+		color: #111;
+	}
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -58,7 +63,8 @@ $(function(){
 <div class="custom-card">
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <h2 class="mb-4 text-center">💸 가계부 내역 상세 보기</h2>
+        <div class="top-title">💸 가계부 내역 상세 보기</div>
+        
 
         <div class="card shadow-sm p-4">
             <div class="d-flex justify-content-between mb-3">

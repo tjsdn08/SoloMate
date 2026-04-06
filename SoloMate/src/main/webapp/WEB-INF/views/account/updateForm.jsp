@@ -26,6 +26,11 @@
         margin-top: 30px;
         margin-bottom: 50px;
     }
+    .top-title {
+		font-size: 28px;
+		font-weight: 800;
+		color: #111;
+	}
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -45,8 +50,7 @@ $(function(){
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-7">
-            <h2 class="mb-4 text-center">✏️ 내역 수정하기</h2>
-
+            <div class="top-title">✏️ 내역 수정하기</div>
             <div class="card shadow p-4">
                 <form action="update.do" method="post">
                     <input type="hidden" name="page" value="${param.page}">

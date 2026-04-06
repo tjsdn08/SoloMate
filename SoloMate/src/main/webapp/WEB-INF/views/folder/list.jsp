@@ -8,6 +8,17 @@
 <meta charset="UTF-8">
 <title>식품 폴더 목록 보기</title>
 
+<style type="text/css">
+.custom-card {
+        background: white;
+        border-radius: 15px;
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-top: 30px;
+    }
+</style>
+
 <c:if test="${!empty pageObject.key && !empty pageObject.word }">
 	<script type="text/javascript">
 		$(function() {
@@ -21,7 +32,7 @@
 </head>
 <body class="bg-light">
 
-
+<div class="custom-card">
 
     <h2 class="mb-4">식품 폴더 목록 보기</h2>
     
@@ -98,6 +109,6 @@
 		</c:if>
 	
 	</div>
-
+</div>
 </body>
 </html>

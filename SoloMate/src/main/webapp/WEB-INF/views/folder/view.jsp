@@ -6,8 +6,19 @@
 <head>
 <meta charset="UTF-8">
 <title>폴더 상세 보기</title>
+<style type="text/css">
+.custom-card {
+        background: white;
+        border-radius: 15px;
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-top: 30px;
+    }
+</style>
 </head>
 <body>
+<div class="custom-card">
 <h2>폴더 상세 보기</h2>
 <h3>${vo.name }</h3>
 <h4>${vo.createdAt }</h4>
@@ -45,6 +56,6 @@
 		<a href="delete.do" class="btn btn-warning">폴더 삭제 하기</a>
 		<a href="list.do" class="btn btn-primary">폴더 목록 보기</a>
 	</div>
-
+</div>
 </body>
 </html>

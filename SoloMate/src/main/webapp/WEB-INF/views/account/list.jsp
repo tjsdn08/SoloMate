@@ -46,6 +46,11 @@
         position: sticky;
         top: 100px; /* 스크롤 시 따라오도록 설정 */
     }
+    .top-title {
+		font-size: 28px;
+		font-weight: 800;
+		color: #111;
+	}
 </style>
 
 <script type="text/javascript">
@@ -111,7 +116,7 @@
         <div class="col-lg-8">
             <div class="custom-card">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>💸 ${login.name}님의 가계부</h3>
+                    <div class="top-title">💸 ${login.name}님의 가계부</div>
                 </div>
 
                 <div class="search-container">

@@ -14,9 +14,19 @@
 		  });
 	  }); 
 	</script>
+	<style type="text/css">
+	.custom-card {
+	        background: white;
+	        border-radius: 15px;
+	        border: none;
+	        padding: 30px;
+	        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	        margin-top: 30px;
+	    }
+	</style>
 </head>
 <body>
-
+<div class="custom-card">
 	<h2>폴더 등록하기</h2>
 
 	<form action="write.do" method="post" id="writeForm">
@@ -36,5 +46,6 @@
 		<div>
 			<p>폴더를 생성한 후, 식품 수정 화면에서 해당 폴더를 선택하여 식품을 분류할 수 있습니다.</p>
 		</div>
+</div>
 </body>
 </html>

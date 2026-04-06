@@ -46,6 +46,11 @@
         margin-top: 30px;
         margin-bottom: 50px;
     }
+    .top-title {
+		font-size: 28px;
+		font-weight: 800;
+		color: #111;
+	}
 </style>
 
 <script type="text/javascript">
@@ -81,7 +86,7 @@
 </head>
 <body>
 <div class="custom-card">
-	<h2>🍯 꿀팁 아카이브</h2>
+	<div class="top-title">🍯 꿀팁 아카이브</div>
 	<div class="mb-4">
     <form action="list.do" method="get">
         <input type="hidden" name="perPageNum" value="${pageObject.perPageNum }">

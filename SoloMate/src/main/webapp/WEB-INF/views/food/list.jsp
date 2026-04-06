@@ -13,6 +13,14 @@
 	/* background: #888; /* 배경색 변경 - BootStrap 5에서 적용이 안됨 */
 	cursor: pointer; /* 손가락 */
 }
+.custom-card {
+        background: white;
+        border-radius: 15px;
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-top: 30px;
+    }
 </style>
 
 <script type="text/javascript">
@@ -47,7 +55,7 @@
 
 </head>
 <body>
-
+<div class="custom-card">
 <h2>식품 목록 보기</h2>
 	
 	<c:if test="${empty login }">
@@ -121,6 +129,6 @@
 		</c:if>
 	
 	</div>
-
+</div>
 </body>
 </html>

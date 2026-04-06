@@ -28,10 +28,18 @@
 		input#name {
 			background-color: rgb(233, 233, 233);
 		}
+		.custom-card {
+	        background: white;
+	        border-radius: 15px;
+	        border: none;
+	        padding: 30px;
+	        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	        margin-top: 30px;
+	    }
 	</style>
 </head>
 <body>
-
+<div class="custom-card">
 	<h2>식품 수정하기</h2>
 
 	<form action="update.do" method="post" id="updateForm">
@@ -88,5 +96,6 @@
 		<button type="reset" class="btn btn-warning">새로입력</button>
 		<button type="button" class="cancelBtn btn btn-secondary">취소</button>	
 	</form>
+</div>
 </body>
 </html>

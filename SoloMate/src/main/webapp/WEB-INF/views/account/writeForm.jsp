@@ -27,6 +27,11 @@
         margin-top: 30px;
         margin-bottom: 50px;
     }
+    .top-title {
+		font-size: 28px;
+		font-weight: 800;
+		color: #111;
+	}
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -55,8 +60,7 @@ $(function(){
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-7">
-            <h2 class="mb-4 text-center">💸 새로운 내역 등록하기</h2>
-
+            <div class="top-title">💸 새로운 내역 등록하기</div>
             <div class="card shadow p-4">
                 <form action="write.do" method="post">
                     <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">
