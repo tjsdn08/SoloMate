@@ -45,6 +45,16 @@
 	    border-color: black;
 	    color: white;
 	}
+	
+	.custom-card {
+        background: white;
+        border-radius: 15px; /* 모서리 둥글게 */
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
 </style>
 
 <script type="text/javascript">
@@ -78,7 +88,7 @@
 
 </head>
 <body>
-
+<div class="custom-card">
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>💸 ${login.name}님의 가계부</h2>
@@ -222,6 +232,6 @@
 	    </div>
 	</div>
 </div>
-
+</div>
 </body>
 </html>

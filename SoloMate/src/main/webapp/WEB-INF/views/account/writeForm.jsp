@@ -18,6 +18,15 @@
         text-align: right;
         color: #212529;
     }
+    .custom-card {
+        background: white;
+        border-radius: 15px; /* 모서리 둥글게 */
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -42,7 +51,7 @@ $(function(){
 
 </head>
 <body class="bg-light">
-
+<div class="custom-card">
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-7">
@@ -111,6 +120,6 @@ $(function(){
         </div>
     </div>
 </div>
-
+</div>
 </body>
 </html>
