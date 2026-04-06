@@ -159,7 +159,20 @@
                 </tr>
             </c:if>
             <c:if test="${!empty list}">
-                <c:forEach items="${list}" var="vo">
+                <%-- 반복문 시작 전 변수 초기화 --%>
+				<c:set var="totalIncome" value="0" />
+				<c:set var="totalExpense" value="0" />
+				
+				<c:forEach items="${list}" var="vo">
+				    <%-- 누적 계산 --%>
+				    <c:choose>
+				        <c:when test="${vo.type == 'income'}">
+				            <c:set var="totalIncome" value="${totalIncome + vo.amount}" />
+				        </c:when>
+				        <c:otherwise>
+				            <c:set var="totalExpense" value="${totalExpense + vo.amount}" />
+				        </c:otherwise>
+				    </c:choose>
                     <tr class="dataRow">
                         <td class="no text-muted">${vo.no}</td>
                         <td>${vo.regDate}</td> 
@@ -177,6 +190,21 @@
                 </c:forEach>
             </c:if>
         </tbody>
+        <tfoot class="table-light" style="border-top: 2px solid #dee2e6;">
+            <tr>
+                <td colspan="3" class="text-center font-weight-bold">총 합계</td>
+                <td class="text-end">
+                    <span class="income">총 수입: <fmt:formatNumber value="${totalIncome}" pattern="#,###" />원</span><br>
+                    <span class="expense">총 지출: <fmt:formatNumber value="${totalExpense}" pattern="#,###" />원</span>
+                </td>
+                <td class="text-end" style="font-size: 1.1em;">
+                    <strong>최종 잔액: </strong>
+                    <span class="${(totalIncome - totalExpense >= 0) ? 'income' : 'expense'}">
+                        <fmt:formatNumber value="${totalIncome - totalExpense}" pattern="#,###" />원
+                    </span>
+                </td>
+            </tr>
+        </tfoot>
     </table>
     <div class="mt-4">
         <pageNav:pageNav listURI="list.do" pageObject="${pageObject}" />
@@ -184,7 +212,7 @@
     <div class="d-flex justify-content-end align-items-center mb-3">
 	    <div class="col-auto me-2">
 	        <a href="writeForm.do?perPageNum=${pageObject.perPageNum}" class="btn btn-dark">
-	            내역 기록하기
+	            내역 등록하기
 	        </a>
 	    </div>
 	    <div class="col-auto">

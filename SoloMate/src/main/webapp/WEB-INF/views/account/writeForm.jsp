@@ -46,7 +46,7 @@ $(function(){
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-7">
-            <h2 class="mb-4 text-center">💸 새로운 내역 기록하기</h2>
+            <h2 class="mb-4 text-center">💸 새로운 내역 등록하기</h2>
 
             <div class="card shadow p-4">
                 <form action="write.do" method="post">

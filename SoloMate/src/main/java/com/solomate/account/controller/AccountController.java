@@ -125,7 +125,36 @@ public class AccountController implements Controller{
 			    return "redirect:view.do?no=" + updateVo.getNo() + "&" + request.getParameter("pageQuery");
 				
 			case "/account/delete.do":
-				return "account/delete";
+			    System.out.println("가계부 내역 삭제 처리");
+			    
+			    // 1. 데이터 수집 (글번호 받기)
+			    // 가계부 VO가 있다면 사용하고, 단순 삭제라면 no만 넘겨도 됩니다.
+			    // 여기서는 보여주신 방식대로 VO에 담는 형식을 유지하겠습니다.
+			    AccountVO accountVo = new AccountVO();
+			    no = Long.parseLong(request.getParameter("no"));
+			    accountVo.setNo(no);
+			    
+			    // 만약 본인 확인을 위해 비밀번호나 아이디가 필요하다면 추가
+			    // accountVo.setPw(request.getParameter("pw")); 
+
+			    // 2. 서비스 실행
+			    // Init.getService(uri)를 통해 AccountDeleteService가 실행되도록 설정되어 있어야 합니다.
+			    result = (Integer) Execute.execute(Init.getService(uri), no); 
+
+			    // 3. 처리 결과 메시지 및 페이지 이동
+			    if(result == 1) {
+			        // 성공 시 리스트로 이동
+			        request.getSession().setAttribute("msg", "가계부 내역이 삭제되었습니다.");
+			        return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+			    } else {
+			        // 실패 시 다시 상세보기로 이동
+			        request.getSession().setAttribute("msg", "삭제에 실패했습니다. 번호를 확인해주세요.");
+			        return "redirect:view.do?no=" + no + "&inc=0"
+			                + "&page=" + request.getParameter("page")
+			                + "&perPageNum=" + request.getParameter("perPageNum")
+			                + "&key=" + request.getParameter("key")
+			                + "&word=" + request.getParameter("word");
+			    }
 			
 			default:
 				return "error/noPage";

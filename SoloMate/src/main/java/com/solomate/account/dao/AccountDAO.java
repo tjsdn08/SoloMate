@@ -236,4 +236,42 @@ public class AccountDAO extends DAO{
 		    return result;
 		}
 		
+		// 삭제 처리 메서드
+	    public int delete(Long no) throws Exception {
+	        int result = 0;
+	        con = null;
+	        PreparedStatement pstmt = null;
+
+	        try {
+	            // 1. 드라이버 확인 및 연결
+	            con = DB.getConnection();
+	            
+	            // 2. SQL 작성
+	            String sql = "DELETE FROM account WHERE no = ?";
+	            
+	            // 3. 상태 서비스 및 데이터 세팅
+	            pstmt = con.prepareStatement(sql);
+	            pstmt.setLong(1, no);
+	            
+	            // 4. 실행
+	            result = pstmt.executeUpdate();
+	            
+	            // 5. 결과 표시
+	            if (result == 1) {
+	                System.out.println("AccountDAO.delete() - 삭제 성공!");
+	            } else {
+	                System.out.println("AccountDAO.delete() - 삭제 실패 (번호가 없을 수 있음)");
+	            }
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            throw new Exception("가계부 삭제 중 DB 오류 발생");
+	        } finally {
+	            // 6. 닫기
+	            DB.close(con, pstmt);
+	        }
+
+	        return result;
+	    }
+		
 }
