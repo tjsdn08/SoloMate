@@ -29,6 +29,15 @@
         border: 1px inset #eee;
         padding: 10px;
     }
+    .custom-card {
+        background: white;
+        border-radius: 15px; /* 모서리 둥글게 */
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -46,7 +55,7 @@ $(function(){
 
 </head>
 <body class="container mt-5">
-
+<div class="custom-card">
 <div class="row justify-content-center">
     <div class="col-md-8">
         <h2 class="mb-4 text-center">💸 가계부 내역 상세 보기</h2>
@@ -118,6 +127,6 @@ $(function(){
     <input type="hidden" name="page" value="${pageObject.page}">
     <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">
 </form>
-
+</div>
 </body>
 </html>

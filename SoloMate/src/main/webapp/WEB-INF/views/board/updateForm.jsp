@@ -19,6 +19,15 @@
     textarea.form-control {
         height: auto;
     }
+    .custom-card {
+        background: white;
+        border-radius: 15px; /* 모서리 둥글게 */
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -33,7 +42,7 @@ $(function(){
 
 </head>
 <body class="container mt-5">
-
+<div class="custom-card">
 <h2 class="mb-4">🍯 꿀팁 아카이브 글수정</h2>
 
 <div class="card p-4">
@@ -93,6 +102,6 @@ $(function(){
 </form>
 
 </div>
-
+</div>
 </body>
 </html>

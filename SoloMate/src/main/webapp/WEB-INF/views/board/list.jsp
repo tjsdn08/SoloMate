@@ -36,6 +36,16 @@
 	    border-color: black;
 	    color: white;
 	}
+	
+	.custom-card {
+        background: white;
+        border-radius: 15px; /* 모서리 둥글게 */
+        border: none;
+        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* 은은한 그림자 */
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
 </style>
 
 <script type="text/javascript">
@@ -70,7 +80,7 @@
 
 </head>
 <body>
-
+<div class="custom-card">
 	<h2>🍯 꿀팁 아카이브</h2>
 	<div class="mb-4">
     <form action="list.do" method="get">
@@ -165,6 +175,6 @@
 		    </a>
 		</c:if>
 	</div>
-
+</div>
 </body>
 </html>

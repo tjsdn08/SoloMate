@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Webjjang : <decorator:title /></title>
+<title>Solomate : <decorator:title /></title>
 <!-- web 라이브러리를 등록 -->
 <!-- Bootstrap 라이브러리 등록 --------- -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,14 +52,16 @@ $(function(){
 			<!-- JSP에서 작성된 body 태그 -->
 			<decorator:body />
 		</div>
+		
+		<footer style="background-color: #f8f9fa; border-top: 1px solid #dee2e6; width: 100%;">
+		    <div style="padding: 20px 0; text-align: center;">
+		        <span style="color: #adb5bd; font-size: 0.85rem; font-weight: 500;">
+		            Copyright &copy; SoloMate.com
+		        </span>
+		    </div>
+		</footer>
 	</div>
 
-	<!-- body 이후의 CopyRight나 회사 주소를 추가해서 나타나게한다. -->
-	<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-bottom">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="#">CopyRight SoloMate.com</a>
-		</div>
-	</nav>
 	
 	
 	<!-- The Modal -->
@@ -79,7 +81,7 @@ $(function(){
 				<!-- Modal footer -->
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger"
-						data-bs-dismiss="modal">Close</button>
+						data-bs-dismiss="modal">닫기</button>
 				</div>
 
 			</div>
