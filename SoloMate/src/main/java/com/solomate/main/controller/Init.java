@@ -3,6 +3,13 @@ package com.solomate.main.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.solomate.account.controller.AccountController;
+import com.solomate.account.dao.AccountDAO;
+import com.solomate.account.service.AccountDeleteService;
+import com.solomate.account.service.AccountListService;
+import com.solomate.account.service.AccountUpdateService;
+import com.solomate.account.service.AccountViewService;
+import com.solomate.account.service.AccountWriteService;
 import com.solomate.admincategory.controller.AdminCategoryController;
 import com.solomate.admincategory.dao.HotDealCategoryDAO;
 import com.solomate.admincategory.service.AdminCategoryDeleteService;
@@ -296,6 +303,25 @@ public class Init extends HttpServlet {
 		serviceMap.get("/boardbookmark/list.do").setDAO(daoMap.get("boardbookmarkDAO"));
 		serviceMap.get("/boardbookmark/write.do").setDAO(daoMap.get("boardbookmarkDAO"));
 		serviceMap.get("/boardbookmark/delete.do").setDAO(daoMap.get("boardbookmarkDAO"));
+
+		
+		// -- 가계부 Init --
+		controllerMap.put("/account", new AccountController());
+		
+		serviceMap.put("/account/list.do", new AccountListService());
+		serviceMap.put("/account/view.do", new AccountViewService());
+		serviceMap.put("/account/write.do", new AccountWriteService());
+		serviceMap.put("/account/update.do", new AccountUpdateService());
+		serviceMap.put("/account/delete.do", new AccountDeleteService());
+		
+		daoMap.put("accountDAO", new AccountDAO());
+
+		serviceMap.get("/account/list.do").setDAO(daoMap.get("accountDAO"));
+		serviceMap.get("/account/view.do").setDAO(daoMap.get("accountDAO"));
+		serviceMap.get("/account/write.do").setDAO(daoMap.get("accountDAO"));
+		serviceMap.get("/account/update.do").setDAO(daoMap.get("accountDAO"));
+		serviceMap.get("/account/delete.do").setDAO(daoMap.get("accountDAO"));
+
 
 		// ------------------------------고승희--------------------------------
 		// 고승희 - 회원관리
