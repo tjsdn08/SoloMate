@@ -189,14 +189,14 @@ public class Init extends HttpServlet {
 
 		// 관리자 카테고리
 		daoMap.put("categoryDAO", new HotDealCategoryDAO());
-
+		
 		serviceMap.put("/adminCategory/list.do", new AdminCategoryListService());
 		serviceMap.put("/adminCategory/view.do", new AdminCategoryViewService());
 		serviceMap.put("/adminCategory/write.do", new AdminCategoryWriteService());
 		serviceMap.put("/adminCategory/update.do", new AdminCategoryUpdateService());
 		serviceMap.put("/adminCategory/delete.do", new AdminCategoryDeleteService());
 		serviceMap.put("/adminCategory/status.do", new AdminCategoryStatusService());
-
+		
 		serviceMap.get("/adminCategory/list.do").setDAO(daoMap.get("categoryDAO"));
 		serviceMap.get("/adminCategory/view.do").setDAO(daoMap.get("categoryDAO"));
 		serviceMap.get("/adminCategory/write.do").setDAO(daoMap.get("categoryDAO"));

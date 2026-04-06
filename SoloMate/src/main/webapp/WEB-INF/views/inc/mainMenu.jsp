@@ -17,7 +17,7 @@
 				<li class="nav-item"><a class="nav-link"
 					href="/shopping/list.do">장보기 계획</a></li>
 				<li class="nav-item"><a class="nav-link"
-					href="/hotdeal/list.do">핫딜 관리</a></li>
+					href="/hotdeal/list.do">핫딜 상품</a></li>
 				<li class="nav-item"><a class="nav-link"
 					href="/account/list.do">가계부</a></li>
 				<li class="nav-item"><a class="nav-link"
