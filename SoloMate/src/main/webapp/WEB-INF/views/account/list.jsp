@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style type="text/css">
-    .dataRow:hover { cursor:pointer; background-color: #f8f9fa !important; }
+    .dataRow:hover { cursor:pointer; background-color: #f2f2f2 !important; }
     .pagination { justify-content: center; }
     .income { color: #007bff; font-weight: bold; } 
     .expense { color: #dc3545; font-weight: bold; } 

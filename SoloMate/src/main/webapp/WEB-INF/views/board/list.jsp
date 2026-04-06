@@ -11,6 +11,7 @@
 <style type="text/css">
 	.dataRow:hover {
 		cursor:pointer;
+		background-color: #f2f2f2 !important;
 	}
 	.pagination {
 	    justify-content: center;
@@ -59,10 +60,6 @@
 		$(".dataRow").click(function(){
 			let no=$(this).find(".no").text();
 			location="view.do?no="+no+"&inc=1&${pageObject.pageQuery}";
-		}).mouseover(function(){
-			$(this).addClass("table-success");
-		}).mouseout(function(){
-			$(this).removeClass("table-success");
 		});
 	});
 </script>
