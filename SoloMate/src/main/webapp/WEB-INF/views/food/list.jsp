@@ -54,7 +54,7 @@
 </head>
 <body>
 <div class="custom-card">
-	<h2>식품 목록 보기</h2>
+	<h2 class="mb-4">식품 목록 보기</h2>
 		
 		<c:if test="${empty login }">
 			<h3>로그인 해주세요</h3>
@@ -75,7 +75,7 @@
 							<option value="냉장">냉장</option>
 							<option value="실온">실온</option>
 						</select>
-						<button class="btn btn-success" type="submit">검색</button>
+						<button class="btn btn-dark" type="submit">검색</button>
 					</div>
 				
 				</div>
@@ -85,7 +85,7 @@
 		<!-- 검색란 처리 -------------------------------------------------------------------------->
 	
 		<table class="table table-hover align-middle">
-			<thead class="table-dark">
+			<thead class="table-light">
 				<tr>
 					<th>식품</th>
 					<th>D-DAY</th>
@@ -139,8 +139,8 @@
 			<!-- 권한 처리 전 임시 방편 -->
 			<c:if test="${!empty login && pageObject.accepter == login.id }">
 				<div>
-					<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-primary">식품 추가하기</a>
-					<a href="list.do" class="btn btn-success">새로고침</a>
+					<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-primary btn-dark">식품 추가하기</a>
+					<a href="list.do" class="btn btn-success btn-dark">새로고침</a>
 				</div>
 			</c:if>
 		

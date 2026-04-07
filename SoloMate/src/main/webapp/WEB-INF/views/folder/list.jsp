@@ -40,7 +40,7 @@
 		<h3>로그인 해주세요</h3>
 	</c:if>
     
-    	<!-- 검색란 처리 ---------------수정해야된다.!!------------------------------------->
+    	<!-- 검색란 처리 --------------------------------------------------->
 	<div>
 		<form action="list.do" method="get">
 			<input type="hidden" name="perPageNum" value="${pageObject.perPageNum }">
@@ -50,7 +50,7 @@
 				<div class="input-group mb-3">
 				  <input type="text" class="form-control" placeholder="폴더명 검색"
 				   value="${param.word }" name="word" id="word">
-				  <button class="btn btn-success" type="submit">검색</button>
+				  <button class="btn btn-dark" type="submit">검색</button>
 				</div>
 			</div>
 					
@@ -65,7 +65,7 @@
         <c:forEach var="folder" items="${list}">
             <div class="col">
 
-                <div class="card shadow-sm h-100">
+                <div class="card shadow-sm h-100 text-center">
 
                     <div class="card-body">
 
@@ -81,7 +81,7 @@
 
                         <!-- 버튼 -->
                         <a href="view.do?no=${folder.no}" 
-                           class="btn btn-primary btn-sm">
+                           class="btn btn-dark btn-sm">
                            상세보기
                         </a>
 
@@ -103,8 +103,8 @@
 		<!-- 권한 처리 전 임시 방편 -->
 		<c:if test="${!empty login && pageObject.accepter == login.id }">
 			<div>
-				<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-primary">폴더 등록</a>
-				<a href="list.do" class="btn btn-success">새로고침</a>
+				<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-dark">폴더 등록</a>
+				<a href="list.do" class="btn btn-dark">새로고침</a>
 			</div>
 		</c:if>
 	
