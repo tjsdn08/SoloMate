@@ -94,9 +94,11 @@ $(function(){
         <h5 class="mb-0">댓글</h5>
 
         <!-- 로그인 안해도 버튼 보이게 -->
-        <button class="btn btn-dark btn-sm" id="replyWriteBtn" data-bs-toggle="modal" data-bs-target="#replyWriteModal">
-            등록
-        </button>
+        <c:if test="${not empty login}">
+	        <button class="btn btn-dark btn-sm" id="replyWriteBtn" data-bs-toggle="modal" data-bs-target="#replyWriteModal">
+	            등록
+	        </button>
+        </c:if>
     </div>
 
     <!-- 댓글 리스트 -->

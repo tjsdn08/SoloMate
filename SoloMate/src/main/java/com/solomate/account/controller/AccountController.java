@@ -23,11 +23,6 @@ public class AccountController implements Controller{
 	        id = login.getId(); // 현재 로그인한 사람의 아이디 추출
 	    }
 
-	    // 2. 만약 로그인이 안 된 상태라면 리스트를 보여주면 안 됨 (필터에서 처리하거나 여기서 체크)
-	    if (id == null) {
-	        return "redirect:/main/main.do"; 
-	    }
-		
 		request.setAttribute("url", request.getRequestURL());
 		
 		try {

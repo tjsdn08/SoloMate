@@ -71,6 +71,23 @@ public class AuthorityFilter extends HttpFilter implements Filter {
 		authMap.put("/hotdeal/list.do", 1);
 		authMap.put("/hotdeal/view.do", 1);
 		authMap.put("/hotdeal/addShopping.do", 1);
+		
+		authMap.put("/board/writeForm.do", 1);
+		authMap.put("/board/write.do", 1);
+		authMap.put("/board/updateForm.do", 1);
+		authMap.put("/board/deleteForm.do", 1);
+		authMap.put("/boardreply/write.do", 1);
+		authMap.put("/boardreply/update.do", 1);
+		authMap.put("/boardreply/delete.do", 1);
+		authMap.put("/boardbookmark/list.do", 1);
+		authMap.put("/boardbookmark/write.do", 1);
+		authMap.put("/boardbookmark/delete.do", 1);
+		
+		authMap.put("/account/list.do", 1);
+		authMap.put("/account/view.do", 1);
+		authMap.put("/account/write.do", 1);
+		authMap.put("/account/update.do", 1);
+		authMap.put("/account/delete.do", 1);
 
 		
 		authMap.put("/recipes/writeForm.do", 1);
