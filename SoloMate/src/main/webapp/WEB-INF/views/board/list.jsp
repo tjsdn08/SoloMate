@@ -13,9 +13,6 @@
 		cursor:pointer;
 		background-color: #f2f2f2 !important;
 	}
-	.pagination {
-	    justify-content: center;
-	}
 	
 	/* 기본 버튼 */
 	.pagination .page-link {
@@ -84,7 +81,7 @@
 </head>
 <body>
 <div class="custom-card">
-	<div class="top-title">🍯 꿀팁 아카이브</div>
+	<div class="top-title">꿀팁 아카이브</div>
 	<div class="mb-4">
     <form action="list.do" method="get">
         <input type="hidden" name="perPageNum" value="${pageObject.perPageNum }">
@@ -127,7 +124,7 @@
 </div>
 
 	<table class="table table-hover align-middle">
-		<thead class="table-dark">
+		<thead class="table-light">
 			<tr>
 				<th>번호</th>
 				<th>제목</th>

@@ -13,7 +13,6 @@
 
 <style type="text/css">
     .dataRow:hover { cursor:pointer; background-color: #f2f2f2 !important; }
-    .pagination { justify-content: center; }
     .income { color: #007bff; font-weight: bold; } 
     .expense { color: #dc3545; font-weight: bold; } 
     
@@ -49,10 +48,14 @@
         });
 
         // 2. 카테고리/날짜 변경 시 자동 검색
-        $("#category, input[name='searchMonth']").on("change", function() {
+        $("input[name='searchMonth']").on("change", function() {
+	        $("#monthForm").submit();
+	    });
+
+        $("#category").on("change", function() {
             $(this).closest("form").submit();
         });
-
+        
         // 3. 차트 데이터 가공
         const labels = [];
         const data = [];
@@ -140,16 +143,19 @@
     <div class="row">
         <div class="col-lg-8">
             <div class="custom-card">
-                <div class="top-title">💸 ${login.name}님의 가계부</div>
+                <div class="top-title">${login.name}님의 가계부</div>
 
                 <div class="search-container">
                     <form action="list.do" method="get">
                         <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">
+                        <input type="hidden" name="searchMonth" value="${param.searchMonth}">
                         <div class="row g-2 align-items-center">
                             <div class="col-md-5">
                                 <div class="input-group">
-                                    <span class="input-group-text bg-white">🔍</span>
-                                    <input type="text" class="form-control" name="word" value="${pageObject.word}" placeholder="글 검색">
+	                                <span class="input-group-text bg-white border-end-0">
+					                    🔍
+					                </span>
+                                    <input type="text" class="form-control" name="word" value="${pageObject.word}" placeholder="내역 검색">
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -158,24 +164,30 @@
                                     <option value="t" ${pageObject.key == 't' ? 'selected' : ''}>제목</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
-                                <select class="form-select" name="category" id="category">
-                                    <option value="">전체 카테고리</option>
-                                    <optgroup label="💰 수입">
-                                        <option value="income" ${param.category == 'income' ? 'selected' : ''}>전체 수입</option>
-                                        <option value="월급" ${param.category == '월급' ? 'selected' : ''}>월급</option>
-                                        <option value="용돈" ${param.category == '용돈' ? 'selected' : ''}>용돈</option>
-                                    </optgroup>
-                                    <optgroup label="📉 지출">
-                                        <option value="expense" ${param.category == 'expense' ? 'selected' : ''}>전체 지출</option>
-                                        <option value="식비" ${param.category == '식비' ? 'selected' : ''}>식비</option>
-                                        <option value="교통비" ${param.category == '교통비' ? 'selected' : ''}>교통비</option>
-                                        <option value="쇼핑" ${param.category == '쇼핑' ? 'selected' : ''}>쇼핑</option>
-                                    </optgroup>
-                                </select>
-                            </div>
                             <div class="col-md-2">
                                 <button class="btn btn-dark w-100">검색</button>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select" name="category" id="category" onchange="this.form.submit()">
+								    <option value="">전체 카테고리</option>
+								    
+								    <optgroup label="💰 수입">
+								        <option value="income" ${param.category == 'income' ? 'selected' : ''}>전체 수입</option>
+								        <option value="월급" ${param.category == '월급' ? 'selected' : ''}>월급</option>
+								        <option value="용돈" ${param.category == '용돈' ? 'selected' : ''}>용돈</option>
+								        <option value="기타(수입)" ${param.category == '기타(수입)' ? 'selected' : ''}>기타(수입)</option>
+								    </optgroup>
+								    
+								    <optgroup label="📉 지출">
+								        <option value="expense" ${param.category == 'expense' ? 'selected' : ''}>전체 지출</option>
+								        <option value="식비" ${param.category == '식비' ? 'selected' : ''}>식비</option>
+								        <option value="교통비" ${param.category == '교통비' ? 'selected' : ''}>교통비</option>
+								        <option value="쇼핑" ${param.category == '쇼핑' ? 'selected' : ''}>쇼핑</option>
+								        <option value="생활비" ${param.category == '생활비' ? 'selected' : ''}>생활비</option>
+								        <option value="문화/여가" ${param.category == '문화/여가' ? 'selected' : ''}>문화/여가</option>
+								        <option value="기타(지출)" ${param.category == '기타(지출)' ? 'selected' : ''}>기타(지출)</option>
+								    </optgroup>
+								</select>
                             </div>
                         </div>
                     </form>
@@ -233,7 +245,6 @@
 		            <form action="list.do" method="get" id="monthForm">
 		                <input type="month" name="searchMonth" 
 		                       class="form-control form-control-sm" 
-		                       value="${param.searchMonth}" 
 		                       onchange="this.form.submit()">
 		            </form>
 		        </div>

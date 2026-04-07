@@ -76,7 +76,7 @@ $(function(){
 </head>
 <body class="container mt-5">
 <div class="custom-card">
-<div class="top-title">🍯 꿀팁 아카이브 글보기</div>
+<div class="top-title">꿀팁 아카이브 글보기</div>
 
 <div class="card p-4">
 

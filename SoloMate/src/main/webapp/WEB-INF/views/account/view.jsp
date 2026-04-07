@@ -64,7 +64,7 @@ $(function(){
 <div class="custom-card">
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="top-title">💸 가계부 내역 상세 보기</div>
+        <div class="top-title">가계부 내역 상세 보기</div>
         
 
         <div class="card shadow-sm p-4">

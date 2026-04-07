@@ -61,7 +61,7 @@ $(function(){
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-7">
-            <div class="top-title">💸 새로운 내역 등록하기</div>
+            <div class="top-title">새로운 내역 등록하기</div>
             <div class="card shadow p-4">
                 <form action="write.do" method="post">
                     <input type="hidden" name="perPageNum" value="${pageObject.perPageNum}">

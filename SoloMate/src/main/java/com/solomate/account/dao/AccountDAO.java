@@ -13,57 +13,40 @@ public class AccountDAO extends DAO{
 
 	public List<AccountVO> list(PageObject pageObject, String id) throws Exception {
 	    List<AccountVO> list = new ArrayList<>();
-	    
 	    try {
 	        con = DB.getConnection();
 
-	        // 1. 기본 SQL 작성 (정렬 기준을 regDate 최신순으로 설정)
-	        // 정렬을 위해 서브쿼리 안에서는 to_char 처리 전의 원본 regDate를 사용하거나, 
-	        // 전체를 감싸는 쿼리에서 정렬해야 합니다.
+	        // 1. 기본 SQL (검색 조건이 붙을 수 있게 마지막에 공백 확인)
 	        String sql = "select a.no, a.amount, ac.cname, ac.type, a.title, a.content, a.regDate "
-	                + " from account a, account_category ac "
-	                + " where (a.id = ?) and (a.cno = ac.cno) ";
+	                   + " from account a, account_category ac "
+	                   + " where a.id = ? and a.cno = ac.cno "; // 괄호 제거하고 단순화
 
-	        // 카테고리 필터링 (기존 로직 유지)
-	        String category = pageObject.getCategory();
-	        if (category != null && !category.equals("")) {
-	            if (category.equals("income")) {
-	                sql += " and ac.type = 'income' ";
-	            } else if (category.equals("expense")) {
-	                sql += " and ac.type = 'expense' ";
-	            } else {
-	                sql += " and ac.cname = ? ";
-	            }
-	        }
+	        // 2. 검색 및 카테고리 조건 추가
+	        sql += search(pageObject);
 
-	        // 2. 정렬 및 페이징 처리 
-	        // [중요] regDate DESC(최신날짜순), no DESC(같은 날짜면 최신글순)
-	        sql = "select no, amount, cname, type, title, content, to_char(regDate, 'yyyy-mm-dd') regDate "
-	            + " from (" + sql + " order by a.regDate desc, a.no desc)";
+	        // 3. 정렬 및 페이징 래퍼
+	        String fullSql = "select no, amount, cname, type, title, content, to_char(regDate, 'yyyy-mm-dd') regDate "
+	                       + " from (" + sql + " order by a.regDate desc, a.no desc)";
 
-	        // 3. ROWNUM을 이용한 페이징 래퍼
-	        sql = "select rownum rnum, no, amount, cname, type, title, content, regDate "
-	            + " from (" + sql + ")";
+	        fullSql = "select rownum rnum, no, amount, cname, type, title, content, regDate "
+	                + " from (" + fullSql + ")";
 	        
-	        sql = "select no, amount, cname, type, title, content, regDate "
-	            + " from (" + sql + ") where rnum between ? and ?";
+	        fullSql = "select no, amount, cname, type, title, content, regDate "
+	                + " from (" + fullSql + ") where rnum between ? and ?";
 
-	        pstmt = con.prepareStatement(sql);
+	        pstmt = con.prepareStatement(fullSql);
 	        
 	        int idx = 1;
-	        pstmt.setString(idx++, id);
+	        pstmt.setString(idx++, id); // ? 1번: 아이디
 
-	        // 카테고리 파라미터 바인딩
-	        if (category != null && !category.equals("") 
-	            && !category.equals("income") && !category.equals("expense")) {
-	            pstmt.setString(idx++, category);
-	        }
+	        // [중요] ? 2번부터 카테고리/검색어 세팅
+	        idx = searchDataSet(pstmt, idx, pageObject);
 
+	        // 마지막 페이징 ? 세팅
 	        pstmt.setLong(idx++, pageObject.getStartRow());
 	        pstmt.setLong(idx++, pageObject.getEndRow());
 
 	        rs = pstmt.executeQuery();
-
 	        while(rs.next()) {
 	            AccountVO vo = new AccountVO();
 	            vo.setNo(rs.getLong("no"));
@@ -73,12 +56,8 @@ public class AccountDAO extends DAO{
 	            vo.setTitle(rs.getString("title"));  
 	            vo.setContent(rs.getString("content"));  
 	            vo.setRegDate(rs.getString("regDate")); 
-
 	            list.add(vo);
 	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        throw e;
 	    } finally {
 	        DB.close(con, pstmt, rs);
 	    }
@@ -129,27 +108,21 @@ public class AccountDAO extends DAO{
 	    return list;
 	}
 	
-	// 글 개수
+	// 4. 전체 데이터 개수 (카테고리/검색 반영)
 	public Long getTotalRow(PageObject pageObject, String id) throws Exception {
 	    Long totalRow = 0L;
 	    try {
 	        con = DB.getConnection();
-	        // 로그인한 아이디(id)의 데이터만 세어야 합니다.
-	        String sql = "select count(*) from account where id = ?";
+	        // count 시에도 카테고리 테이블 조인이 필요함
+	        String sql = "select count(*) from account a, account_category ac "
+	                   + " where a.id = ? and a.cno = ac.cno ";
 	        
-	        // 카테고리 선택 시 개수도 같이 줄어들게 처리
-	        String category = pageObject.getCategory();
-	        if (category != null && !category.equals("")) {
-	            if (category.equals("income")) sql += " and cno in (1,2,3)"; // 예시 cno
-	            else if (category.equals("expense")) sql += " and cno in (4,5,6,7,8,9)";
-	            else sql += " and cno = (select cno from account_category where cname = ?)";
-	        }
+	        sql += search(pageObject); // 위에서 만든 search() 재사용
 
 	        pstmt = con.prepareStatement(sql);
-	        pstmt.setString(1, id);
-	        if (category != null && !category.equals("") && !category.equals("income") && !category.equals("expense")) {
-	            pstmt.setString(2, category);
-	        }
+	        int idx = 1;
+	        pstmt.setString(idx++, id);
+	        idx = searchDataSet(pstmt, idx, pageObject); // 파라미터 세팅 재사용
 
 	        rs = pstmt.executeQuery();
 	        if (rs.next()) totalRow = rs.getLong(1);
@@ -159,53 +132,63 @@ public class AccountDAO extends DAO{
 	    return totalRow;
 	}
 	
-	// 검색
-		// 검색 조건을 생성하는 메서드
-		public String search(PageObject pageObject) {
-		    String sql = " where 1=1 "; // 모든 조건 앞에 1=1을 붙여서 다음에 오는 AND 처리를 쉽게 함
+	// 2. 검색 및 카테고리 SQL 생성
+	public String search(PageObject pageObject) {
+	    String sql = ""; 
+	    String category = pageObject.getCategory();
+	    String word = pageObject.getWord();
+	    String key = pageObject.getKey();
 
-		    // 1. 카테고리 조건 추가 (카테고리가 있을 때만)
-		    String category = pageObject.getCategory();
-		    if (category != null && !category.equals("")) {
-		        // b.category인 이유는 list() 메서드 SQL에서 board 테이블을 'b'로 별칭 주었기 때문
-		        sql += " and b.category = ? "; 
-		    }
+	    // 1. 카테고리 조건
+	    if (category != null && !category.equals("")) {
+	        // '전체 수입' 선택 시 -> type이 income인 것들
+	        if (category.equals("income")) {
+	            sql += " and ac.type = 'income' ";
+	        } 
+	        // '전체 지출' 선택 시 -> type이 expense인 것들
+	        else if (category.equals("expense")) {
+	            sql += " and ac.type = 'expense' ";
+	        } 
+	        // '식비', '월급', '기타(수입)' 등 구체적인 이름 선택 시 -> cname과 비교
+	        else {
+	            sql += " and ac.cname = ? ";
+	        }
+	    }
 
-		    // 2. 검색어 조건 추가 (기존 로직 유지 및 b. 추가)
-		    String key = pageObject.getKey();
-		    String word = pageObject.getWord();
-		    if (word != null && word.length() != 0) {
-		        sql += " and ( 1=0 ";
-		        if (key.indexOf("t") >= 0) sql += " or b.title like ? ";
-		        if (key.indexOf("c") >= 0) sql += " or b.content like ? ";
-		        if (key.indexOf("w") >= 0) sql += " or b.writer like ? ";
-		        sql += " ) ";
-		    }
-		    return sql;
-		}
+	    // 2. 검색어 조건
+	    if (word != null && !word.equals("")) {
+	        sql += " and ( 1=0 ";
+	        if (key.indexOf("t") >= 0) sql += " or a.title like ? ";
+	        if (key.indexOf("c") >= 0) sql += " or a.content like ? ";
+	        sql += " ) ";
+	    }
+	    return sql;
+	}
 		
-		// 검색어 세팅
-		// 검색어 데이터를 세팅하는 메서드
-		public Integer searchDataSet(PreparedStatement pstmt, int idx, PageObject pageObject)
-		 throws Exception {
-		    
-		    // 1. 카테고리 데이터 세팅
-		    String category = pageObject.getCategory();
-		    if (category != null && !category.equals("")) {
-		        pstmt.setString(idx++, category);
-		    }
+	// 3. 파라미터 세팅 (여기가 가장 중요합니다!)
+	public Integer searchDataSet(PreparedStatement pstmt, int idx, PageObject pageObject) throws Exception {
+	    String category = pageObject.getCategory();
+	    String word = pageObject.getWord();
+	    String key = pageObject.getKey();
 
-		    // 2. 검색어 데이터 세팅 (기존 로직)
-		    String key = pageObject.getKey();
-		    String word = pageObject.getWord();
-		    if (word != null && word.length() != 0) {
-		        if (key.indexOf("t") >= 0) pstmt.setString(idx++, "%" + word + "%");
-		        if (key.indexOf("c") >= 0) pstmt.setString(idx++, "%" + word + "%");
-		        if (key.indexOf("w") >= 0) pstmt.setString(idx++, "%" + word + "%");
-		    }
-		    return idx;
-		}
-		
+	    // [수정 포인트] 
+	    // category가 "income"이나 "expense"일 때는 SQL문에 직접 'income'이라고 박아넣었으므로
+	    // pstmt.setString을 할 필요가 없습니다. 
+	    // 그 외의 구체적인 카테고리 이름일 때만 ?를 채워줘야 합니다.
+	    if (category != null && !category.equals("")) {
+	        if (!category.equals("income") && !category.equals("expense")) {
+	            pstmt.setString(idx++, category);
+	        }
+	    }
+
+	    // 검색어 세팅
+	    if (word != null && !word.equals("")) {
+	        if (key.indexOf("t") >= 0) pstmt.setString(idx++, "%" + word + "%");
+	        if (key.indexOf("c") >= 0) pstmt.setString(idx++, "%" + word + "%");
+	    }
+	    return idx;
+	}
+	
 		public AccountVO view(Long no) throws Exception {
 		    AccountVO vo = null;
 		    con = DB.getConnection();
