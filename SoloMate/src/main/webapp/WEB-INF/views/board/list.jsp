@@ -165,9 +165,11 @@
 		<pageNav:pageNav listURI="list.do" pageObject="${pageObject }"/>
 	</div>
 	<div class="d-flex justify-content-end gap-2 mb-3">
-	    <a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-dark">
-	        글등록
-	    </a>
+		<c:if test="${not empty login}">
+		    <a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-dark">
+		        글등록
+		    </a>
+	    </c:if>
 	    <a href="list.do" class="btn btn-outline-dark">
 	        새로고침
 	    </a>
