@@ -36,20 +36,20 @@ public class AccountController implements Controller{
 			switch (uri) {
 			
 			case "/account/list.do":
-				PageObject pageObject = PageObject.getInstance(request);
-	            String category = request.getParameter("category");
-	            pageObject.setCategory(category); 
-	            
-	            // 2. 서비스로 넘길 파라미터 구성 (pageObject와 id를 배열로 묶음)
-	            // 서비스(AccountListService)에서도 이 배열을 받도록 수정되어야 합니다.
-	            Object[] args = {pageObject, id}; 
-	            
-	            // 3. 실행 및 결과 저장
-	            request.setAttribute("list", Execute.execute(Init.getService(uri), args));
-	            
-	            System.out.println("AccountController.execute().id - " + id);
-	            request.setAttribute("pageObject", pageObject);
-	            return "account/list";
+			    PageObject pageObject = PageObject.getInstance(request);
+			    String searchMonth = request.getParameter("searchMonth"); // 날짜 선택값 받기
+			    
+			    // 1. 기존 리스트 (페이징 유지)
+			    request.setAttribute("list", Execute.execute(Init.getService(uri), new Object[]{pageObject, id}));
+			    
+			    // 2. 차트용 데이터 (페이징 무시, 날짜 조건 추가)
+			    // 파라미터를 배열로 묶어 전달하거나 Map 사용
+			    Object[] chartArgs = {id, searchMonth}; 
+			    request.setAttribute("chartData", Execute.execute(Init.getService("/account/monthlyStatus.do"), chartArgs));
+			    
+			    request.setAttribute("pageObject", pageObject);
+			    request.setAttribute("searchMonth", searchMonth); // 선택한 달 유지
+			    return "account/list";
 				
 			case "/account/view.do":
 			    // 1. 넘어오는 글 번호(no)를 받는다.

@@ -7,6 +7,7 @@ import com.solomate.account.controller.AccountController;
 import com.solomate.account.dao.AccountDAO;
 import com.solomate.account.service.AccountDeleteService;
 import com.solomate.account.service.AccountListService;
+import com.solomate.account.service.AccountMonthlyStatusService;
 import com.solomate.account.service.AccountUpdateService;
 import com.solomate.account.service.AccountViewService;
 import com.solomate.account.service.AccountWriteService;
@@ -313,6 +314,7 @@ public class Init extends HttpServlet {
 		serviceMap.put("/account/write.do", new AccountWriteService());
 		serviceMap.put("/account/update.do", new AccountUpdateService());
 		serviceMap.put("/account/delete.do", new AccountDeleteService());
+		serviceMap.put("/account/monthlyStatus.do", new AccountMonthlyStatusService());
 		
 		daoMap.put("accountDAO", new AccountDAO());
 
@@ -321,7 +323,7 @@ public class Init extends HttpServlet {
 		serviceMap.get("/account/write.do").setDAO(daoMap.get("accountDAO"));
 		serviceMap.get("/account/update.do").setDAO(daoMap.get("accountDAO"));
 		serviceMap.get("/account/delete.do").setDAO(daoMap.get("accountDAO"));
-
+		serviceMap.get("/account/monthlyStatus.do").setDAO(daoMap.get("accountDAO")); // 여기도 통일
 
 		// ------------------------------고승희--------------------------------
 		// 고승희 - 회원관리

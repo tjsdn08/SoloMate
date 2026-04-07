@@ -85,6 +85,50 @@ public class AccountDAO extends DAO{
 	    return list;
 	}
 	
+	public List<AccountVO> getMonthlyStats(String id, String dateStr) throws Exception {
+	    List<AccountVO> list = new ArrayList<>();
+	    try {
+	        con = DB.getConnection();
+	        String sql = "";
+	        
+	        if (dateStr != null && !dateStr.equals("")) {
+	            // [핵심] 특정 달 선택 시: 카테고리별 지출 합계
+	            sql = "SELECT ac.cname as category, ac.type, SUM(a.amount) as total "
+	                + " FROM account a, account_category ac "
+	                + " WHERE a.id = ? AND a.cno = ac.cno AND TO_CHAR(regDate, 'YYYY-MM') = ? "
+	                + " GROUP BY ac.cname, ac.type " // 카테고리명으로 그룹화
+	                + " ORDER BY total DESC";
+	        } else {
+	            // 달 미선택 시: 전체 월별 합계 (기존 유지)
+	            sql = "SELECT TO_CHAR(regDate, 'YYYY-MM') as target_date, ac.type, SUM(a.amount) as total "
+	                + " FROM account a, account_category ac "
+	                + " WHERE a.id = ? AND a.cno = ac.cno "
+	                + " GROUP BY TO_CHAR(regDate, 'YYYY-MM'), ac.type "
+	                + " ORDER BY target_date ASC";
+	        }
+
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        if (dateStr != null && !dateStr.equals("")) pstmt.setString(2, dateStr);
+	        
+	        rs = pstmt.executeQuery();
+	        while(rs.next()) {
+	            AccountVO vo = new AccountVO();
+	            if (dateStr != null && !dateStr.equals("")) {
+	                vo.setCategory(rs.getString("category")); // 카테고리명 저장
+	            } else {
+	                vo.setRegDate(rs.getString("target_date")); // 월 정보 저장
+	            }
+	            vo.setType(rs.getString("type"));
+	            vo.setAmount(rs.getLong("total"));
+	            list.add(vo);
+	        }
+	    } finally {
+	        DB.close(con, pstmt, rs);
+	    }
+	    return list;
+	}
+	
 	// 글 개수
 	public Long getTotalRow(PageObject pageObject, String id) throws Exception {
 	    Long totalRow = 0L;
