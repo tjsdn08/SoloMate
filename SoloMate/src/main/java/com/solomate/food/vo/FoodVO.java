@@ -1,8 +1,9 @@
 package com.solomate.food.vo;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import com.solomate.folder.vo.FolderVO;
 
 public class FoodVO {
 	
@@ -18,6 +19,22 @@ public class FoodVO {
 	private String dDay;
 	private List<String> folders;   // 조회용
 	private List<Long> folderNos; // 등록/수정 용
+    // 추가
+    private String dday;
+    private long diffDays;
+
+    public void calculateDday() {
+        LocalDate today = LocalDate.now();
+
+        // String → LocalDate 변환
+        LocalDate expiry = LocalDate.parse(this.expiryDate);
+
+        this.diffDays = ChronoUnit.DAYS.between(today, expiry);
+
+        if (diffDays > 0) this.dday = "D-" + diffDays;
+        else if (diffDays == 0) this.dday = "D-Day";
+        else this.dday = "D+" + Math.abs(diffDays);
+    }
 	
 	public long getNo() {
 		return no;
@@ -93,13 +110,32 @@ public class FoodVO {
 	public void setFolderNos(List<Long> folderNos) {
 		this.folderNos = folderNos;
 	}
+
+	public String getDday() {
+		return dday;
+	}
+
+	public void setDday(String dday) {
+		this.dday = dday;
+	}
+
+	public long getDiffDays() {
+		return diffDays;
+	}
+
+	public void setDiffDays(long diffDays) {
+		this.diffDays = diffDays;
+	}
+
 	@Override
 	public String toString() {
 		return "FoodVO [no=" + no + ", memberId=" + memberId + ", name=" + name + ", quantity=" + quantity
 				+ ", storageType=" + storageType + ", expiryDate=" + expiryDate + ", memo=" + memo + ", createdAt="
 				+ createdAt + ", updatedAt=" + updatedAt + ", dDay=" + dDay + ", folders=" + folders + ", folderNos="
-				+ folderNos + "]";
+				+ folderNos + ", dday=" + dday + ", diffDays=" + diffDays + "]";
 	}
+
+	
 
 	
 	

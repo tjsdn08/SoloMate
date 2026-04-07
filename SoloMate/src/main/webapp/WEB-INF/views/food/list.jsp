@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="pageNav" tagdir="/WEB-INF/tags" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,13 +104,31 @@
 		</c:if>
 		<c:if test="${!empty list }">
 			<c:forEach items="${list }" var="vo" >
-				<tr class="dataRow" data-no="${vo.no }">
-					<td>${vo.name }</td>
-					<td>${vo.dDay }</td>
-					<td>${vo.quantity }</td>
-					<td>${vo.storageType }</td>
-				</tr>
+			
+				<!-- 색처리 -->
+					<c:set var="color" value="black" />
+			
+			        <!-- 유통기한 지난 경우 -->
+			        <c:if test="${vo.diffDays < 0}">
+			            <c:set var="color" value="red" />
+			        </c:if>
+			
+			        <!-- 7일 이하 -->
+			        <c:if test="${vo.diffDays >= 0 && vo.diffDays <= 7}">
+			            <c:set var="color" value="orange" />
+			        </c:if>
+				<!-- 색처리 -->
+					<tr class="dataRow" data-no="${vo.no }">
+						<td>${vo.name }</td>
+						<!-- DDAY 색 처리 -->
+						<td style="color:${color}">${vo.dday}</td>
+						<!-- DDAY 색 처리 -->
+						<td>${vo.quantity }</td>
+						<td>${vo.storageType }</td>
+					</tr>
 			</c:forEach>
+		
+    
 		</c:if>
 		</tbody>
 	</table>
