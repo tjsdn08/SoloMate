@@ -9,19 +9,20 @@
 <meta charset="UTF-8">
 <title>식품 목록 보기</title>
 <style type="text/css">
-/* :hover - 마우스가 오라 갔을 때 CSS. 공백없이 :hover 작성  */
-.dataRow:hover{
-	/* background: #888; /* 배경색 변경 - BootStrap 5에서 적용이 안됨 */
-	cursor: pointer; /* 손가락 */
-}
-.custom-card {
-        background: white;
-        border-radius: 15px;
-        border: none;
-        padding: 30px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        margin-top: 30px;
-    }
+	/* :hover - 마우스가 오라 갔을 때 CSS. 공백없이 :hover 작성  */
+	.dataRow:hover{
+		/* background: #888; /* 배경색 변경 - BootStrap 5에서 적용이 안됨 */
+		cursor: pointer; /* 손가락 */
+		background-color: #f8f9fc;
+	}
+	.custom-card {
+	        background: white;
+	        border-radius: 15px;
+	        border: none;
+	        padding: 30px;
+	        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	        margin-top: 30px;
+	    }
 </style>
 
 <script type="text/javascript">
@@ -33,10 +34,6 @@
 		 let no = $(this).data("no"); // js = jQuery
 
 		 location = "view.do?no=" + no + "&${pageObject.pageQuery}";
-	 }).mouseover(function(){
-		 $(this).addClass("table-success");
-	 }).mouseout(function(){
-		 $(this).removeClass("table-success");
 	 });
 	 
 	 
@@ -57,97 +54,97 @@
 </head>
 <body>
 <div class="custom-card">
-<h2>식품 목록 보기</h2>
-	
-	<c:if test="${empty login }">
-		<h3>로그인 해주세요</h3>
-	</c:if>
-	
-	<!-- 검색란 처리 -------------------------------------------------------------------------->
-	<div>
-		<form action="list.do" method="get">
-			<input type="hidden" name="perPageNum" value="${pageObject.perPageNum }">
-			<div class="d-inline-flex">
-			
-				<div class="input-group mb-3">
-					<input type="text" class="form-control" placeholder="식품명 검색"
-					 name="word" id="word" value="${param.word }">
-					<select class="form-select" name="key" id="key">
-						<option value="">전체</option>
-						<option value="냉동">냉동</option>
-						<option value="냉장">냉장</option>
-						<option value="실온">실온</option>
-					</select>
-					<button class="btn btn-success" type="submit">검색</button>
+	<h2>식품 목록 보기</h2>
+		
+		<c:if test="${empty login }">
+			<h3>로그인 해주세요</h3>
+		</c:if>
+		
+		<!-- 검색란 처리 -------------------------------------------------------------------------->
+		<div>
+			<form action="list.do" method="get">
+				<input type="hidden" name="perPageNum" value="${pageObject.perPageNum }">
+				<div class="d-inline-flex">
+				
+					<div class="input-group mb-3">
+						<input type="text" class="form-control" placeholder="식품명 검색"
+						 name="word" id="word" value="${param.word }">
+						<select class="form-select" name="key" id="key">
+							<option value="">전체</option>
+							<option value="냉동">냉동</option>
+							<option value="냉장">냉장</option>
+							<option value="실온">실온</option>
+						</select>
+						<button class="btn btn-success" type="submit">검색</button>
+					</div>
+				
 				</div>
 			
-			</div>
-		
-		</form>
-	</div>
-	<!-- 검색란 처리 -------------------------------------------------------------------------->
-
-	<table class="table">
-		<thead class="table align-middle">
-			<tr>
-				<th>식품</th>
-				<th>D-DAY</th>
-				<th>수량</th>
-				<th>보관방법</th>
-			</tr>
-		</thead>
-		<tbody>
-		<c:if test="${empty list }">
-			<tr>
-				<td colspan="4">데이터가 존재하지 않습니다.</td>
-			</tr>
-		</c:if>
-		<c:if test="${!empty list }">
-			<c:forEach items="${list }" var="vo" >
-			
-				<!-- 색처리 -->
-					<c:set var="color" value="black" />
-			
-			        <!-- 유통기한 지난 경우 -->
-			        <c:if test="${vo.diffDays < 0}">
-			            <c:set var="color" value="red" />
-			        </c:if>
-			
-			        <!-- 7일 이하 -->
-			        <c:if test="${vo.diffDays >= 0 && vo.diffDays <= 7}">
-			            <c:set var="color" value="orange" />
-			        </c:if>
-				<!-- 색처리 -->
-					<tr class="dataRow" data-no="${vo.no }">
-						<td>${vo.name }</td>
-						<!-- DDAY 색 처리 -->
-						<td style="color:${color}">${vo.dday}</td>
-						<!-- DDAY 색 처리 -->
-						<td>${vo.quantity }</td>
-						<td>${vo.storageType }</td>
-					</tr>
-			</c:forEach>
-		
-    
-		</c:if>
-		</tbody>
-	</table>
-	
-	<div class="d-flex justify-content-between mb-3">
-	
-		<div>
-			<pageNav:pageNav listURI="list.do" pageObject="${pageObject }"></pageNav:pageNav>
+			</form>
 		</div>
-		
-		<!-- 권한 처리 전 임시 방편 -->
-		<c:if test="${!empty login && pageObject.accepter == login.id }">
-			<div>
-				<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-primary">식품 추가하기</a>
-				<a href="list.do" class="btn btn-success">새로고침</a>
-			</div>
-		</c:if>
+		<!-- 검색란 처리 -------------------------------------------------------------------------->
 	
-	</div>
+		<table class="table table-hover align-middle">
+			<thead class="table-dark">
+				<tr>
+					<th>식품</th>
+					<th>D-DAY</th>
+					<th>수량</th>
+					<th>보관방법</th>
+				</tr>
+			</thead>
+			<tbody>
+			<c:if test="${empty list }">
+				<tr>
+					<td colspan="4">데이터가 존재하지 않습니다.</td>
+				</tr>
+			</c:if>
+			<c:if test="${!empty list }">
+				<c:forEach items="${list }" var="vo" >
+				
+					<!-- 색처리 -->
+						<c:set var="color" value="black" />
+				
+				        <!-- 유통기한 지난 경우 -->
+				        <c:if test="${vo.diffDays < 0}">
+				            <c:set var="color" value="red" />
+				        </c:if>
+				
+				        <!-- 7일 이하 -->
+				        <c:if test="${vo.diffDays >= 0 && vo.diffDays <= 7}">
+				            <c:set var="color" value="orange" />
+				        </c:if>
+					<!-- 색처리 -->
+						<tr class="dataRow" data-no="${vo.no }">
+							<td>${vo.name }</td>
+							<!-- DDAY 색 처리 -->
+							<td style="color:${color}">${vo.dday}</td>
+							<!-- DDAY 색 처리 -->
+							<td>${vo.quantity }</td>
+							<td>${vo.storageType }</td>
+						</tr>
+				</c:forEach>
+			
+	    
+			</c:if>
+			</tbody>
+		</table>
+		
+		<div class="d-flex justify-content-between mb-3">
+		
+			<div>
+				<pageNav:pageNav listURI="list.do" pageObject="${pageObject }"></pageNav:pageNav>
+			</div>
+			
+			<!-- 권한 처리 전 임시 방편 -->
+			<c:if test="${!empty login && pageObject.accepter == login.id }">
+				<div>
+					<a href="writeForm.do?perPageNum=${param.perPageNum }" class="btn btn-primary">식품 추가하기</a>
+					<a href="list.do" class="btn btn-success">새로고침</a>
+				</div>
+			</c:if>
+		
+		</div>
 </div>
 </body>
 </html>

@@ -50,7 +50,7 @@
 						없음
 					</c:if>
 					<c:if test="${!empty vo.folders }">
-						<c:forEach items="${vo.folders }" var="folder">
+						<c:forEach items="${vo.folders }" var="folder" varStatus="status">
 							${folder }<c:if test="${!status.last }">, </c:if>
 						</c:forEach>
 					
