@@ -86,9 +86,9 @@
 						<div class="form-label">카테고리</div>
 						<select name="categoryId" class="form-select" required>
 							<option value="">선택</option>
-							<c:forEach items="${categoryList}" var="cvo">
-								<c:if test="${cvo.status eq 'ACTIVE'}">
-									<option value="${cvo.categoryId}">${cvo.categoryName}</option>
+							<c:forEach items="${categoryList}" var="cat">
+								<c:if test="${cat.status eq 'ACTIVE'}">
+									<option value="${cat.categoryId}">${cat.categoryName}</option>
 								</c:if>
 							</c:forEach>
 						</select>
@@ -111,20 +111,16 @@
 				<div class="form-grid">
 					<div>
 						<div class="form-label">가격</div>
-						<input type="number" name="price" class="form-input" min="0"
-							required>
+						<input type="number" name="price" class="form-input" min="0" required>
 					</div>
 
 					<div>
 						<div class="form-label">원가</div>
-						<input type="number" name="originalPrice" class="form-input"
-							min="0" required>
+						<input type="number" name="originalPrice" class="form-input" min="0" required>
 					</div>
 				</div>
 
 				<div class="form-grid">
-					
-
 					<div>
 						<div class="form-label">종료일</div>
 						<input type="date" name="endDate" class="form-input" required>
@@ -145,8 +141,7 @@
 
 				<div class="form-row-full">
 					<div class="form-label">상품 이미지</div>
-					<input type="file" name="imageFile" class="form-input"
-						accept="image/*">
+					<input type="file" name="imageFile" class="form-input" accept="image/*">
 				</div>
 
 				<div class="form-row-full">

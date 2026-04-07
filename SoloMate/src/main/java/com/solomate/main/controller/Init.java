@@ -19,6 +19,7 @@ import com.solomate.admincategory.service.AdminCategoryUpdateService;
 import com.solomate.admincategory.service.AdminCategoryViewService;
 import com.solomate.admincategory.service.AdminCategoryWriteService;
 import com.solomate.adminhotdeal.controller.AdminHotDealController;
+import com.solomate.adminhotdeal.service.AdminHotDealCategoryListService;
 import com.solomate.adminhotdeal.service.AdminHotDealDeleteService;
 import com.solomate.adminhotdeal.service.AdminHotDealListService;
 import com.solomate.adminhotdeal.service.AdminHotDealStatusService;
@@ -61,6 +62,7 @@ import com.solomate.food.service.FoodWriteService;
 import com.solomate.hotdeal.controller.HotDealController;
 import com.solomate.hotdeal.dao.HotDealDAO;
 import com.solomate.hotdeal.service.HotDealAddShoppingService;
+import com.solomate.hotdeal.service.HotDealCategoryActiveListService;
 import com.solomate.hotdeal.service.HotDealListService;
 import com.solomate.hotdeal.service.HotDealViewService;
 import com.solomate.main.dao.DAO;
@@ -158,12 +160,14 @@ public class Init extends HttpServlet {
 		controllerMap.put("/shopping", new ShoppingController());
 
 		daoMap.put("hotDealDAO", new HotDealDAO());
-
+		daoMap.put("hotDealCategoryDAO", new HotDealCategoryDAO());
 		// hotdeal
 		serviceMap.put("/hotdeal/list.do", new HotDealListService());
 		serviceMap.put("/hotdeal/view.do", new HotDealViewService());
 		serviceMap.put("/hotdeal/addShopping.do", new HotDealAddShoppingService());
-
+		serviceMap.put("/hotdeal/categoryList.do", new HotDealCategoryActiveListService());
+		
+		serviceMap.get("/hotdeal/categoryList.do").setDAO(daoMap.get("hotDealCategoryDAO"));
 		serviceMap.get("/hotdeal/list.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/hotdeal/view.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/hotdeal/addShopping.do").setDAO(daoMap.get("shoppingDAO"));
@@ -177,13 +181,15 @@ public class Init extends HttpServlet {
 		serviceMap.put("/adminHotDeal/update.do", new AdminHotDealUpdateService());
 		serviceMap.put("/adminHotDeal/delete.do", new AdminHotDealDeleteService());
 		serviceMap.put("/adminHotDeal/status.do", new AdminHotDealStatusService());
-
+		serviceMap.put("/adminHotDeal/categoryList.do", new AdminHotDealCategoryListService());
+		
 		serviceMap.get("/adminHotDeal/list.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/view.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/write.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/update.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/delete.do").setDAO(daoMap.get("hotDealDAO"));
 		serviceMap.get("/adminHotDeal/status.do").setDAO(daoMap.get("hotDealDAO"));
+		serviceMap.get("/adminHotDeal/categoryList.do").setDAO(daoMap.get("hotDealCategoryDAO"));
 
 		controllerMap.put("/adminHotDeal", new AdminHotDealController());
 

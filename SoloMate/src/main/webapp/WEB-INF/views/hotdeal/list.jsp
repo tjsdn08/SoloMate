@@ -261,9 +261,9 @@
 
 					<select name="categoryId" id="categoryId" class="hotdeal-select">
 						<option value="">전체</option>
-						<option value="1">식품</option>
-						<option value="2">생활용품</option>
-						<option value="3">가전</option>
+						<c:forEach items="${categoryList}" var="cat">
+							<option value="${cat.categoryId}">${cat.categoryName}</option>
+						</c:forEach>
 					</select>
 
 					<select name="sort" id="sort" class="hotdeal-select">

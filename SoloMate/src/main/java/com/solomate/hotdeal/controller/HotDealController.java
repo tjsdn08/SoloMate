@@ -37,7 +37,13 @@ public class HotDealController implements Controller {
 				searchVO.setWord(request.getParameter("word"));
 				searchVO.setSort(request.getParameter("sort"));
 
+				// 핫딜 목록
 				request.setAttribute("list", Execute.execute(Init.getService(uri), searchVO));
+
+				// 활성 카테고리 목록
+				request.setAttribute("categoryList",
+						Execute.execute(Init.getService("/hotdeal/categoryList.do"), null));
+
 				request.setAttribute("pageObject", pageObject);
 				request.setAttribute("searchVO", searchVO);
 

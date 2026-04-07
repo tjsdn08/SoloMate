@@ -42,6 +42,10 @@ public class AdminHotDealController implements Controller {
 				request.setAttribute("pageObject", pageObject);
 				request.setAttribute("searchVO", searchVO);
 
+				// 관리자 카테고리 목록 추가
+				request.setAttribute("categoryList",
+						Execute.execute(Init.getService("/adminCategory/list.do"), null));
+
 				return "adminHotDeal/list";
 
 			case "/adminHotDeal/view.do":
