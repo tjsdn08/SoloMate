@@ -27,9 +27,8 @@
 	margin-bottom: 8px;
 }
 
-.dataRow:hover {
-	cursor: pointer;
-	background-color: #f8f9ff;
+.table tbody tr.dataRow:hover {
+	background-color: #f2f2f2;
 }
 
 .status-badge {
@@ -77,6 +76,17 @@
 	border-radius: 10px;
 	padding: 10px 18px;
 	font-weight: 600;
+}
+
+.btn-black {
+	background-color: #111827 !important;
+	color: #fff !important;
+	border: none !important;
+}
+
+.btn-black:hover {
+	background-color: #000 !important;
+	color: #fff !important;
 }
 </style>
 
@@ -126,7 +136,7 @@ $(function(){
 				</div>
 
 				<div class="col-md-1 d-grid">
-					<button type="submit" class="btn btn-primary">검색</button>
+					<button type="submit" class="btn btn-black">검색</button>
 				</div>
 
 				<div class="col-md-2">
@@ -141,7 +151,7 @@ $(function(){
 		</form>
 
 		<div class="table-responsive">
-			<table class="table align-middle">
+			<table class="table table-hover align-middle">
 				<thead>
 					<tr>
 						<th>번호</th>
@@ -200,7 +210,7 @@ $(function(){
 
 			<div>
 				<a href="${pageContext.request.contextPath}/shopping/writeForm.do?perPageNum=${pageObject.perPageNum}"
-				   class="btn btn-primary write-btn">+ 장보기 등록</a>
+				   class="btn btn-black write-btn">+ 장보기 등록</a>
 			</div>
 		</div>
 	</div>
