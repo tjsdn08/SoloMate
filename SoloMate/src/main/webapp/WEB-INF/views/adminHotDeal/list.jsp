@@ -137,29 +137,22 @@
 		$("#categoryId").val("${searchVO.categoryId}");
 		$("#perPageNum").val("${pageObject.perPageNum}");
 
-		$(".dataRow")
-				.click(
-						function(e) {
-							// 관리 버튼 클릭 시 행 클릭 막기
-							if ($(e.target).closest(".manage-box").length > 0)
-								return;
+		$(".dataRow").click(function(e) {
+			if ($(e.target).closest(".manage-box").length > 0) return;
 
-							let dealId = $(this).find(".dealId").text();
-							location = "${pageContext.request.contextPath}/adminHotDeal/view.do?dealId="
-									+ dealId;
-						});
+			let dealId = $(this).find(".dealId").text();
+			location = "${pageContext.request.contextPath}/adminHotDeal/view.do?dealId=" + dealId;
+		});
 
 		$(".delete-btn").click(function() {
 			return confirm("해당 핫딜을 삭제하시겠습니까?");
 		});
 
-		$(".status-btn").click(
-				function() {
-					const currentStatus = $(this).data("status");
-					const nextStatus = currentStatus === "ACTIVE" ? "INACTIVE"
-							: "ACTIVE";
-					return confirm("상태를 " + nextStatus + " 로 변경하시겠습니까?");
-				});
+		$(".status-btn").click(function() {
+			const currentStatus = $(this).data("status");
+			const nextStatus = currentStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+			return confirm("상태를 " + nextStatus + " 로 변경하시겠습니까?");
+		});
 	});
 </script>
 </head>
@@ -170,27 +163,28 @@
 
 			<div class="top-bar">
 				<div class="top-title">관리자 핫딜 관리</div>
-				<a
-					href="${pageContext.request.contextPath}/adminHotDeal/writeForm.do"
+				<a href="${pageContext.request.contextPath}/adminHotDeal/writeForm.do"
 					class="btn-main">+ 등록</a>
 			</div>
 
-			<form
-				action="${pageContext.request.contextPath}/adminHotDeal/list.do"
-				method="get">
+			<form action="${pageContext.request.contextPath}/adminHotDeal/list.do" method="get">
 				<div class="search-row">
-					<input type="text" name="word" id="word" class="form-input"
-						placeholder="상품명 검색"> <select name="categoryId"
-						id="categoryId" class="form-select">
+					<input type="text" name="word" id="word" class="form-input" placeholder="상품명 검색">
+
+					<select name="categoryId" id="categoryId" class="form-select">
 						<option value="">전체 카테고리</option>
-						<option value="1">식품</option>
-						<option value="2">생활용품</option>
-						<option value="3">가전</option>
-					</select> <select name="status" id="status" class="form-select">
+						<c:forEach items="${categoryList}" var="cat">
+							<option value="${cat.categoryId}">${cat.categoryName}</option>
+						</c:forEach>
+					</select>
+
+					<select name="status" id="status" class="form-select">
 						<option value="">전체 상태</option>
 						<option value="ACTIVE">ACTIVE</option>
 						<option value="INACTIVE">INACTIVE</option>
-					</select> <select name="perPageNum" id="perPageNum" class="form-select"
+					</select>
+
+					<select name="perPageNum" id="perPageNum" class="form-select"
 						onchange="this.form.submit()">
 						<option value="5">5개</option>
 						<option value="10">10개</option>
@@ -230,20 +224,21 @@
 							<td>${vo.price}원</td>
 							<td>${vo.discountRateInt}%</td>
 							<td>${vo.shopName}</td>
-							<td><c:choose>
+							<td>
+								<c:choose>
 									<c:when test="${vo.status eq 'ACTIVE'}">
 										<span class="status-badge status-active">ACTIVE</span>
 									</c:when>
 									<c:otherwise>
 										<span class="status-badge status-inactive">INACTIVE</span>
 									</c:otherwise>
-								</c:choose></td>
+								</c:choose>
+							</td>
 							<td>${vo.createdAt}</td>
 							<td>
 								<div class="manage-box">
 
-									<form
-										action="${pageContext.request.contextPath}/adminHotDeal/status.do"
+									<form action="${pageContext.request.contextPath}/adminHotDeal/status.do"
 										method="post">
 										<input type="hidden" name="dealId" value="${vo.dealId}">
 										<input type="hidden" name="status"
@@ -274,10 +269,9 @@
 										</button>
 									</form>
 
-									<a
-										href="${pageContext.request.contextPath}/adminHotDeal/updateForm.do?dealId=${vo.dealId}"
-										class="btn-icon" title="수정"><svg
-											xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+									<a href="${pageContext.request.contextPath}/adminHotDeal/updateForm.do?dealId=${vo.dealId}"
+										class="btn-icon" title="수정">
+										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 											viewBox="0 0 24 24">
 											<g fill="none" stroke="currentColor" stroke-linecap="round"
 												stroke-linejoin="round" stroke-width="1">
@@ -293,10 +287,10 @@
 											<path stroke-dasharray="8" stroke-dashoffset="8"
 												d="M6 15l3 3">
 											<animate fill="freeze" attributeName="stroke-dashoffset"
-												begin="0.8s" dur="0.2s" to="0" /></path></g></svg></a>
+												begin="0.8s" dur="0.2s" to="0" /></path></g></svg>
+									</a>
 
-									<form
-										action="${pageContext.request.contextPath}/adminHotDeal/delete.do"
+									<form action="${pageContext.request.contextPath}/adminHotDeal/delete.do"
 										method="post">
 										<input type="hidden" name="dealId" value="${vo.dealId}">
 										<button type="submit" class="btn-icon delete-btn" title="삭제">
@@ -328,7 +322,6 @@
 
 			<div class="bottom-row">
 				<div>
-					<%-- pageNav 태그 연동 시 사용 --%>
 					<pageNav:pageNav listURI="list.do" pageObject="${pageObject}" />
 				</div>
 				<div>

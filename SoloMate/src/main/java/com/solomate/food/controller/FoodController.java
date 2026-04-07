@@ -38,9 +38,16 @@ public class FoodController implements Controller {
 				PageObject pageObject = PageObject.getInstance(request);
 				pageObject.setAccepter(loginId); // 로그인 아이디를 accepter에 넘김
 				
-				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
+				List<FoodVO> list = (List<FoodVO>) Execute.execute(Init.getService(uri), pageObject);
+				
+				// dDay 색을 입히기 위한 메서드 diffDays
+				for (FoodVO food : list) {
+				    food.calculateDday();
+				}
+				
 				System.out.println("FoodController.execute().pageObject - " + pageObject);
 				request.setAttribute("pageObject", pageObject);
+				request.setAttribute("list", list);
 				
 				return "food/list";
 				

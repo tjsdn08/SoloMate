@@ -102,9 +102,14 @@
 					<div>
 						<div class="form-label">카테고리</div>
 						<select name="categoryId" class="form-select" required>
-							<option value="1" ${vo.categoryId eq 1 ? 'selected' : ''}>식품</option>
-							<option value="2" ${vo.categoryId eq 2 ? 'selected' : ''}>생활용품</option>
-							<option value="3" ${vo.categoryId eq 3 ? 'selected' : ''}>가전</option>
+							<option value="">선택</option>
+							<c:forEach items="${categoryList}" var="cat">
+								<c:if test="${cat.status eq 'ACTIVE'}">
+									<option value="${cat.categoryId}"
+										${vo.categoryId == cat.categoryId ? 'selected="selected"' : ''}>
+										${cat.categoryName}</option>
+								</c:if>
+							</c:forEach>
 						</select>
 					</div>
 

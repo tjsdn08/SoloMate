@@ -88,6 +88,24 @@ public class AuthorityFilter extends HttpFilter implements Filter {
 		authMap.put("/account/write.do", 1);
 		authMap.put("/account/update.do", 1);
 		authMap.put("/account/delete.do", 1);
+		
+		// ---------------- food ----------
+		authMap.put("/food/list.do", 1);
+		authMap.put("/food/view.do", 1);
+		authMap.put("/food/writeForm.do", 1);
+		authMap.put("/food/write.do", 1);
+		authMap.put("/food/updateForm.do", 1);
+		authMap.put("/food/update.do", 1);
+		authMap.put("/food/delete.do", 1);
+		
+		// ---------------- folder ----------
+		authMap.put("/folder/list.do", 1);
+		authMap.put("/folder/view.do", 1);
+		authMap.put("/folder/writeForm.do", 1);
+		authMap.put("/folder/write.do", 1);
+		authMap.put("/folder/updateForm.do", 1);
+		authMap.put("/folder/update.do", 1);
+		authMap.put("/folder/delete.do", 1);
 
 		
 		authMap.put("/recipes/writeForm.do", 1);

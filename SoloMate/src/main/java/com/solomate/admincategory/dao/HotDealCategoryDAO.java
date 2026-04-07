@@ -9,7 +9,7 @@ import com.solomate.util.db.DB;
 
 public class HotDealCategoryDAO extends DAO {
 
-	// 리스트
+	// 관리자 카테고리 리스트
 	public List<HotDealCategoryVO> list() throws Exception {
 
 		List<HotDealCategoryVO> list = new ArrayList<>();
@@ -22,6 +22,40 @@ public class HotDealCategoryDAO extends DAO {
 					+ "        to_char(created_at, 'yyyy-mm-dd') created_at "
 					+ " from hot_deal_category "
 					+ " where is_deleted = 'N' "
+					+ " order by category_id asc ";
+
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				HotDealCategoryVO vo = new HotDealCategoryVO();
+				vo.setCategoryId(rs.getLong("category_id"));
+				vo.setCategoryName(rs.getString("category_name"));
+				vo.setStatus(rs.getString("status"));
+				vo.setCreatedAt(rs.getString("created_at"));
+				list.add(vo);
+			}
+
+			return list;
+		} finally {
+			DB.close(con, pstmt, rs);
+		}
+	}
+
+	// 사용자 핫딜 화면용 활성 카테고리 리스트
+	public List<HotDealCategoryVO> activeList() throws Exception {
+
+		List<HotDealCategoryVO> list = new ArrayList<>();
+
+		try {
+			con = DB.getConnection();
+
+			String sql = ""
+					+ " select category_id, category_name, status, "
+					+ "        to_char(created_at, 'yyyy-mm-dd') created_at "
+					+ " from hot_deal_category "
+					+ " where is_deleted = 'N' "
+					+ "   and status = 'ACTIVE' "
 					+ " order by category_id asc ";
 
 			pstmt = con.prepareStatement(sql);
