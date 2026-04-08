@@ -168,7 +168,7 @@ public class MainDAO extends DAO {
         return totalExpense;
     }
     
- // 6. 메인 페이지용 상위 추천 핫딜 3개 가져오기 (할인율 높은 순)
+    // 6. 메인 페이지용 상위 추천 핫딜 3개 가져오기 (할인율 높은 순)
     // 핫딜은 로그인 여부와 상관없이 보여주므로 파라미터(id)가 필요 없습니다.
     public List<HotDealVO> getTopHotDeals() throws Exception {
         List<HotDealVO> list = new ArrayList<>();
@@ -206,6 +206,85 @@ public class MainDAO extends DAO {
         DB.close(con, pstmt, rs);
         return list;
     }
+    
+    
+ // 7. 냉장고 파먹기: 유통기한 임박(D-0 ~ D-3) 식재료 상위 3개 이름 가져오기
+    public List<String> getUrgentIngredientList(String memberId) throws Exception {
+        List<String> ingredientList = new ArrayList<>();
+        con = DB.getConnection();
+
+        // 유통기한이 짧은 순으로 정렬하여 최대 3개까지만 추출
+        String sql = " SELECT name FROM ( "
+                   + "    SELECT name FROM food "
+                   + "    WHERE memberId = ? "
+                   + "      AND expiryDate >= TRUNC(SYSDATE) "
+                   + "      AND expiryDate - TRUNC(SYSDATE) <= 3 "
+                   + "    ORDER BY expiryDate ASC "
+                   + " ) WHERE ROWNUM <= 3 ";
+
+        pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, memberId);
+        rs = pstmt.executeQuery();
+
+        while (rs != null && rs.next()) {
+            ingredientList.add(rs.getString("name"));
+        }
+
+        DB.close(con, pstmt, rs);
+        return ingredientList;
+    }
+
+    // 8. 냉장고 파먹기: 식재료 리스트를 이용해 레시피 통합 검색 (제목, 설명, 재료 포함 여부)
+    public List<RecipesVO> getFridgeRecipes(List<String> ingredients) throws Exception {
+        List<RecipesVO> list = new ArrayList<>();
+        // 식재료가 없으면 빈 리스트 반환
+        if (ingredients == null || ingredients.isEmpty()) return list; 
+
+        con = DB.getConnection();
+
+        // StringBuilder를 이용해 식재료 개수만큼 동적으로 SQL(OR 조건)을 생성합니다.
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT recipes_no, recipes_title, recipes_img, description ");
+        sql.append(" FROM ( ");
+        sql.append("    SELECT recipes_no, recipes_title, recipes_img, description ");
+        sql.append("    FROM recipes ");
+        sql.append("    WHERE ");
+
+        // 식재료 1개당 제목, 설명, 재료 3곳을 검사하는 쿼리를 덧붙임
+        for (int i = 0; i < ingredients.size(); i++) {
+            if (i > 0) sql.append(" OR ");
+            sql.append(" (recipes_title LIKE ? OR description LIKE ? OR food LIKE ?) ");
+        }
+
+        sql.append("    ORDER BY DBMS_RANDOM.VALUE "); // 겹치지 않게 매번 랜덤 정렬
+        sql.append(" ) WHERE ROWNUM <= 3 "); // 최종 추천 레시피도 3개만 추출
+
+        pstmt = con.prepareStatement(sql.toString());
+
+        // 동적 쿼리에 맞춰 데이터(?) 세팅
+        int idx = 1;
+        for (String ingredient : ingredients) {
+            String query = "%" + ingredient + "%"; // 포함 검색을 위한 와일드카드
+            pstmt.setString(idx++, query); // recipes_title 검사용
+            pstmt.setString(idx++, query); // description 검사용
+            pstmt.setString(idx++, query); // food 검사용
+        }
+
+        rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            RecipesVO vo = new RecipesVO();
+            vo.setRecipes_no(rs.getLong("recipes_no"));
+            vo.setRecipes_title(rs.getString("recipes_title"));
+            vo.setRecipes_img(rs.getString("recipes_img"));
+            vo.setDescription(rs.getString("description")); // RecipesDAO의 컬럼명과 맞춤
+            list.add(vo);
+        }
+
+        DB.close(con, pstmt, rs);
+        return list;
+    }
+    
     
     
 }

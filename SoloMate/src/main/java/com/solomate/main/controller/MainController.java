@@ -21,7 +21,7 @@ public class MainController implements Controller {
 	            MainDAO mainDao = new com.solomate.main.dao.MainDAO();
 	            request.setAttribute("topHotDeals", mainDao.getTopHotDeals()); 
 
-	            // 2. 로그인 한 경우에만 나머지 개인 데이터를 가져옵니다.
+	         // 2. 로그인 한 경우에만 나머지 개인 데이터를 가져온다
 	            if (loginVO != null) {
 	                Object[] summaryData = (Object[]) Execute.execute(
 	                    Init.getService("/main/summary.do"),
@@ -32,6 +32,8 @@ public class MainController implements Controller {
 	                request.setAttribute("expiringFoods", summaryData[2]);
 	                request.setAttribute("shoppingList",  summaryData[3]);
 	                request.setAttribute("totalExpense",  summaryData[4]); 
+	                request.setAttribute("ingredientNames", summaryData[5]); 
+	                request.setAttribute("fridgeRecipes",   summaryData[6]); 
 	            }
 	            return "main/main";
 

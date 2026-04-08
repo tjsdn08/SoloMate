@@ -27,11 +27,9 @@
     .d-day-warning { background-color: #fef5e7; color: #d35400; }
     .empty-state { text-align: center; color: #95a5a6; padding: 30px 0; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; height: 100%; border: 1px dashed #ced4da; border-radius: 12px; background: #fff;}
     
-    /* 핫딜 & 가계부 강조 스타일 추가 */
     .expense-amount { font-size: 1.5rem; font-weight: 800; color: #e74c3c; text-align: center; padding: 15px 0; }
     .hotdeal-badge { background: #e74c3c; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 5px; display: inline-block;}
 
-    /* 퀵 액세스 컨테이너 그리드 4열로 변경 */
     .quick-access-container { max-width: 900px; margin: 20px auto 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
     .quick-btn { display: flex; flex-direction: column; align-items: center; background: #ffffff; border: 1px solid #e9ecef; border-radius: 16px; padding: 20px 10px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
     .quick-btn:hover { background-color: #f0f7ff; border-color: #3498db; transform: translateY(-5px); }
@@ -41,65 +39,119 @@
     @media (max-width: 768px) { 
         .summary-dashboard { grid-template-columns: 1fr; } 
         .quick-access-container { grid-template-columns: repeat(2, 1fr); gap: 10px;} 
+        .fridge-recipe-grid { grid-template-columns: 1fr !important; }
     }
     
-/* 1. 슬라이더 전체를 감싸는 래퍼 */
-    .hotdeal-wrapper {
-        position: relative;
-        width: 100%;
-        flex: 1; /* 🔥 추가: 회색 박스의 남은 세로 공간을 모두 차지하도록 늘림 */
-        display: flex;
-        flex-direction: column;
-    }
-    
-    /* 2. 실제 슬라이드가 움직이는 영역 */
-    .hotdeal-slider-container {
-        width: 100%;
-        overflow: hidden; 
-        position: relative;
-        flex: 1; /* 🔥 추가: 래퍼의 높이에 맞춰 꽉 차게 늘림 */
-    }
-    .hotdeal-slider-track {
-        display: flex;
-        transition: transform 0.5s ease-in-out;
-        height: 100%; /* 🔥 추가: 트랙의 높이도 100%로 맞춤 */
-    }
-    .hotdeal-slide {
-        flex: 0 0 100%;
-        box-sizing: border-box;
-        height: 100%; /* 🔥 추가: 개별 슬라이드의 높이도 100%로 맞춤 */
-        padding: 3px 0; /* 카드가 위로 움직일 때(hover) 그림자가 잘리지 않도록 미세한 여백 추가 */
-    }
-
-    /* 3. 화살표 버튼 디자인 (기존 유지) */
-    .slider-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: transparent;
-        color: #bdc3c7; 
-        border: none;
-        cursor: pointer;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px; 
-        width: 20px; 
-        transition: color 0.2s;
-        padding: 0;
-    }
+    .hotdeal-wrapper { position: relative; width: 100%; flex: 1; display: flex; flex-direction: column; }
+    .hotdeal-slider-container { width: 100%; overflow: hidden; position: relative; flex: 1; }
+    .hotdeal-slider-track { display: flex; transition: transform 0.5s ease-in-out; height: 100%; }
+    .hotdeal-slide { flex: 0 0 100%; box-sizing: border-box; height: 100%; padding: 3px 0; }
+    .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: transparent; color: #bdc3c7; border: none; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 18px; width: 20px; transition: color 0.2s; padding: 0; }
     .slider-btn:hover { color: #e74c3c; } 
-    
     .prev-btn { left: -20px; }
     .next-btn { right: -20px; }
-    
+	
+	/* 냉장고 파먹기 전용 컨테이너 (Flexbox로 변경) */
+	.fridge-recipe-grid { 
+	    display: flex;
+	    gap: 15px; 
+	    width: 100%;
+	    align-items: stretch;  /* 높이를 동일하게 맞춤 */
+	}
+	
+	/* 냉장고 파먹기 내부 카드 개별 설정 */
+	.fridge-recipe-grid .bookmark-card {
+	    flex: 1;               /* 남은 공간을 똑같이 나눠 가짐 (1개면 1, 2개면 0.5씩) */
+	    min-width: 0;          /* 텍스트가 박스를 밀어내지 않도록 방어 */
+	    display: flex;
+	    flex-direction: row; 
+	    align-items: center;
+	    box-sizing: border-box;
+	    overflow: hidden;
+	    background: #ffffff;
+	    border: 1px solid #e9ecef;
+	    border-radius: 12px;
+	    padding: 12px;
+	}
+	
+	/* 설명글 영역 (글자 수에 상관없이 정갈하게 유지) */
+	.fridge-recipe-grid .card-info {
+	    flex: 1;
+	    min-width: 0;
+	    overflow: hidden;
+	    padding-left: 5px; /* 이미지와의 간격 */
+	}
+	
+	/* 폰트 및 텍스트 처리 */
+	.fridge-recipe-grid .bookmark-title {
+	    font-size: 1rem;
+	    white-space: nowrap;
+	    overflow: hidden;
+	    text-overflow: ellipsis;
+	}
+	
+	.fridge-recipe-grid .bookmark-desc {
+	    display: -webkit-box;
+	    -webkit-line-clamp: 2;
+	    -webkit-box-orient: vertical;
+	    overflow: hidden;
+	    height: 2.6em; 
+	    font-size: 0.85rem;
+	    color: #7f8c8d;
+	}
+	
+	/* 모바일 대응: 화면이 좁아지면 가로로 늘어지는 대신 세로로 쌓이게 변경 */
+	@media (max-width: 768px) {
+	    .fridge-recipe-grid {
+	        flex-direction: column; /* 세로 배치 */
+	    }
+	    .fridge-recipe-grid .bookmark-card {
+	        width: 100%; /* 모바일에서는 무조건 꽉 차게 */
+	    }
+	}
+	
+	
+	
 </style>
 <title>메인페이지</title>
 </head>
 <body>
 
 <div class="summary-dashboard">
+    <div class="dashboard-section" style="grid-column: 1 / span 2;">
+        <div class="section-header">
+            <span>냉장고 파먹기 추천 👨‍🍳</span>
+            <c:if test="${not empty ingredientNames}">
+                <span class="sub-text">임박한 <b>${ingredientNames}</b> 활용하기</span>
+            </c:if>
+        </div>
+        <c:choose>
+            <c:when test="${not empty login}">
+                <c:choose>
+                    <c:when test="${not empty fridgeRecipes}">
+                        <div class="fridge-recipe-grid">
+                            <c:forEach var="fRec" items="${fridgeRecipes}">
+                                <a href="/recipes/view.do?no=${fRec.recipes_no}" class="bookmark-card">
+                                    <img src="${fRec.recipes_img}" alt="레시피" class="recipe-img">
+                                    <div class="card-info">
+                                        <h4 class="bookmark-title">${fRec.recipes_title}</h4>
+                                        <p class="bookmark-desc">${fRec.description}</p>
+                                    </div>
+                                </a>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="empty-state">임박한 식재료에 맞는 레시피를 찾고 있어요! 🔍</div>
+                    </c:otherwise>
+                </c:choose>
+            </c:when>
+            <c:otherwise>
+                <div class="empty-state">로그인 후 식재료 맞춤 레시피를 확인하세요.</div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+
     <div class="dashboard-section">
         <div class="section-header">최근 북마크한 레시피</div>
         <c:choose>
@@ -208,15 +260,13 @@
         </c:choose>
     </div>
 
-	<div class="dashboard-section">
+    <div class="dashboard-section">
         <div class="section-header">오늘의 추천 핫딜 🔥</div>
         <c:choose>
             <c:when test="${not empty topHotDeals}">
                 <div class="hotdeal-wrapper">
-                    
                     <button class="slider-btn prev-btn" id="prevBtn">&#10094;</button>
                     <button class="slider-btn next-btn" id="nextBtn">&#10095;</button>
-
                     <div class="hotdeal-slider-container">
                         <div class="hotdeal-slider-track" id="hotdeal-track">
                             <c:forEach var="deal" items="${topHotDeals}">
@@ -232,13 +282,11 @@
                             </c:forEach>
                         </div>
                     </div>
-                    
-                </div> </c:when>
+                </div> 
+            </c:when>
             <c:otherwise><div class="empty-state">현재 진행 중인 핫딜이 없습니다.</div></c:otherwise>
         </c:choose>
     </div>
-    
-    
 </div>
 
 <div class="quick-access-container">
@@ -257,7 +305,6 @@
 </div>
 
 <script>
-    // 기존 로그인 체크 함수
     function checkLogin(url) {
         var isLoggedIn = ${not empty login};
         if (isLoggedIn) {
@@ -268,68 +315,42 @@
         }
     }
 
-    // 핫딜 슬라이드 (자동 10초 + 좌우 클릭)
     document.addEventListener("DOMContentLoaded", function() {
         const track = document.getElementById('hotdeal-track');
         if (!track) return; 
-
         const slides = track.querySelectorAll('.hotdeal-slide');
-        if (slides.length <= 1) return; // 슬라이드가 1개면 버튼과 자동넘김 모두 불필요
-
+        if (slides.length <= 1) return;
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-
         let currentIndex = 0;
         const totalSlides = slides.length;
         let slideTimer;
 
-        // 특정 인덱스로 슬라이드를 이동시키는 함수
         function moveToSlide(index) {
             currentIndex = index;
-            
-            // 맨 끝에서 오른쪽을 누르면 처음으로, 처음에서 왼쪽을 누르면 맨 끝으로
             if (currentIndex < 0) currentIndex = totalSlides - 1;
             if (currentIndex >= totalSlides) currentIndex = 0;
-
             const movePercent = -(currentIndex * 100);
             track.style.transform = 'translateX(' + movePercent + '%)';
         }
+        function nextSlide() { moveToSlide(currentIndex + 1); }
+        function startTimer() { slideTimer = setInterval(nextSlide, 10000); }
+        function resetTimer() { clearInterval(slideTimer); startTimer(); }
 
-        // 다음 슬라이드로 넘어가는 함수
-        function nextSlide() {
-            moveToSlide(currentIndex + 1);
-        }
-
-        // 10초(10000ms) 타이머 시작 함수
-        function startTimer() {
-            slideTimer = setInterval(nextSlide, 10000);
-        }
-
-        // 사용자가 클릭했을 때 타이머가 겹치지 않게 초기화 후 다시 시작
-        function resetTimer() {
-            clearInterval(slideTimer);
-            startTimer();
-        }
-
-        // 왼쪽 화살표 클릭 시
         if (prevBtn) {
             prevBtn.addEventListener('click', function() {
                 moveToSlide(currentIndex - 1);
                 resetTimer();
             });
         }
-
-        // 오른쪽 화살표 클릭 시
         if (nextBtn) {
             nextBtn.addEventListener('click', function() {
                 nextSlide();
                 resetTimer();
             });
         }
-
-        // 페이지 로드 시 최초 10초 타이머 시작
         startTimer();
-    }); // <-- 중복되어 있던 괄호를 삭제하고 하나만 남겨두었습니다.
+    });
 </script>
 
 </body>
