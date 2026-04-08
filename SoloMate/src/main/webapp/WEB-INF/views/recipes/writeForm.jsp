@@ -194,11 +194,11 @@ $(function(){
                 <div class="col-md-3">
                     <div class="info-item h-100">
                         <span class="info-label">소요 시간</span>
-                        <div class="input-group align-items-center">
-                            <input type="number" name="recipes_time" class="form-control-custom text-center" 
-                                   min="1" required style="width: 70%;">
-                            <span class="ps-2 fw-bold text-muted">분</span>
-                        </div>
+						<div class="d-flex align-items-center">
+						    <input type="number" name="recipes_time" class="form-control-custom text-center" 
+						           min="1" required style="width: 70%;">
+						    <span class="ps-2 fw-bold text-muted">분</span>
+						</div>
                     </div>
                 </div>
                 <div class="col-md-3">
