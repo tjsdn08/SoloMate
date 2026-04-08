@@ -3,6 +3,7 @@ package com.solomate.main.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.solomate.account.vo.AccountVO;
 import com.solomate.boardbookmark.vo.BoardBookmarkVO;
 import com.solomate.food.dao.FoodDAO;
 import com.solomate.food.vo.FoodVO;
@@ -278,6 +279,37 @@ public class MainDAO extends DAO {
             vo.setRecipes_title(rs.getString("recipes_title"));
             vo.setRecipes_img(rs.getString("recipes_img"));
             vo.setDescription(rs.getString("description")); // RecipesDAO의 컬럼명과 맞춤
+            list.add(vo);
+        }
+
+        DB.close(con, pstmt, rs);
+        return list;
+    }
+    
+    
+
+    // MainDAO 클래스 내부에 추가
+    public List<AccountVO> getMonthlyChartData(String id) throws Exception {
+        List<AccountVO> list = new ArrayList<>();
+        con = DB.getConnection();
+
+        // 이번 달(SYSDATE 기준)의 카테고리별 수입/지출 합계를 구하는 쿼리
+        String sql = " SELECT ac.cname as category, ac.type, SUM(a.amount) as total "
+                   + " FROM account a, account_category ac "
+                   + " WHERE a.id = ? AND a.cno = ac.cno "
+                   + "   AND TO_CHAR(a.regDate, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM') "
+                   + " GROUP BY ac.cname, ac.type "
+                   + " ORDER BY total DESC ";
+
+        pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, id);
+        rs = pstmt.executeQuery();
+
+        while (rs != null && rs.next()) {
+            AccountVO vo = new AccountVO();
+            vo.setCategory(rs.getString("category"));
+            vo.setType(rs.getString("type"));
+            vo.setAmount(rs.getLong("total"));
             list.add(vo);
         }
 

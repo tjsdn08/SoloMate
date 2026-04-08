@@ -17,23 +17,22 @@ public class MainController implements Controller {
 	            HttpSession session = request.getSession();
 	            LoginVO loginVO = (LoginVO) session.getAttribute("login");
 
-	            // 1. 핫딜은 로그인과 무관하게 무조건 가져오자
 	            MainDAO mainDao = new com.solomate.main.dao.MainDAO();
 	            request.setAttribute("topHotDeals", mainDao.getTopHotDeals()); 
 
-	         // 2. 로그인 한 경우에만 나머지 개인 데이터를 가져온다
 	            if (loginVO != null) {
 	                Object[] summaryData = (Object[]) Execute.execute(
 	                    Init.getService("/main/summary.do"),
 	                    loginVO.getId()
 	                );
-	                request.setAttribute("recentRecipe",  summaryData[0]);
-	                request.setAttribute("recentTip",     summaryData[1]);
-	                request.setAttribute("expiringFoods", summaryData[2]);
-	                request.setAttribute("shoppingList",  summaryData[3]);
-	                request.setAttribute("totalExpense",  summaryData[4]); 
+	                request.setAttribute("recentRecipe",   summaryData[0]);
+	                request.setAttribute("recentTip",      summaryData[1]);
+	                request.setAttribute("expiringFoods",  summaryData[2]);
+	                request.setAttribute("shoppingList",   summaryData[3]);
+	                request.setAttribute("totalExpense",   summaryData[4]); 
 	                request.setAttribute("ingredientNames", summaryData[5]); 
 	                request.setAttribute("fridgeRecipes",   summaryData[6]); 
+	                request.setAttribute("chartData",      summaryData[7]); 
 	            }
 	            return "main/main";
 
