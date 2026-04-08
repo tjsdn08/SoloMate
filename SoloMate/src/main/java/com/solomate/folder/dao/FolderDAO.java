@@ -281,6 +281,26 @@ public class FolderDAO extends DAO{
 		
 	}
 	
+	// 폴더 삭제
+	public Integer delete(Long no) throws Exception {
+		Integer result = 0;
+		
+		con = DB.getConnection();
+		
+		String sql = "delete from folder where no = ?";
+		
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, no);
+		
+		result = pstmt.executeUpdate();
+		
+		DB.close(con, pstmt);
+		
+		return result;
+		
+	}
+	
+	
 	
 
 }

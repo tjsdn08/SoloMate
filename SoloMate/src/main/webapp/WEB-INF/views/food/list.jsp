@@ -11,9 +11,8 @@
 <style type="text/css">
 	/* :hover - 마우스가 오라 갔을 때 CSS. 공백없이 :hover 작성  */
 	.dataRow:hover{
-		/* background: #888; /* 배경색 변경 - BootStrap 5에서 적용이 안됨 */
+		/* background: #888; /* 배경색 변경 - BootStrap 5에서 적용이 안됨 -> table class=table-hover 추가 회색*/ 
 		cursor: pointer; /* 손가락 */
-		background-color: #f8f9fc;
 	}
 	.custom-card {
 	        background: white;
@@ -84,7 +83,7 @@
 		</div>
 		<!-- 검색란 처리 -------------------------------------------------------------------------->
 	
-		<table class="table table-hover align-middle">
+		<table class="table table-hover align-middle text-center table-bordered">
 			<thead class="table-light">
 				<tr>
 					<th>식품</th>

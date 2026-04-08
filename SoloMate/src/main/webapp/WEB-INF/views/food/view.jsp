@@ -16,11 +16,15 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         margin-top: 30px;
     }
+th {
+	width: 200px;
+	text-align: center;
+}
 </style>
 </head>
 <body>
 <div class="custom-card">
-<h2>식품 상세 보기</h2>
+<h2 class="mb-4">식품 상세 보기</h2>
 	<table class="table">
 		<tbody>
 			<tr>

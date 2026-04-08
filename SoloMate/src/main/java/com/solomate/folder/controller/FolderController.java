@@ -33,6 +33,7 @@ public class FolderController implements Controller{
 				PageObject pageObject = PageObject.getInstance(request);
 				// 아이디를 pageObject에 넣기
 				pageObject.setAccepter(loginId);
+				pageObject.setPerPageNum(4);
 				
 				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
 				System.out.println("FoodController.execute().pageObject - " + pageObject);
@@ -91,6 +92,24 @@ public class FolderController implements Controller{
 				request.setAttribute("result", result);
 				
 				return "folder/result";
+				
+			case "/folder/delete.do":
+				
+				no = Long.parseLong(request.getParameter("no"));
+				Integer result1 = (Integer) Execute.execute(Init.getService(uri), no);
+				
+				if(result1 == 1) {
+					request.getSession().setAttribute("msg", "삭제가 되었습니다.");
+					return "redirect:list.do?perPageNum=" + request.getParameter("perPageNum");
+				} else {
+					request.getSession().setAttribute("msg", "삭제에 실패하였습니다. 정보를 다시 확인해 주세요");
+					return "redirect:view.do?no=" + no
+							+ "&page=" + request.getParameter("page")
+							+ "&perPageNum=" + request.getParameter("perPageNum")
+							+ "&key=" + request.getParameter("key")
+							+ "&word=" + request.getParameter("word");
+				}
+			
 
 			default:
 				return "error/noPage";
