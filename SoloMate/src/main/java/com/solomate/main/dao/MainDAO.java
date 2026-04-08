@@ -6,6 +6,7 @@ import java.util.List;
 import com.solomate.boardbookmark.vo.BoardBookmarkVO;
 import com.solomate.food.dao.FoodDAO;
 import com.solomate.food.vo.FoodVO;
+import com.solomate.hotdeal.vo.HotDealVO;
 import com.solomate.recipes.vo.RecipesVO;
 import com.solomate.util.db.DB;
 
@@ -103,6 +104,7 @@ public class MainDAO extends DAO {
         return list;
     }
 
+// 수정 예정, 우선 주석 처리
 //    // 4. 구매 예정(PLANNED) 장보기 항목 최신 5건
 //    // shopping_plan.user_id 는 member.no(Long) 기반이므로 member 테이블과 조인
 //    public List<ShoppingVO> getPlannedShoppingList(String memberId) throws Exception {
@@ -136,4 +138,74 @@ public class MainDAO extends DAO {
 //        DB.close(con, pstmt, rs);
 //        return list;
 //    }
+    
+    
+ // 5. 이번 달 지출 총액 가져오기
+    public long getTotalExpenseThisMonth(String id) throws Exception {
+        long totalExpense = 0;
+        con = DB.getConnection();
+
+        // account(a)와 account_category(ac)를 조인하여 'expense'(지출)만 필터링
+        // regDate를 기준으로 이번 달 데이터만 합산(SUM)합니다.
+        String sql = " SELECT NVL(SUM(a.amount), 0) "
+                   + " FROM account a, account_category ac "
+                   + " WHERE a.id = ? "
+                   + "   AND a.cno = ac.cno "
+                   + "   AND ac.type = 'expense' "
+                   + "   AND TO_CHAR(a.regDate, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM') ";
+
+        pstmt = con.prepareStatement(sql);
+        pstmt.setString(1, id);
+        rs = pstmt.executeQuery();
+
+        if (rs != null && rs.next()) {
+            // SUM의 결과값이므로 첫 번째 컬럼(1)을 가져옵니다. 
+            // 금액이 클 수 있어서 long 타입
+            totalExpense = rs.getLong(1); 
+        }
+
+        DB.close(con, pstmt, rs);
+        return totalExpense;
+    }
+    
+ // 6. 메인 페이지용 상위 추천 핫딜 3개 가져오기 (할인율 높은 순)
+    // 핫딜은 로그인 여부와 상관없이 보여주므로 파라미터(id)가 필요 없습니다.
+    public List<HotDealVO> getTopHotDeals() throws Exception {
+        List<HotDealVO> list = new ArrayList<>();
+        con = DB.getConnection();
+
+        // 할인율(discount_rate) 기준 내림차순 정렬 후 상위 3개(ROWNUM <= 3)만 추출
+        String sql = " SELECT deal_id, title, price, discount_rate "
+                   + " FROM ( "
+                   + "    SELECT hd.deal_id, hd.title, hd.price, hd.discount_rate "
+                   + "    FROM hot_deal hd "
+                   + "    JOIN hot_deal_category c ON hd.category_id = c.category_id "
+                   + "    WHERE hd.is_deleted = 'N' "
+                   + "      AND c.is_deleted = 'N' "
+                   + "      AND c.status = 'ACTIVE' "
+                   + "      AND hd.status = 'ACTIVE' "
+                   + "    ORDER BY hd.discount_rate DESC "
+                   + " ) WHERE ROWNUM <= 3 ";
+
+        pstmt = con.prepareStatement(sql);
+        rs = pstmt.executeQuery();
+
+        if (rs != null) {
+            while (rs.next()) {
+                HotDealVO vo = new HotDealVO();
+                vo.setDealId(rs.getLong("deal_id"));
+                // HotDealVO에 정의된 필드명에 맞게 세팅합니다.
+                // (JSP에서 deal.hotdealNo 대신 deal.dealId를 사용하셔야 합니다!)
+                vo.setTitle(rs.getString("title"));
+                vo.setPrice(rs.getLong("price"));
+                vo.setDiscountRate(rs.getDouble("discount_rate"));
+                list.add(vo);
+            }
+        }
+
+        DB.close(con, pstmt, rs);
+        return list;
+    }
+    
+    
 }

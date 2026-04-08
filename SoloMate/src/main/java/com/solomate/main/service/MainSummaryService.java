@@ -18,11 +18,13 @@ public class MainSummaryService implements Service {
         String id = (String) obj;
 
         // 4가지 데이터를 Object[] 배열로 묶어서 반환
-        Object[] result = new Object[4];
+        Object[] result = new Object[6];
         result[0] = dao.getRecentRecipeDetail(id);
         result[1] = dao.getRecentBoardBookmark(id);// BoardBookmarkVO
         result[2] = dao.getExpiringFoods(id);// List<FoodVO>
 //        result[3] = dao.getPlannedShoppingList(id);// List<ShoppingVO>
+        result[4] = dao.getTotalExpenseThisMonth(id);
+        result[5] = dao.getTopHotDeals();
 
         return result;
     }
