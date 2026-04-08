@@ -492,7 +492,7 @@
 <div class="quick-access-container">
     <a href="javascript:checkLogin('/food/writeForm.do')" class="quick-btn"><div class="icon">🍎</div><span>식품 등록</span></a>
     <a href="javascript:checkLogin('/shopping/list.do')" class="quick-btn"><div class="icon">🛒</div><span>장보기 목록</span></a>
-    <a href="javascript:checkLogin('/account/writeForm.do')" class="quick-btn"><div class="icon">💸</div><span>지출 등록</span></a>
+    <a href="javascript:checkLogin('/account/writeForm.do')" class="quick-btn"><div class="icon">💸</div><span>수입/지출 등록</span></a>
     <a href="javascript:checkLogin('/recipes/list.do')" class="quick-btn"><div class="icon">🍳</div><span>레시피 찾기</span></a>
 </div>
 

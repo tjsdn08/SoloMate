@@ -61,6 +61,72 @@ body {
     background-color: #f8f9fa; /* 배경색 대비 */
 }
 
+
+/* 6. 프로필 카드 및 드롭업 메뉴 스타일 */
+.profile-card {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin: 0 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.2s ease;
+}
+
+.profile-card:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-name {
+    color: white;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.profile-grade {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+
+.toggle-icon {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+/* 위로 펼쳐지는 메뉴 영역 */
+.profile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, margin 0.3s ease;
+    margin: 0 10px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* JS로 'show' 클래스가 붙었을 때의 상태 */
+.profile-menu.show {
+    max-height: 200px; /* 메뉴 항목에 맞게 충분한 높이 지정 */
+    margin-bottom: 10px;
+    padding: 5px 0;
+}
+
+.profile-menu .nav-link {
+    padding: 8px 20px;
+    text-align: left;
+}
+
+
+
 /* 모바일 등 작은 화면에서는 상단바로 돌아가거나 숨김 처리 가능 */
 @media (max-width: 992px) {
     .sidebar { display: none; }
@@ -88,23 +154,46 @@ body {
         </c:if>
     </ul>
 
-    <div class="sidebar-footer">
-        <ul class="nav flex-column">
-            <c:if test="${empty login }">
-                <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm mx-3 mb-2" href="/member/loginForm.do">로그인</a></li>
-                <li class="nav-item"><a class="nav-link btn btn-outline-secondary btn-sm mx-3" href="/member/writeForm.do">회원가입</a></li>
-            </c:if>
-            <c:if test="${!empty login }">
-				<li class="nav-item px-3 mb-3 text-center">
-					<a href="/member/view.do?id=${login.id}" class="text-decoration-none text-white-50 small">
-				        <span class="text-white fw-bold">${login.name}</span>님 (${login.gradeName})
-				    </a>
-				</li>
-                <li class="nav-item"><a class="nav-link py-1 small text-center" href="/member/changePw.do">비밀번호 변경</a></li>
-                <li class="nav-item"><a class="nav-link py-1 small text-center" href="/member/logout.do">로그아웃</a></li>
-                <li class="nav-item"><a class="nav-link py-1 small text-danger text-center" href="/member/deleteForm.do">회원 탈퇴</a></li>
-            </c:if>
-        </ul>
-
-    </div>
+	<div class="sidebar-footer">
+	    <c:if test="${empty login }">
+	        <ul class="nav flex-column">
+	            <li class="nav-item"><a class="nav-link btn btn-outline-light btn-sm mx-3 mb-2" href="/member/loginForm.do">로그인</a></li>
+	            <li class="nav-item"><a class="nav-link btn btn-outline-secondary btn-sm mx-3" href="/member/writeForm.do">회원가입</a></li>
+	        </ul>
+	    </c:if>
+	    
+	    <c:if test="${!empty login }">
+	        <ul class="nav flex-column profile-menu" id="profileMenu">
+	            <li class="nav-item"><a class="nav-link py-2 small" href="/member/view.do?id=${login.id}">👤 내 정보 보기</a></li>
+	            <li class="nav-item"><a class="nav-link py-2 small" href="/member/changePw.do">🔒 비밀번호 변경</a></li>
+	            <li class="nav-item"><a class="nav-link py-2 small" href="/member/logout.do">🚪 로그아웃</a></li>
+	            <li class="nav-item"><a class="nav-link py-2 small text-danger" href="/member/deleteForm.do">⚠️ 회원 탈퇴</a></li>
+	        </ul>
+	
+	        <div class="profile-card" onclick="toggleProfileMenu()">
+	            <div class="profile-info">
+	                <span class="profile-name">${login.name}님</span>
+	                <span class="profile-grade">(${login.gradeName})</span>
+	            </div>
+	            <span class="toggle-icon" id="profileToggleIcon">▲</span>
+	        </div>
+	    </c:if>
+	</div>
 </nav>
+
+<script>
+function toggleProfileMenu() {
+    const menu = document.getElementById('profileMenu');
+    const icon = document.getElementById('profileToggleIcon');
+    
+    // 메뉴 펼치기/접기
+    menu.classList.toggle('show');
+    
+    // 화살표 애니메이션
+    if (menu.classList.contains('show')) {
+        icon.style.transform = 'rotate(180deg)';
+    } else {
+        icon.style.transform = 'rotate(0deg)';
+    }
+}
+</script>
