@@ -30,6 +30,15 @@ public class HotDealVO {
 	private String sort;
 	private String addedToShopping;
 
+	private String memberId;
+
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
 	public Long getDealId() {
 		return dealId;
 	}
@@ -190,6 +199,6 @@ public class HotDealVO {
 				+ description + ", endDate=" + endDate + ", viewCount=" + viewCount + ", status=" + status
 				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", isDeleted=" + isDeleted
 				+ ", pageObject=" + pageObject + ", word=" + word + ", sort=" + sort
-				+ ", addedToShopping=" + addedToShopping + "]";
+				+ ", addedToShopping=" + addedToShopping + ", memberId=" + memberId + "]";
 	}
 }

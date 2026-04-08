@@ -18,7 +18,7 @@ public class ShoppingVO {
 	private String createdAt;
 	private String updatedAt;
 	private String isDeleted;
-
+	private String memberId;
 	// 연동 핫딜 제목
 	private String hotDealTitle;
 
@@ -163,10 +163,25 @@ public class ShoppingVO {
 		this.planDateSearch = planDateSearch;
 	}
 
+	
+
+	public String getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(String memberId) {
+		this.memberId = memberId;
+	}
+
 	@Override
 	public String toString() {
-		return "ShoppingVO [shoppingId=" + shoppingId + ", itemName=" + itemName + ", quantity=" + quantity
-				+ ", expectedPrice=" + expectedPrice + ", planDate=" + planDate + ", status=" + status
-				+ ", sourceType=" + sourceType + ", memo=" + memo + ", hotDealTitle=" + hotDealTitle + "]";
+		return "ShoppingVO [shoppingId=" + shoppingId + ", userId=" + userId + ", dealId=" + dealId + ", itemName="
+				+ itemName + ", quantity=" + quantity + ", expectedPrice=" + expectedPrice + ", planDate=" + planDate
+				+ ", status=" + status + ", sourceType=" + sourceType + ", memo=" + memo + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", isDeleted=" + isDeleted + ", memberId=" + memberId + ", hotDealTitle="
+				+ hotDealTitle + ", pageObject=" + pageObject + ", word=" + word + ", planDateSearch=" + planDateSearch
+				+ "]";
 	}
+	
+	
 }

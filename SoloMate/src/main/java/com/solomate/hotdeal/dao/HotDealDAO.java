@@ -40,6 +40,7 @@ public class HotDealDAO extends DAO {
 				+ "                from shopping_plan sp "
 				+ "                where sp.deal_id = hd.deal_id "
 				+ "                  and sp.is_deleted = 'N' "
+				+ "                  and sp.member_id = ? "
 				+ "              ) then 'Y' "
 				+ "              else 'N' "
 				+ "            end as added_to_shopping "
@@ -58,8 +59,8 @@ public class HotDealDAO extends DAO {
 		pstmt = con.prepareStatement(sql);
 
 		int idx = 1;
+		pstmt.setString(idx++, searchVO.getMemberId());
 		idx = searchDataSet(pstmt, idx, searchVO);
-
 		pstmt.setLong(idx++, pageObject.getStartRow());
 		pstmt.setLong(idx++, pageObject.getEndRow());
 
@@ -147,6 +148,7 @@ public class HotDealDAO extends DAO {
 
 		return idx;
 	}
+
 	// 3. 조회수 증가
 	public Integer increase(Long dealId) throws Exception {
 
@@ -169,8 +171,9 @@ public class HotDealDAO extends DAO {
 
 		return result;
 	}
+
 	// 4. 핫딜 상세보기
-	public HotDealVO view(Long dealId) throws Exception {
+	public HotDealVO view(HotDealVO paramVO) throws Exception {
 
 		HotDealVO vo = null;
 
@@ -191,6 +194,7 @@ public class HotDealDAO extends DAO {
 				+ "            from shopping_plan sp "
 				+ "            where sp.deal_id = hd.deal_id "
 				+ "              and sp.is_deleted = 'N' "
+				+ "              and sp.member_id = ? "
 				+ "          ) then 'Y' "
 				+ "          else 'N' "
 				+ "        end as added_to_shopping "
@@ -202,7 +206,8 @@ public class HotDealDAO extends DAO {
 				+ "   and c.status = 'ACTIVE' ";
 
 		pstmt = con.prepareStatement(sql);
-		pstmt.setLong(1, dealId);
+		pstmt.setString(1, paramVO.getMemberId());
+		pstmt.setLong(2, paramVO.getDealId());
 
 		rs = pstmt.executeQuery();
 
@@ -233,275 +238,282 @@ public class HotDealDAO extends DAO {
 
 		return vo;
 	}
-	
-	// ------------------------------------------------------------------------------------------
+
 	// 관리자 리스트
-		public List<HotDealVO> adminList(HotDealVO searchVO) throws Exception {
+	public List<HotDealVO> adminList(HotDealVO searchVO) throws Exception {
 
-			List<HotDealVO> list = new ArrayList<>();
-			PageObject pageObject = searchVO.getPageObject();
+		List<HotDealVO> list = new ArrayList<>();
+		PageObject pageObject = searchVO.getPageObject();
 
-			con = DB.getConnection();
+		con = DB.getConnection();
 
-			String sql = ""
-					+ " select deal_id, category_name, title, price, discount_rate, shop_name, "
-					+ "        status, created_at "
-					+ " from ( "
-					+ "   select rownum rnum, data.* "
-					+ "   from ( "
-					+ "     select hd.deal_id, c.category_name, hd.title, hd.price, hd.discount_rate, "
-					+ "            hd.shop_name, hd.status, to_char(hd.created_at, 'yyyy-mm-dd') created_at "
-					+ "     from hot_deal hd "
-					+ "     join hot_deal_category c on hd.category_id = c.category_id "
-					+ "     where hd.is_deleted = 'N' "
-					+ adminSearch(searchVO)
-					+ "     order by hd.deal_id desc "
-					+ "   ) data "
-					+ " ) "
-					+ " where rnum between ? and ? ";
+		String sql = ""
+				+ " select deal_id, category_name, title, price, discount_rate, shop_name, "
+				+ "        status, created_at "
+				+ " from ( "
+				+ "   select rownum rnum, data.* "
+				+ "   from ( "
+				+ "     select hd.deal_id, c.category_name, hd.title, hd.price, hd.discount_rate, "
+				+ "            hd.shop_name, hd.status, to_char(hd.created_at, 'yyyy-mm-dd') created_at "
+				+ "     from hot_deal hd "
+				+ "     join hot_deal_category c on hd.category_id = c.category_id "
+				+ "     where hd.is_deleted = 'N' "
+				+ adminSearch(searchVO)
+				+ "     order by hd.deal_id desc "
+				+ "   ) data "
+				+ " ) "
+				+ " where rnum between ? and ? ";
 
-			pstmt = con.prepareStatement(sql);
+		pstmt = con.prepareStatement(sql);
 
-			int idx = 1;
-			idx = adminSearchDataSet(pstmt, idx, searchVO);
-			pstmt.setLong(idx++, pageObject.getStartRow());
-			pstmt.setLong(idx++, pageObject.getEndRow());
+		int idx = 1;
+		idx = adminSearchDataSet(pstmt, idx, searchVO);
+		pstmt.setLong(idx++, pageObject.getStartRow());
+		pstmt.setLong(idx++, pageObject.getEndRow());
 
-			rs = pstmt.executeQuery();
+		rs = pstmt.executeQuery();
 
-			while (rs.next()) {
-				HotDealVO vo = new HotDealVO();
-				vo.setDealId(rs.getLong("deal_id"));
-				vo.setCategoryName(rs.getString("category_name"));
-				vo.setTitle(rs.getString("title"));
-				vo.setPrice(rs.getLong("price"));
-				vo.setDiscountRate(rs.getDouble("discount_rate"));
-				vo.setShopName(rs.getString("shop_name"));
-				vo.setStatus(rs.getString("status"));
-				vo.setCreatedAt(rs.getString("created_at"));
-				list.add(vo);
-			}
-
-			DB.close(con, pstmt, rs);
-			return list;
+		while (rs.next()) {
+			HotDealVO vo = new HotDealVO();
+			vo.setDealId(rs.getLong("deal_id"));
+			vo.setCategoryName(rs.getString("category_name"));
+			vo.setTitle(rs.getString("title"));
+			vo.setPrice(rs.getLong("price"));
+			vo.setDiscountRate(rs.getDouble("discount_rate"));
+			vo.setShopName(rs.getString("shop_name"));
+			vo.setStatus(rs.getString("status"));
+			vo.setCreatedAt(rs.getString("created_at"));
+			list.add(vo);
 		}
 
-		public Long getAdminTotalRow(HotDealVO searchVO) throws Exception {
+		DB.close(con, pstmt, rs);
+		return list;
+	}
 
-			Long totalRow = 0L;
+	public Long getAdminTotalRow(HotDealVO searchVO) throws Exception {
 
-			con = DB.getConnection();
+		Long totalRow = 0L;
 
-			String sql = ""
-					+ " select count(*) "
-					+ " from hot_deal hd "
-					+ " where hd.is_deleted = 'N' "
-					+ adminSearch(searchVO);
+		con = DB.getConnection();
 
-			pstmt = con.prepareStatement(sql);
+		String sql = ""
+				+ " select count(*) "
+				+ " from hot_deal hd "
+				+ " where hd.is_deleted = 'N' "
+				+ adminSearch(searchVO);
 
-			int idx = 1;
-			idx = adminSearchDataSet(pstmt, idx, searchVO);
+		pstmt = con.prepareStatement(sql);
 
-			rs = pstmt.executeQuery();
+		int idx = 1;
+		idx = adminSearchDataSet(pstmt, idx, searchVO);
 
-			if (rs != null && rs.next()) totalRow = rs.getLong(1);
+		rs = pstmt.executeQuery();
 
-			DB.close(con, pstmt, rs);
-			return totalRow;
+		if (rs != null && rs.next()) {
+			totalRow = rs.getLong(1);
 		}
 
-		public HotDealVO adminView(Long dealId) throws Exception {
+		DB.close(con, pstmt, rs);
+		return totalRow;
+	}
 
-			HotDealVO vo = null;
+	public HotDealVO adminView(Long dealId) throws Exception {
 
-			con = DB.getConnection();
+		HotDealVO vo = null;
 
-			String sql = ""
-					+ " select hd.deal_id, hd.category_id, c.category_name, hd.title, hd.price, "
-					+ "        hd.original_price, hd.discount_rate, hd.image_url, hd.shop_name, "
-					+ "        hd.seller_name, hd.deal_url, hd.description, "
-					+ "        to_char(hd.end_date, 'yyyy-mm-dd') end_date, "
-					+ "        hd.view_count, hd.status, "
-					+ "        to_char(hd.created_at, 'yyyy-mm-dd') created_at, "
-					+ "        to_char(hd.updated_at, 'yyyy-mm-dd') updated_at "
-					+ " from hot_deal hd "
-					+ " join hot_deal_category c on hd.category_id = c.category_id "
-					+ " where hd.deal_id = ? "
-					+ "   and hd.is_deleted = 'N' ";
+		con = DB.getConnection();
 
-			pstmt = con.prepareStatement(sql);
-			pstmt.setLong(1, dealId);
+		String sql = ""
+				+ " select hd.deal_id, hd.category_id, c.category_name, hd.title, hd.price, "
+				+ "        hd.original_price, hd.discount_rate, hd.image_url, hd.shop_name, "
+				+ "        hd.seller_name, hd.deal_url, hd.description, "
+				+ "        to_char(hd.end_date, 'yyyy-mm-dd') end_date, "
+				+ "        hd.view_count, hd.status, "
+				+ "        to_char(hd.created_at, 'yyyy-mm-dd') created_at, "
+				+ "        to_char(hd.updated_at, 'yyyy-mm-dd') updated_at "
+				+ " from hot_deal hd "
+				+ " join hot_deal_category c on hd.category_id = c.category_id "
+				+ " where hd.deal_id = ? "
+				+ "   and hd.is_deleted = 'N' ";
 
-			rs = pstmt.executeQuery();
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, dealId);
 
-			if (rs != null && rs.next()) {
-				vo = new HotDealVO();
-				vo.setDealId(rs.getLong("deal_id"));
-				vo.setCategoryId(rs.getLong("category_id"));
-				vo.setCategoryName(rs.getString("category_name"));
-				vo.setTitle(rs.getString("title"));
-				vo.setPrice(rs.getLong("price"));
-				vo.setOriginalPrice(rs.getLong("original_price"));
-				vo.setDiscountRate(rs.getDouble("discount_rate"));
-				vo.setImageUrl(rs.getString("image_url"));
-				vo.setShopName(rs.getString("shop_name"));
-				vo.setSellerName(rs.getString("seller_name"));
-				vo.setDealUrl(rs.getString("deal_url"));
-				vo.setDescription(rs.getString("description"));
-				vo.setEndDate(rs.getString("end_date"));
-				vo.setViewCount(rs.getLong("view_count"));
-				vo.setStatus(rs.getString("status"));
-				vo.setCreatedAt(rs.getString("created_at"));
-				vo.setUpdatedAt(rs.getString("updated_at"));
-			}
+		rs = pstmt.executeQuery();
 
-			DB.close(con, pstmt, rs);
-			return vo;
+		if (rs != null && rs.next()) {
+			vo = new HotDealVO();
+			vo.setDealId(rs.getLong("deal_id"));
+			vo.setCategoryId(rs.getLong("category_id"));
+			vo.setCategoryName(rs.getString("category_name"));
+			vo.setTitle(rs.getString("title"));
+			vo.setPrice(rs.getLong("price"));
+			vo.setOriginalPrice(rs.getLong("original_price"));
+			vo.setDiscountRate(rs.getDouble("discount_rate"));
+			vo.setImageUrl(rs.getString("image_url"));
+			vo.setShopName(rs.getString("shop_name"));
+			vo.setSellerName(rs.getString("seller_name"));
+			vo.setDealUrl(rs.getString("deal_url"));
+			vo.setDescription(rs.getString("description"));
+			vo.setEndDate(rs.getString("end_date"));
+			vo.setViewCount(rs.getLong("view_count"));
+			vo.setStatus(rs.getString("status"));
+			vo.setCreatedAt(rs.getString("created_at"));
+			vo.setUpdatedAt(rs.getString("updated_at"));
 		}
 
-		public Integer write(HotDealVO vo) throws Exception {
+		DB.close(con, pstmt, rs);
+		return vo;
+	}
 
-			Integer result = 0;
+	public Integer write(HotDealVO vo) throws Exception {
 
-			con = DB.getConnection();
+		Integer result = 0;
 
-			String sql = ""
-					+ " insert into hot_deal "
-					+ " (deal_id, category_id, title, price, original_price, discount_rate, "
-					+ "  image_url, shop_name, seller_name, deal_url, description, end_date, "
-					+ "  view_count, status, created_at, is_deleted) "
-					+ " values "
-					+ " (seq_hot_deal.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
-					+ "  to_date(?, 'yyyy-mm-dd'), 0, ?, sysdate, 'N') ";
+		con = DB.getConnection();
 
-			pstmt = con.prepareStatement(sql);
+		String sql = ""
+				+ " insert into hot_deal "
+				+ " (deal_id, category_id, title, price, original_price, discount_rate, "
+				+ "  image_url, shop_name, seller_name, deal_url, description, end_date, "
+				+ "  view_count, status, created_at, is_deleted) "
+				+ " values "
+				+ " (seq_hot_deal.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+				+ "  to_date(?, 'yyyy-mm-dd'), 0, ?, sysdate, 'N') ";
 
-			int idx = 1;
+		pstmt = con.prepareStatement(sql);
+
+		int idx = 1;
+		pstmt.setLong(idx++, vo.getCategoryId());
+		pstmt.setString(idx++, vo.getTitle());
+		pstmt.setLong(idx++, vo.getPrice());
+		pstmt.setLong(idx++, vo.getOriginalPrice());
+		pstmt.setDouble(idx++, vo.getDiscountRate());
+		pstmt.setString(idx++, vo.getImageUrl());
+		pstmt.setString(idx++, vo.getShopName());
+		pstmt.setString(idx++, vo.getSellerName());
+		pstmt.setString(idx++, vo.getDealUrl());
+		pstmt.setString(idx++, vo.getDescription());
+		pstmt.setString(idx++, vo.getEndDate());
+		pstmt.setString(idx++, vo.getStatus());
+
+		result = pstmt.executeUpdate();
+
+		DB.close(con, pstmt);
+		return result;
+	}
+
+	public Integer update(HotDealVO vo) throws Exception {
+
+		Integer result = 0;
+
+		con = DB.getConnection();
+
+		String sql = ""
+				+ " update hot_deal "
+				+ " set category_id = ?, "
+				+ "     title = ?, "
+				+ "     price = ?, "
+				+ "     original_price = ?, "
+				+ "     discount_rate = ?, "
+				+ "     image_url = ?, "
+				+ "     shop_name = ?, "
+				+ "     seller_name = ?, "
+				+ "     deal_url = ?, "
+				+ "     description = ?, "
+				+ "     end_date = to_date(?, 'yyyy-mm-dd'), "
+				+ "     status = ?, "
+				+ "     updated_at = sysdate "
+				+ " where deal_id = ? "
+				+ "   and is_deleted = 'N' ";
+
+		pstmt = con.prepareStatement(sql);
+
+		int idx = 1;
+		pstmt.setLong(idx++, vo.getCategoryId());
+		pstmt.setString(idx++, vo.getTitle());
+		pstmt.setLong(idx++, vo.getPrice());
+		pstmt.setLong(idx++, vo.getOriginalPrice());
+		pstmt.setDouble(idx++, vo.getDiscountRate());
+		pstmt.setString(idx++, vo.getImageUrl());
+		pstmt.setString(idx++, vo.getShopName());
+		pstmt.setString(idx++, vo.getSellerName());
+		pstmt.setString(idx++, vo.getDealUrl());
+		pstmt.setString(idx++, vo.getDescription());
+		pstmt.setString(idx++, vo.getEndDate());
+		pstmt.setString(idx++, vo.getStatus());
+		pstmt.setLong(idx++, vo.getDealId());
+
+		result = pstmt.executeUpdate();
+
+		DB.close(con, pstmt);
+		return result;
+	}
+
+	public Integer delete(Long dealId) throws Exception {
+
+		Integer result = 0;
+
+		con = DB.getConnection();
+
+		String sql = ""
+				+ " update hot_deal "
+				+ " set is_deleted = 'Y', updated_at = sysdate "
+				+ " where deal_id = ? ";
+
+		pstmt = con.prepareStatement(sql);
+		pstmt.setLong(1, dealId);
+
+		result = pstmt.executeUpdate();
+
+		DB.close(con, pstmt);
+		return result;
+	}
+
+	public Integer changeStatus(HotDealVO vo) throws Exception {
+
+		Integer result = 0;
+
+		con = DB.getConnection();
+
+		String sql = ""
+				+ " update hot_deal "
+				+ " set status = ?, updated_at = sysdate "
+				+ " where deal_id = ? "
+				+ "   and is_deleted = 'N' ";
+
+		pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, vo.getStatus());
+		pstmt.setLong(2, vo.getDealId());
+
+		result = pstmt.executeUpdate();
+
+		DB.close(con, pstmt);
+		return result;
+	}
+
+	private String adminSearch(HotDealVO vo) {
+		String sql = "";
+
+		if (vo.getCategoryId() != null)
+			sql += " and hd.category_id = ? ";
+		if (vo.getStatus() != null && !vo.getStatus().trim().equals(""))
+			sql += " and hd.status = ? ";
+		if (vo.getWord() != null && !vo.getWord().trim().equals(""))
+			sql += " and hd.title like ? ";
+
+		return sql;
+	}
+
+	private int adminSearchDataSet(java.sql.PreparedStatement pstmt, int idx, HotDealVO vo) throws Exception {
+
+		if (vo.getCategoryId() != null)
 			pstmt.setLong(idx++, vo.getCategoryId());
-			pstmt.setString(idx++, vo.getTitle());
-			pstmt.setLong(idx++, vo.getPrice());
-			pstmt.setLong(idx++, vo.getOriginalPrice());
-			pstmt.setDouble(idx++, vo.getDiscountRate());
-			pstmt.setString(idx++, vo.getImageUrl());
-			pstmt.setString(idx++, vo.getShopName());
-			pstmt.setString(idx++, vo.getSellerName());
-			pstmt.setString(idx++, vo.getDealUrl());
-			pstmt.setString(idx++, vo.getDescription());
-			pstmt.setString(idx++, vo.getEndDate());
+		if (vo.getStatus() != null && !vo.getStatus().trim().equals(""))
 			pstmt.setString(idx++, vo.getStatus());
+		if (vo.getWord() != null && !vo.getWord().trim().equals(""))
+			pstmt.setString(idx++, "%" + vo.getWord() + "%");
 
-			result = pstmt.executeUpdate();
-
-			DB.close(con, pstmt);
-			return result;
-		}
-
-		public Integer update(HotDealVO vo) throws Exception {
-
-			Integer result = 0;
-
-			con = DB.getConnection();
-
-			String sql = ""
-					+ " update hot_deal "
-					+ " set category_id = ?, "
-					+ "     title = ?, "
-					+ "     price = ?, "
-					+ "     original_price = ?, "
-					+ "     discount_rate = ?, "
-					+ "     image_url = ?, "
-					+ "     shop_name = ?, "
-					+ "     seller_name = ?, "
-					+ "     deal_url = ?, "
-					+ "     description = ?, "
-					+ "     end_date = to_date(?, 'yyyy-mm-dd'), "
-					+ "     status = ?, "
-					+ "     updated_at = sysdate "
-					+ " where deal_id = ? "
-					+ "   and is_deleted = 'N' ";
-
-			pstmt = con.prepareStatement(sql);
-
-			int idx = 1;
-			pstmt.setLong(idx++, vo.getCategoryId());
-			pstmt.setString(idx++, vo.getTitle());
-			pstmt.setLong(idx++, vo.getPrice());
-			pstmt.setLong(idx++, vo.getOriginalPrice());
-			pstmt.setDouble(idx++, vo.getDiscountRate());
-			pstmt.setString(idx++, vo.getImageUrl());
-			pstmt.setString(idx++, vo.getShopName());
-			pstmt.setString(idx++, vo.getSellerName());
-			pstmt.setString(idx++, vo.getDealUrl());
-			pstmt.setString(idx++, vo.getDescription());
-			pstmt.setString(idx++, vo.getEndDate());
-			pstmt.setString(idx++, vo.getStatus());
-			pstmt.setLong(idx++, vo.getDealId());
-
-			result = pstmt.executeUpdate();
-
-			DB.close(con, pstmt);
-			return result;
-		}
-
-		public Integer delete(Long dealId) throws Exception {
-
-			Integer result = 0;
-
-			con = DB.getConnection();
-
-			String sql = ""
-					+ " update hot_deal "
-					+ " set is_deleted = 'Y', updated_at = sysdate "
-					+ " where deal_id = ? ";
-
-			pstmt = con.prepareStatement(sql);
-			pstmt.setLong(1, dealId);
-
-			result = pstmt.executeUpdate();
-
-			DB.close(con, pstmt);
-			return result;
-		}
-
-		public Integer changeStatus(HotDealVO vo) throws Exception {
-
-			Integer result = 0;
-
-			con = DB.getConnection();
-
-			String sql = ""
-					+ " update hot_deal "
-					+ " set status = ?, updated_at = sysdate "
-					+ " where deal_id = ? "
-					+ "   and is_deleted = 'N' ";
-
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, vo.getStatus());
-			pstmt.setLong(2, vo.getDealId());
-
-			result = pstmt.executeUpdate();
-
-			DB.close(con, pstmt);
-			return result;
-		}
-
-		private String adminSearch(HotDealVO vo) {
-			String sql = "";
-
-			if (vo.getCategoryId() != null) sql += " and hd.category_id = ? ";
-			if (vo.getStatus() != null && !vo.getStatus().trim().equals("")) sql += " and hd.status = ? ";
-			if (vo.getWord() != null && !vo.getWord().trim().equals("")) sql += " and hd.title like ? ";
-
-			return sql;
-		}
-
-		private int adminSearchDataSet(java.sql.PreparedStatement pstmt, int idx, HotDealVO vo) throws Exception {
-
-			if (vo.getCategoryId() != null) pstmt.setLong(idx++, vo.getCategoryId());
-			if (vo.getStatus() != null && !vo.getStatus().trim().equals("")) pstmt.setString(idx++, vo.getStatus());
-			if (vo.getWord() != null && !vo.getWord().trim().equals("")) pstmt.setString(idx++, "%" + vo.getWord() + "%");
-
-			return idx;
-		}
+		return idx;
+	}
 }

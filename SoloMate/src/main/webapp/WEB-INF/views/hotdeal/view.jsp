@@ -248,15 +248,8 @@
 									</c:otherwise>
 								</c:choose>
 
-								<c:choose>
-									<c:when test="${not empty vo.dealUrl}">
-										<a href="${vo.dealUrl}" target="_blank"
-											rel="noopener noreferrer" class="btn-main"> 쿠팡에서 구매하기 </a>
-									</c:when>
-									<c:otherwise>
-										<span class="btn-done">구매 링크 없음</span>
-									</c:otherwise>
-								</c:choose>
+								<a href="https://www.coupang.com/" target="_blank"
+									rel="noopener noreferrer" class="btn-main">쿠팡에서 구매하기</a>
 							</div>
 
 							<div>

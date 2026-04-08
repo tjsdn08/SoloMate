@@ -3,6 +3,7 @@ package com.solomate.hotdeal.service;
 import com.solomate.main.dao.DAO;
 import com.solomate.main.service.Service;
 import com.solomate.shopping.dao.ShoppingDAO;
+import com.solomate.shopping.vo.ShoppingVO;
 
 public class HotDealAddShoppingService implements Service {
 
@@ -15,7 +16,7 @@ public class HotDealAddShoppingService implements Service {
 
 	@Override
 	public Integer service(Object obj) throws Exception {
-		Long dealId = (Long) obj;
-		return dao.addFromHotDeal(dealId);
+		ShoppingVO vo = (ShoppingVO) obj;
+		return dao.addFromHotDeal(vo);
 	}
 }

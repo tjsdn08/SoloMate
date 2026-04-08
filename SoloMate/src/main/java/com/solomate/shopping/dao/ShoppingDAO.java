@@ -30,6 +30,7 @@ public class ShoppingDAO extends DAO {
 				+ "            plan_date, status, created_at "
 				+ "     from shopping_plan "
 				+ "     where is_deleted = 'N' "
+				+ "       and member_id = ? "
 				+ search(searchVO)
 				+ "     order by shopping_id desc "
 				+ "   ) data "
@@ -39,8 +40,8 @@ public class ShoppingDAO extends DAO {
 		pstmt = con.prepareStatement(sql);
 
 		int idx = 1;
+		pstmt.setString(idx++, searchVO.getMemberId());
 		idx = searchDataSet(pstmt, idx, searchVO);
-
 		pstmt.setLong(idx++, pageObject.getStartRow());
 		pstmt.setLong(idx++, pageObject.getEndRow());
 
@@ -74,11 +75,13 @@ public class ShoppingDAO extends DAO {
 				+ " select count(*) "
 				+ " from shopping_plan "
 				+ " where is_deleted = 'N' "
+				+ "   and member_id = ? "
 				+ search(searchVO);
 
 		pstmt = con.prepareStatement(sql);
 
 		int idx = 1;
+		pstmt.setString(idx++, searchVO.getMemberId());
 		idx = searchDataSet(pstmt, idx, searchVO);
 
 		rs = pstmt.executeQuery();
@@ -129,7 +132,8 @@ public class ShoppingDAO extends DAO {
 
 		return idx;
 	}
-	// 3. 장보기 상세보기
+
+	// 5. 장보기 상세보기
 	public ShoppingVO view(Long shoppingId) throws Exception {
 
 		ShoppingVO vo = null;
@@ -137,7 +141,7 @@ public class ShoppingDAO extends DAO {
 		con = DB.getConnection();
 
 		String sql = ""
-				+ " select sp.shopping_id, sp.user_id, sp.deal_id, sp.item_name, sp.quantity, sp.expected_price, "
+				+ " select sp.shopping_id, sp.member_id, sp.deal_id, sp.item_name, sp.quantity, sp.expected_price, "
 				+ "        to_char(sp.plan_date, 'yyyy-mm-dd') plan_date, "
 				+ "        sp.status, sp.source_type, sp.memo, "
 				+ "        to_char(sp.created_at, 'yyyy-mm-dd') created_at, "
@@ -156,7 +160,7 @@ public class ShoppingDAO extends DAO {
 		if (rs != null && rs.next()) {
 			vo = new ShoppingVO();
 			vo.setShoppingId(rs.getLong("shopping_id"));
-			vo.setUserId(rs.getLong("user_id"));
+			vo.setMemberId(rs.getString("member_id"));
 
 			long dealId = rs.getLong("deal_id");
 			if (!rs.wasNull()) {
@@ -180,7 +184,8 @@ public class ShoppingDAO extends DAO {
 
 		return vo;
 	}
-	// 4. 장보기 등록
+
+	// 6. 장보기 등록
 	public Integer write(ShoppingVO vo) throws Exception {
 
 		Integer result = 0;
@@ -189,7 +194,7 @@ public class ShoppingDAO extends DAO {
 
 		String sql = ""
 				+ " insert into shopping_plan "
-				+ " (shopping_id, user_id, deal_id, item_name, quantity, expected_price, "
+				+ " (shopping_id, member_id, deal_id, item_name, quantity, expected_price, "
 				+ "  plan_date, status, source_type, memo, created_at, is_deleted) "
 				+ " values "
 				+ " (seq_shopping_plan.nextval, ?, ?, ?, ?, ?, "
@@ -199,7 +204,7 @@ public class ShoppingDAO extends DAO {
 
 		int idx = 1;
 
-		pstmt.setLong(idx++, vo.getUserId());
+		pstmt.setString(idx++, vo.getMemberId());
 
 		if (vo.getDealId() == null) {
 			pstmt.setNull(idx++, java.sql.Types.NUMERIC);
@@ -220,7 +225,8 @@ public class ShoppingDAO extends DAO {
 
 		return result;
 	}
-	// 5. 장보기 수정
+
+	// 7. 장보기 수정
 	public Integer update(ShoppingVO vo) throws Exception {
 
 		Integer result = 0;
@@ -256,7 +262,8 @@ public class ShoppingDAO extends DAO {
 
 		return result;
 	}
-	// 6. 장보기 삭제 (soft delete)
+
+	// 8. 장보기 삭제 (soft delete)
 	public Integer delete(Long shoppingId) throws Exception {
 
 		Integer result = 0;
@@ -278,7 +285,8 @@ public class ShoppingDAO extends DAO {
 
 		return result;
 	}
-	// 7. 구매완료 처리
+
+	// 9. 구매완료 처리
 	public Integer complete(Long shoppingId) throws Exception {
 
 		Integer result = 0;
@@ -301,7 +309,8 @@ public class ShoppingDAO extends DAO {
 
 		return result;
 	}
-	// 8. 장보기 취소
+
+	// 10. 장보기 취소
 	public Integer cancel(Long shoppingId) throws Exception {
 
 		Integer result = 0;
@@ -324,34 +333,55 @@ public class ShoppingDAO extends DAO {
 
 		return result;
 	}
-	// 8. 핫딜에서 장보기 자동 추가
-	public Integer addFromHotDeal(Long dealId) throws Exception {
+
+	// 11. 핫딜에서 장보기 자동 추가
+	public Integer addFromHotDeal(ShoppingVO vo) throws Exception {
 
 		Integer result = 0;
 
-		con = DB.getConnection();
+		try {
+			con = DB.getConnection();
 
-		String sql = ""
-				+ " insert into shopping_plan "
-				+ " (shopping_id, user_id, deal_id, item_name, quantity, expected_price, "
-				+ "  plan_date, status, source_type, memo, created_at, is_deleted) "
-				+ " select seq_shopping_plan.nextval, 1, hd.deal_id, hd.title, 1, hd.price, "
-				+ "        sysdate, 'PLANNED', 'HOTDEAL', null, sysdate, 'N' "
-				+ " from hot_deal hd "
-				+ " where hd.deal_id = ? "
-				+ "   and not exists ( "
-				+ "       select 1 "
-				+ "       from shopping_plan sp "
-				+ "       where sp.deal_id = hd.deal_id "
-				+ "         and sp.is_deleted = 'N' "
-				+ "   ) ";
+			String checkSql = ""
+					+ " select count(*) "
+					+ " from shopping_plan "
+					+ " where deal_id = ? "
+					+ "   and member_id = ? "
+					+ "   and is_deleted = 'N' ";
 
-		pstmt = con.prepareStatement(sql);
-		pstmt.setLong(1, dealId);
+			pstmt = con.prepareStatement(checkSql);
+			pstmt.setLong(1, vo.getDealId());
+			pstmt.setString(2, vo.getMemberId());
+			rs = pstmt.executeQuery();
 
-		result = pstmt.executeUpdate();
+			if (rs != null && rs.next() && rs.getInt(1) > 0) {
+				DB.close(con, pstmt, rs);
+				return 0;
+			}
 
-		DB.close(con, pstmt);
+			DB.close(null, pstmt, rs);
+
+			String insertSql = ""
+					+ " insert into shopping_plan "
+					+ " (shopping_id, member_id, deal_id, item_name, quantity, expected_price, "
+					+ "  plan_date, status, source_type, memo, created_at, is_deleted) "
+					+ " select seq_shopping_plan.nextval, ?, hd.deal_id, hd.title, 1, hd.price, "
+					+ "        sysdate, 'PLANNED', 'HOTDEAL', null, sysdate, 'N' "
+					+ " from hot_deal hd "
+					+ " where hd.deal_id = ? ";
+
+			pstmt = con.prepareStatement(insertSql);
+			pstmt.setString(1, vo.getMemberId());
+			pstmt.setLong(2, vo.getDealId());
+
+			result = pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			DB.close(con, pstmt, rs);
+		}
 
 		return result;
 	}

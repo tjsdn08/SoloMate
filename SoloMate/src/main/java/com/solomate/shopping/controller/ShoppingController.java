@@ -3,6 +3,7 @@ package com.solomate.shopping.controller;
 import com.solomate.main.controller.Controller;
 import com.solomate.main.controller.Init;
 import com.solomate.main.service.Execute;
+import com.solomate.member.vo.LoginVO;
 import com.solomate.shopping.vo.ShoppingVO;
 import com.solomate.util.page.PageObject;
 
@@ -20,14 +21,27 @@ public class ShoppingController implements Controller {
 			String uri = request.getServletPath();
 			System.out.println("uri = " + uri);
 
+			LoginVO loginVO = (LoginVO) request.getSession().getAttribute("login");
+			String memberId = null;
+
+			if (loginVO != null) {
+				memberId = loginVO.getId();
+			}
+
 			switch (uri) {
 
 			case "/shopping/list.do":
+
+				if (memberId == null) {
+					request.getSession().setAttribute("msg", "로그인 후 이용 가능합니다.");
+					return "redirect:/member/loginForm.do";
+				}
 
 				PageObject pageObject = PageObject.getInstance(request);
 
 				ShoppingVO searchVO = new ShoppingVO();
 				searchVO.setPageObject(pageObject);
+				searchVO.setMemberId(memberId);
 				searchVO.setStatus(request.getParameter("status"));
 				searchVO.setPlanDateSearch(request.getParameter("planDate"));
 				searchVO.setWord(request.getParameter("word"));
@@ -43,20 +57,28 @@ public class ShoppingController implements Controller {
 			case "/shopping/view.do":
 
 				Long shoppingId = Long.parseLong(request.getParameter("shoppingId"));
-
 				request.setAttribute("vo", Execute.execute(Init.getService(uri), shoppingId));
 
 				return "shopping/view";
 
 			case "/shopping/writeForm.do":
+
+				if (memberId == null) {
+					request.getSession().setAttribute("msg", "로그인 후 이용 가능합니다.");
+					return "redirect:/member/loginForm.do";
+				}
+
 				return "shopping/writeForm";
 
 			case "/shopping/write.do":
 
-				ShoppingVO vo = new ShoppingVO();
+				if (memberId == null) {
+					request.getSession().setAttribute("msg", "로그인 후 이용 가능합니다.");
+					return "redirect:/member/loginForm.do";
+				}
 
-				// TODO 로그인 붙이면 세션 회원번호로 교체
-				vo.setUserId(1L);
+				ShoppingVO vo = new ShoppingVO();
+				vo.setMemberId(memberId);
 
 				String dealIdStr = request.getParameter("dealId");
 				if (dealIdStr != null && !dealIdStr.trim().equals("")) {
@@ -80,18 +102,19 @@ public class ShoppingController implements Controller {
 
 				return "redirect:list.do?perPageNum="
 						+ (request.getParameter("perPageNum") == null ? "10" : request.getParameter("perPageNum"));
+
 			case "/shopping/updateForm.do":
 
 				Long shoppingId2 = Long.parseLong(request.getParameter("shoppingId"));
 
 				request.setAttribute("vo",
-					Execute.execute(Init.getService("/shopping/view.do"), shoppingId2));
+						Execute.execute(Init.getService("/shopping/view.do"), shoppingId2));
 
 				return "shopping/updateForm";
+
 			case "/shopping/update.do":
 
 				ShoppingVO vo2 = new ShoppingVO();
-
 				vo2.setShoppingId(Long.parseLong(request.getParameter("shoppingId")));
 				vo2.setItemName(request.getParameter("itemName"));
 				vo2.setQuantity(Integer.parseInt(request.getParameter("quantity")));
@@ -108,7 +131,9 @@ public class ShoppingController implements Controller {
 					request.getSession().setAttribute("msg", "장보기 수정에 실패했습니다.");
 				}
 
-				return "redirect:view.do?shoppingId=" + vo2.getShoppingId();			case "/shopping/delete.do":
+				return "redirect:view.do?shoppingId=" + vo2.getShoppingId();
+
+			case "/shopping/delete.do":
 
 				Long deleteId = Long.parseLong(request.getParameter("shoppingId"));
 
@@ -121,6 +146,7 @@ public class ShoppingController implements Controller {
 				}
 
 				return "redirect:list.do";
+
 			case "/shopping/complete.do":
 
 				Long completeId = Long.parseLong(request.getParameter("shoppingId"));
@@ -134,6 +160,7 @@ public class ShoppingController implements Controller {
 				}
 
 				return "redirect:view.do?shoppingId=" + completeId;
+
 			case "/shopping/cancel.do":
 
 				Long cancelId = Long.parseLong(request.getParameter("shoppingId"));
@@ -147,6 +174,7 @@ public class ShoppingController implements Controller {
 				}
 
 				return "redirect:view.do?shoppingId=" + cancelId;
+
 			default:
 				return "error/noPage";
 			}

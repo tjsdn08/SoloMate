@@ -16,11 +16,8 @@ public class HotDealViewService implements Service {
 
 	@Override
 	public HotDealVO service(Object obj) throws Exception {
-
-		Long dealId = (Long) obj;
-
-		dao.increase(dealId);
-
-		return dao.view(dealId);
+		HotDealVO vo = (HotDealVO) obj;
+		dao.increase(vo.getDealId());
+		return dao.view(vo);
 	}
 }
