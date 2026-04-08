@@ -10,7 +10,6 @@
 /* 공통 레이아웃 스타일 */
 .admin-page {
 	padding: 30px;
-	background-color: #fff;
 }
 
 .admin-card {

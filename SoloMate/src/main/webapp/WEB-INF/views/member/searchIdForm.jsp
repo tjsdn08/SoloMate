@@ -10,7 +10,6 @@
 <style>
 .admin-page {
 	padding: 80px 30px 30px 30px;
-	background-color: #fff;
 	min-height: 100vh;
 	display: flex;
 	align-items: flex-start;
