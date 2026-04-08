@@ -9,10 +9,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style type="text/css">
-/* 리스트 페이지와 동일한 베이스 레이아웃 */
 .admin-page {
     padding: 30px;
-    background-color: #fff;
 }
 
 .admin-card {
@@ -99,7 +97,6 @@
     margin-bottom: 15px;
 }
 
-/* 버튼 스타일 (리스트 페이지 스타일 이식) */
 .btn-main, .btn-sub, .btn-danger-custom {
     display: inline-flex;
     align-items: center;
@@ -141,14 +138,12 @@
 
 <script type="text/javascript">
 $(function(){
-	// [기존 로직 유지] 삭제 버튼 이벤트
 	$("#deleteBtn").click(function(){
 		if(confirm("정말로 이 레시피를 삭제하시겠습니까?")) {
 			$("#deleteForm").submit();
 		}
 	});
 
-	// [기존 로직 유지] 북마크 버튼 이벤트
 	$(".bookmarkBtn").click(function(){
 		let loginId = "${login.id}";
 

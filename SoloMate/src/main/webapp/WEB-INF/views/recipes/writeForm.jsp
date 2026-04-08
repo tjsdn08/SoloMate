@@ -9,10 +9,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style type="text/css">
-/* 프로젝트 공통 베이스 레이아웃 */
 .admin-page {
     padding: 30px;
-    background-color: #fff;
     min-height: 100vh;
 }
 

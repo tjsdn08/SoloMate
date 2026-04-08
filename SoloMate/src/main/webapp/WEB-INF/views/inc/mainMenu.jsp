@@ -95,9 +95,11 @@ body {
                 <li class="nav-item"><a class="nav-link btn btn-outline-secondary btn-sm mx-3" href="/member/writeForm.do">회원가입</a></li>
             </c:if>
             <c:if test="${!empty login }">
-                <li class="nav-item px-3 mb-3 text-white-50 small text-center">
-                    <span class="text-white fw-bold">${login.name}</span>님 (${login.gradeName})
-                </li>
+				<li class="nav-item px-3 mb-3 text-center">
+					<a href="/member/view.do?id=${login.id}" class="text-decoration-none text-white-50 small">
+				        <span class="text-white fw-bold">${login.name}</span>님 (${login.gradeName})
+				    </a>
+				</li>
                 <li class="nav-item"><a class="nav-link py-1 small text-center" href="/member/changePw.do">비밀번호 변경</a></li>
                 <li class="nav-item"><a class="nav-link py-1 small text-center" href="/member/logout.do">로그아웃</a></li>
                 <li class="nav-item"><a class="nav-link py-1 small text-danger text-center" href="/member/deleteForm.do">회원 탈퇴</a></li>

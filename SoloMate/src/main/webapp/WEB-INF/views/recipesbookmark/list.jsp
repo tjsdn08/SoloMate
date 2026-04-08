@@ -11,7 +11,6 @@
 <style type="text/css">
 .admin-page {
 	padding: 30px;
-	background-color: #fff;
 }
 
 .admin-card {

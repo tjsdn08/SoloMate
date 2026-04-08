@@ -9,10 +9,8 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style type="text/css">
-/* 리스트/상세보기와 동일한 베이스 레이아웃 */
 .admin-page {
     padding: 30px;
-    background-color: #fff;
     min-height: 100vh;
 }
 

@@ -10,7 +10,6 @@
 <style type="text/css">
 .admin-page {
 	padding: 30px;
-	background-color: #fff;
 }
 
 .admin-card {
@@ -196,7 +195,7 @@
 				<div class="btn-group-custom">
 					<a href="list.do" class="btn-sub">새로고침</a>
 					<c:if test="${not empty login}">
-						<a href="${pageContext.request.contextPath}/recipesbookmark/list.do" class="btn-main">내 북마크 보기</a>
+						<a href="${pageContext.request.contextPath}/recipesbookmark/list.do" class="btn btn-dark">내 북마크 보기</a>
 					</c:if>
 				</div>
 			</div>
