@@ -140,17 +140,21 @@ public class MainDAO extends DAO {
         List<HotDealVO> list = new ArrayList<>();
         con = DB.getConnection();
 
-        // 할인율(discount_rate) 기준 내림차순 정렬 후 상위 3개(ROWNUM <= 3)만 추출
+        // [수정된 부분] 할인율(discount_rate)을 직접 계산하도록 수정
         String sql = " SELECT deal_id, title, price, discount_rate "
                    + " FROM ( "
-                   + "    SELECT hd.deal_id, hd.title, hd.price, hd.discount_rate "
+                   + "    SELECT hd.deal_id, hd.title, hd.price, "
+                   + "           CASE "
+                   + "             WHEN hd.original_price IS NULL OR hd.original_price = 0 THEN 0 "
+                   + "             ELSE ROUND((hd.original_price - hd.price) * 100 / hd.original_price) "
+                   + "           END as discount_rate "
                    + "    FROM hot_deal hd "
                    + "    JOIN hot_deal_category c ON hd.category_id = c.category_id "
                    + "    WHERE hd.is_deleted = 'N' "
                    + "      AND c.is_deleted = 'N' "
                    + "      AND c.status = 'ACTIVE' "
                    + "      AND hd.status = 'ACTIVE' "
-                   + "    ORDER BY hd.discount_rate DESC "
+                   + "    ORDER BY discount_rate DESC "
                    + " ) WHERE ROWNUM <= 3 ";
 
         pstmt = con.prepareStatement(sql);
