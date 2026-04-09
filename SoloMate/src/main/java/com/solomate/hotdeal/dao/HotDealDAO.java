@@ -31,7 +31,11 @@ public class HotDealDAO extends DAO {
 				+ "   select rownum rnum, data.* "
 				+ "   from ( "
 				+ "     select hd.deal_id, c.category_name, hd.title, hd.price, hd.original_price, "
-				+ "            hd.discount_rate, hd.image_url, hd.shop_name, "
+				+ "            case "
+				+ "              when hd.original_price is null or hd.original_price = 0 then 0 "
+				+ "              else round((hd.original_price - hd.price) * 100 / hd.original_price) "
+				+ "            end as discount_rate, "
+				+ "            hd.image_url, hd.shop_name, "
 				+ "            to_char(hd.end_date, 'yyyy-mm-dd') end_date, "
 				+ "            hd.view_count, to_char(hd.created_at, 'yyyy-mm-dd') created_at, "
 				+ "            case "
@@ -181,7 +185,11 @@ public class HotDealDAO extends DAO {
 
 		String sql = ""
 				+ " select hd.deal_id, hd.category_id, c.category_name, hd.title, "
-				+ "        hd.price, hd.original_price, hd.discount_rate, "
+				+ "        hd.price, hd.original_price, "
+				+ "        case "
+				+ "          when hd.original_price is null or hd.original_price = 0 then 0 "
+				+ "          else round((hd.original_price - hd.price) * 100 / hd.original_price) "
+				+ "        end as discount_rate, "
 				+ "        hd.image_url, hd.shop_name, hd.seller_name, hd.deal_url, hd.description, "
 				+ "        to_char(hd.end_date, 'yyyy-mm-dd') end_date, "
 				+ "        hd.view_count, hd.status, "
@@ -253,7 +261,11 @@ public class HotDealDAO extends DAO {
 				+ " from ( "
 				+ "   select rownum rnum, data.* "
 				+ "   from ( "
-				+ "     select hd.deal_id, c.category_name, hd.title, hd.price, hd.discount_rate, "
+				+ "     select hd.deal_id, c.category_name, hd.title, hd.price, "
+				+ "            case "
+				+ "              when hd.original_price is null or hd.original_price = 0 then 0 "
+				+ "              else round((hd.original_price - hd.price) * 100 / hd.original_price) "
+				+ "            end as discount_rate, "
 				+ "            hd.shop_name, hd.status, to_char(hd.created_at, 'yyyy-mm-dd') created_at "
 				+ "     from hot_deal hd "
 				+ "     join hot_deal_category c on hd.category_id = c.category_id "
@@ -325,7 +337,12 @@ public class HotDealDAO extends DAO {
 
 		String sql = ""
 				+ " select hd.deal_id, hd.category_id, c.category_name, hd.title, hd.price, "
-				+ "        hd.original_price, hd.discount_rate, hd.image_url, hd.shop_name, "
+				+ "        hd.original_price, "
+				+ "        case "
+				+ "          when hd.original_price is null or hd.original_price = 0 then 0 "
+				+ "          else round((hd.original_price - hd.price) * 100 / hd.original_price) "
+				+ "        end as discount_rate, "
+				+ "        hd.image_url, hd.shop_name, "
 				+ "        hd.seller_name, hd.deal_url, hd.description, "
 				+ "        to_char(hd.end_date, 'yyyy-mm-dd') end_date, "
 				+ "        hd.view_count, hd.status, "
@@ -374,11 +391,11 @@ public class HotDealDAO extends DAO {
 
 		String sql = ""
 				+ " insert into hot_deal "
-				+ " (deal_id, category_id, title, price, original_price, discount_rate, "
+				+ " (deal_id, category_id, title, price, original_price, "
 				+ "  image_url, shop_name, seller_name, deal_url, description, end_date, "
 				+ "  view_count, status, created_at, is_deleted) "
 				+ " values "
-				+ " (seq_hot_deal.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
+				+ " (seq_hot_deal.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, "
 				+ "  to_date(?, 'yyyy-mm-dd'), 0, ?, sysdate, 'N') ";
 
 		pstmt = con.prepareStatement(sql);
@@ -388,7 +405,6 @@ public class HotDealDAO extends DAO {
 		pstmt.setString(idx++, vo.getTitle());
 		pstmt.setLong(idx++, vo.getPrice());
 		pstmt.setLong(idx++, vo.getOriginalPrice());
-		pstmt.setDouble(idx++, vo.getDiscountRate());
 		pstmt.setString(idx++, vo.getImageUrl());
 		pstmt.setString(idx++, vo.getShopName());
 		pstmt.setString(idx++, vo.getSellerName());
@@ -415,7 +431,6 @@ public class HotDealDAO extends DAO {
 				+ "     title = ?, "
 				+ "     price = ?, "
 				+ "     original_price = ?, "
-				+ "     discount_rate = ?, "
 				+ "     image_url = ?, "
 				+ "     shop_name = ?, "
 				+ "     seller_name = ?, "
@@ -434,7 +449,6 @@ public class HotDealDAO extends DAO {
 		pstmt.setString(idx++, vo.getTitle());
 		pstmt.setLong(idx++, vo.getPrice());
 		pstmt.setLong(idx++, vo.getOriginalPrice());
-		pstmt.setDouble(idx++, vo.getDiscountRate());
 		pstmt.setString(idx++, vo.getImageUrl());
 		pstmt.setString(idx++, vo.getShopName());
 		pstmt.setString(idx++, vo.getSellerName());

@@ -88,6 +88,34 @@
 	background-color: #000 !important;
 	color: #fff !important;
 }
+
+/* 페이지네이션 전체 */
+.pagination .page-link {
+	color: #111 !important;
+	background-color: #fff !important;
+	border: 1px solid #ddd !important;
+}
+
+/* 현재 페이지 (이거 때문에 파란색이었던거임) */
+.pagination .page-item.active .page-link {
+	background-color: #000 !important;
+	border-color: #000 !important;
+	color: #fff !important;
+}
+
+/* hover */
+.pagination .page-link:hover {
+	color: #000 !important;
+	background-color: #f5f5f5 !important;
+	border-color: #ccc !important;
+}
+
+/* 비활성 버튼 */
+.pagination .page-item.disabled .page-link {
+	color: #aaa !important;
+	background-color: #f8f8f8 !important;
+	border-color: #e5e5e5 !important;
+}
 </style>
 
 <script type="text/javascript">
