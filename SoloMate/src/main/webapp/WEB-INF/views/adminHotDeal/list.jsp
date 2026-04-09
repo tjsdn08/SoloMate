@@ -127,6 +127,29 @@
 	align-items: center;
 	margin-top: 20px;
 }
+.pagination .page-link {
+	color: #111 !important;
+	background-color: #fff !important;
+	border: 1px solid #ddd !important;
+}
+
+.pagination .page-item.active .page-link {
+	background-color: #000 !important;
+	border-color: #000 !important;
+	color: #fff !important;
+}
+
+.pagination .page-link:hover {
+	color: #000 !important;
+	background-color: #f5f5f5 !important;
+	border-color: #ccc !important;
+}
+
+.pagination .page-item.disabled .page-link {
+	color: #aaa !important;
+	background-color: #f8f8f8 !important;
+	border-color: #e5e5e5 !important;
+}
 </style>
 
 <script type="text/javascript">

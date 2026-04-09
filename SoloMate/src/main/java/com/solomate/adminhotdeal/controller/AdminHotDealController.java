@@ -42,7 +42,6 @@ public class AdminHotDealController implements Controller {
 				request.setAttribute("pageObject", pageObject);
 				request.setAttribute("searchVO", searchVO);
 
-				// 관리자 카테고리 목록 추가
 				request.setAttribute("categoryList",
 						Execute.execute(Init.getService("/adminCategory/list.do"), null));
 
@@ -158,7 +157,6 @@ public class AdminHotDealController implements Controller {
 		}
 		vo.setStatus(status);
 
-		// 이미지 처리
 		Part imagePart = request.getPart("imageFile");
 		String imageFileName = null;
 
@@ -185,15 +183,12 @@ public class AdminHotDealController implements Controller {
 			}
 		}
 
-		// 등록일 때
 		if (!isUpdate) {
 			if (imageFileName == null) {
 				imageFileName = "default.png";
 			}
 			vo.setImageUrl(imageFileName);
-		}
-		// 수정일 때
-		else {
+		} else {
 			if (imageFileName != null) {
 				vo.setImageUrl(imageFileName);
 			} else {
