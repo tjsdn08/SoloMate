@@ -33,7 +33,7 @@ public class FolderController implements Controller{
 				PageObject pageObject = PageObject.getInstance(request);
 				// 아이디를 pageObject에 넣기
 				pageObject.setAccepter(loginId);
-				pageObject.setPerPageNum(4);
+				pageObject.setPerPageNum(8);
 				
 				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
 				System.out.println("FoodController.execute().pageObject - " + pageObject);

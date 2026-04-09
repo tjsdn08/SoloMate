@@ -49,6 +49,7 @@ import com.solomate.folder.controller.FolderController;
 import com.solomate.folder.dao.FolderDAO;
 import com.solomate.folder.service.FolderDeleteFoodService;
 import com.solomate.folder.service.FolderDeleteService;
+import com.solomate.folder.service.FolderListAllService;
 import com.solomate.folder.service.FolderListService;
 import com.solomate.folder.service.FolderUpdateService;
 import com.solomate.folder.service.FolderViewService;
@@ -238,6 +239,8 @@ public class Init extends HttpServlet {
 		controllerMap.put("/folder", new FolderController());
 		// == service는 URI로 저장
 		serviceMap.put("/folder/list.do", new FolderListService());
+		serviceMap.put("/folder/listAll.do", new FolderListAllService());
+		
 		serviceMap.put("/folder/view.do", new FolderViewService());
 		serviceMap.put("/folder/write.do", new FolderWriteService());
 		serviceMap.put("/folder/update.do", new FolderUpdateService());
@@ -247,6 +250,8 @@ public class Init extends HttpServlet {
 		daoMap.put("folderDAO", new FolderDAO());
 		// 조립 service <- dao : service를 꺼내서 setter를 이용해서 dao를 꺼내서 넣는다.
 		serviceMap.get("/folder/list.do").setDAO(daoMap.get("folderDAO"));
+		serviceMap.get("/folder/listAll.do").setDAO(daoMap.get("folderDAO"));
+		
 		serviceMap.get("/folder/view.do").setDAO(daoMap.get("folderDAO"));
 		serviceMap.get("/folder/write.do").setDAO(daoMap.get("folderDAO"));
 		serviceMap.get("/folder/update.do").setDAO(daoMap.get("folderDAO"));

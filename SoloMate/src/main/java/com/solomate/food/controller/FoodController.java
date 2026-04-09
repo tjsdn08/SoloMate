@@ -60,9 +60,7 @@ public class FoodController implements Controller {
 			case "/food/writeForm.do":
 				
 				// 선택 용 폴더 
-				// id
-				FolderDAO dao = new FolderDAO();
-				request.setAttribute("folderList", dao.listAll(loginId));
+				request.setAttribute("folderList", Execute.execute(Init.getService("/folder/listAll.do"), loginId));
 				
 				return "food/writeForm";
 			
@@ -97,9 +95,9 @@ public class FoodController implements Controller {
 				// 식품 정보
 				request.setAttribute("vo", Execute.execute(Init.getService("/food/view.do"), no));
 				
-				// id
-				dao = new FolderDAO();
-				request.setAttribute("folderList", dao.listAll(loginId));
+				// 선택 용 폴더 
+				request.setAttribute("folderList", Execute.execute(Init.getService("/folder/listAll.do"), loginId));
+				
 				return "food/updateForm";		
 			
 			case "/food/update.do":
