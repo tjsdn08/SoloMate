@@ -7,8 +7,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Solomate : <decorator:title /></title>
-<!-- web 라이브러리를 등록 -->
-<!-- Bootstrap 라이브러리 등록 --------- -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -16,16 +14,13 @@
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- jQuery 라이브러리 등록 - 자바스크립트 함수 : jQuery() ==> $() -->
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-<!-- jQuery UI 라이브러리 등록 : datepicker 등록-->
 <link rel="stylesheet"
 	href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
 
-<!-- icon lib 등록 - awesome 4 -->
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -36,49 +31,37 @@ $(function(){
 });
 // ${(!empty msg)?"alert('" += msg += "');":""}
 </script>
-<!-- JSP의 Head 태그의 title 제외한 부분에 소스가 추가된다. -->
 <decorator:head />
 </head>
-<body>
-	<!-- body 이전의 메뉴바를 추가해서 나타나게한다. -->
-	<!-- 메인 메뉴 부분 ------------------------------------ -->
-	<!--  include 디렉티브 태그 : 소스를 복붙해서 클래스를 한개로 만들어서 컴파일 한다. -->
-	<%@ include file="../inc/mainMenu.jsp"%>
-	<!-- 메인 메뉴 부분 끝 ------------------------------------ -->
 
-	<div class="container-fluid"
-		style="margin-top: 80px; margin-bottom: 80px;">
+<body class="d-flex flex-column min-vh-100">
+	<%@ include file="../inc/mainMenu.jsp"%>
+	<div class="container-fluid flex-grow-1"
+		style="margin-top: 80px; margin-bottom: 40px;">
 		<div class="container mt-3 mb-3">
-			<!-- JSP에서 작성된 body 태그 -->
 			<decorator:body />
 		</div>
-		
-		<footer style="background-color: #f8f9fa; border-top: 1px solid #dee2e6; width: 100%;">
-		    <div style="padding: 20px 0; text-align: center;">
-		        <span style="color: #adb5bd; font-size: 0.85rem; font-weight: 500;">
-		            Copyright &copy; SoloMate.com
-		        </span>
-		    </div>
-		</footer>
 	</div>
 
-	
-	
-	<!-- The Modal -->
+	<footer class="mt-auto" style="background-color: #f8f9fa; border-top: 1px solid #dee2e6; width: 100%;">
+	    <div style="padding: 20px 0; text-align: center;">
+	        <span style="color: #adb5bd; font-size: 0.85rem; font-weight: 500;">
+	            Copyright &copy; SoloMate.com
+	        </span>
+	    </div>
+	</footer>
+
 	<div class="modal" id="msgModal">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 
-				<!-- Modal Header -->
 				<div class="modal-header">
 					<h4 class="modal-title">처리 결과</h4>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 				</div>
 
-				<!-- Modal body -->
 				<div class="modal-body">${msg }</div>
 
-				<!-- Modal footer -->
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger"
 						data-bs-dismiss="modal">닫기</button>
