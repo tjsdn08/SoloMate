@@ -32,7 +32,6 @@
 	color: #111;
 }
 
-/* 레시피 리스트에 맞춘 검색 그리드 */
 .search-row {
 	display: grid;
 	grid-template-columns: 1fr 140px 140px 140px;
@@ -102,6 +101,27 @@
 .btn-group-custom {
 	display: flex;
 	gap: 10px;
+}
+
+/* 기본 버튼 */
+.pagination .page-link {
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 0 3px;
+}
+
+/* hover */
+.pagination .page-link:hover {
+    background-color: black;
+    color: white;
+}
+
+/* 현재 페이지 */
+.pagination .active .page-link {
+    background-color: black;
+    border-color: black;
+    color: white;
 }
 </style>
 
@@ -195,7 +215,7 @@
 				<div class="btn-group-custom">
 					<a href="list.do" class="btn-sub">새로고침</a>
 					<c:if test="${not empty login}">
-						<a href="${pageContext.request.contextPath}/recipesbookmark/list.do" class="btn btn-dark">내 북마크 보기</a>
+                        <a href="${pageContext.request.contextPath}/recipesbookmark/list.do" class="btn-main">내 북마크 보기</a>
 					</c:if>
 				</div>
 			</div>

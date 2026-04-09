@@ -31,6 +31,7 @@
         display: grid; 
         grid-template-columns: 1fr 1fr; 
         gap: 24px; /* 섹션 간 간격 */
+        align-content: start; /* 우측 높이에 맞춰 내부 상자들이 억지로 세로로 늘어나는 공백 현상 방지 */
     }
     
     /* [오른쪽] 리포트 사이드바 (전체 클릭 가능 영역) */
@@ -380,15 +381,17 @@
 		    <c:choose>
 		        <c:when test="${not empty login && not empty expiringFoods}">
 		            <ul class="item-list">
-		                <c:forEach var="food" items="${expiringFoods}">
-		                    <li>
-		                        <a href="/food/view.do?no=${food.no}" style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-		                            <span class="item-name">${food.name}</span>
-		                            <span class="d-day-badge ${fn:replace(food.dDay, 'D-', '') <= 3 ? 'd-day-urgent' : 'd-day-warning'}">
-		                                ${food.dDay}
-		                            </span>
-		                        </a>
-		                    </li>
+                        <c:forEach var="food" items="${expiringFoods}" varStatus="status">
+                            <c:if test="${status.index < 4}">
+                                <li>
+                                    <a href="/food/view.do?no=${food.no}" style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                                        <span class="item-name">${food.name}</span>
+                                        <span class="d-day-badge ${fn:replace(food.dDay, 'D-', '') <= 3 ? 'd-day-urgent' : 'd-day-warning'}">
+                                            ${food.dDay}
+                                        </span>
+                                    </a>
+                                </li>
+                            </c:if>
 		                </c:forEach>
 		            </ul>
 		        </c:when>
@@ -550,7 +553,6 @@
                 });
             }
         }
-        // 핫딜 슬라이더 JS 로직 삭제됨
     });
 </script>
 </body>

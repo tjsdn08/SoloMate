@@ -117,6 +117,26 @@
 	align-items: center;
 	margin-top: 20px;
 }
+/* 기본 버튼 */
+.pagination .page-link {
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 0 3px;
+}
+
+/* hover */
+.pagination .page-link:hover {
+    background-color: black;
+    color: white;
+}
+
+/* 현재 페이지 */
+.pagination .active .page-link {
+    background-color: black;
+    border-color: black;
+    color: white;
+}
 </style>
 
 <script type="text/javascript">
