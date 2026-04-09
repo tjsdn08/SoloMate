@@ -142,48 +142,65 @@ public class AuthorityFilter extends HttpFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+	        throws IOException, ServletException {
 
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
+	    HttpServletRequest req = (HttpServletRequest) request;
+	    HttpServletResponse res = (HttpServletResponse) response;
 
-		String uri = req.getServletPath();
-		System.out.println("AuthorityFilter servletPath = " + uri);
+	    String uri = req.getRequestURI();
 
-		// authMap에 없는 페이지는 기본 허용
-		Integer pageGradeNo = authMap.get(uri);
-		if (pageGradeNo == null) {
-			chain.doFilter(request, response);
-			return;
-		}
+	    // 정적 리소스는 필터 통과
+	    if (uri.contains("/upload/")
+	            || uri.contains("/css/")
+	            || uri.contains("/js/")
+	            || uri.contains("/images/")
+	            || uri.endsWith(".png")
+	            || uri.endsWith(".jpg")
+	            || uri.endsWith(".jpeg")
+	            || uri.endsWith(".webp")
+	            || uri.endsWith(".gif")) {
 
-		// 0이면 누구나 접근 가능
-		if (pageGradeNo == 0) {
-			chain.doFilter(request, response);
-			return;
-		}
+	        chain.doFilter(request, response);
+	        return;
+	    }
 
-		HttpSession session = req.getSession();
-		Object loginObj = session.getAttribute("login");
+	    String servletPath = req.getServletPath();
+	    System.out.println("AuthorityFilter servletPath = " + servletPath);
 
-		// 로그인 필요 페이지인데 로그인 안 한 경우
-		if (loginObj == null) {
-			session.setAttribute("msg", "로그인 후 이용 가능합니다.");
-			res.sendRedirect(req.getContextPath() + "/member/loginForm.do");
-			return;
-		}
+	    // authMap에 없는 페이지는 기본 허용
+	    Integer pageGradeNo = authMap.get(servletPath);
+	    if (pageGradeNo == null) {
+	        chain.doFilter(request, response);
+	        return;
+	    }
 
-		LoginVO login = (LoginVO) loginObj;
-		int userGradeNo = login.getGradeNo();
+	    // 0이면 누구나 접근 가능
+	    if (pageGradeNo == 0) {
+	        chain.doFilter(request, response);
+	        return;
+	    }
 
-		// 권한 부족
-		if (userGradeNo < pageGradeNo) {
-			session.setAttribute("msg", "접근 권한이 없습니다.");
-			res.sendRedirect(req.getContextPath() + "/main/main.do");
-			return;
-		}
+	    HttpSession session = req.getSession();
+	    Object loginObj = session.getAttribute("login");
 
-		chain.doFilter(request, response);
+	    // 로그인 필요 페이지인데 로그인 안 한 경우
+	    if (loginObj == null) {
+	        session.setAttribute("msg", "로그인 후 이용 가능합니다.");
+	        res.sendRedirect(req.getContextPath() + "/member/loginForm.do");
+	        return;
+	    }
+
+	    LoginVO login = (LoginVO) loginObj;
+	    int userGradeNo = login.getGradeNo();
+
+	    // 권한 부족
+	    if (userGradeNo < pageGradeNo) {
+	        session.setAttribute("msg", "접근 권한이 없습니다.");
+	        res.sendRedirect(req.getContextPath() + "/main/main.do");
+	        return;
+	    }
+
+	    chain.doFilter(request, response);
 	}
 
 	@Override
