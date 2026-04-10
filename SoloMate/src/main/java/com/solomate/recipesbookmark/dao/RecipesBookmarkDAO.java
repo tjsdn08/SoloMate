@@ -16,10 +16,10 @@ public class RecipesBookmarkDAO extends DAO {
 
 		con = DB.getConnection();
 
-		String sql = "select r.recipes_no, r.recipes_title, r.name, "
+		String sql = "select r.recipes_no, r.recipes_title, m.name, "
 				   + " TO_CHAR(r.recipes_writeDate, 'yyyy-mm-dd') recipes_writeDate "
-				   + " from recipes r, recipes_bookmark rb "
-				   + " where (r.recipes_no = rb.recipes_no) and (rb.id = ?) "
+				   + " from recipes r, recipes_bookmark rb, member m "
+				   + " where (r.recipes_no = rb.recipes_no) and (r.id = m.id) and (rb.id = ?) "
 				   + " order by rb.recipes_no desc";
 
 		sql = "select rownum rnum, recipes_no, recipes_title, name, recipes_writeDate "
@@ -28,7 +28,7 @@ public class RecipesBookmarkDAO extends DAO {
 			+ " from (" + sql + ") where rnum between ? and ?";
 
 		pstmt = con.prepareStatement(sql);
-		pstmt.setString(1, id);
+		pstmt.setString(1, id); // 북마크한 본인 아이디 세팅
 		pstmt.setLong(2, pageObject.getStartRow());
 		pstmt.setLong(3, pageObject.getEndRow());
 
@@ -39,7 +39,7 @@ public class RecipesBookmarkDAO extends DAO {
 				RecipesBookmarkVO vo = new RecipesBookmarkVO();
 				vo.setRecipes_no(rs.getLong("recipes_no"));
 				vo.setRecipes_title(rs.getString("recipes_title"));
-				vo.setName(rs.getString("name"));
+				vo.setName(rs.getString("name")); // 조인된 회원의 이름을 VO에 저장
 				vo.setRecipes_writeDate(rs.getString("recipes_writeDate"));
 				list.add(vo);
 			}
