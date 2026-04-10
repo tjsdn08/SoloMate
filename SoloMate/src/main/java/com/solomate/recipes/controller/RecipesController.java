@@ -32,7 +32,7 @@ public class RecipesController implements Controller{
 				PageObject pageObject = PageObject.getInstance(request);
 				
 				request.setAttribute("list", Execute.execute(Init.getService(uri), pageObject));
-				System.out.println("RecipesController.execuete().pageObject - " + pageObject);
+				System.out.println("RecipesController.execute().pageObject - " + pageObject);
 				request.setAttribute("pageObject", pageObject);
 				return "recipes/list";
 			
@@ -80,7 +80,7 @@ public class RecipesController implements Controller{
 	 			    LoginVO login = (LoginVO) session.getAttribute("login");
 	 			    if (login != null) {
 	 			        writeVo.setId(login.getId());
-	 			        writeVo.setName(login.getName());
+	 			        // DB 정규화에 따라 writeVo.setName(login.getName()); 삭제 완료
 	 			    }
 
 	 			    Execute.execute(Init.getService(uri), writeVo);
