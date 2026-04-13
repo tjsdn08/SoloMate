@@ -368,8 +368,6 @@ public class MemberDAO extends DAO{
 	    return result;
 	}
 	
-	// MemberDAO.java
-
 	// 이름, 아이디, 연락처가 모두 일치하는 회원의 연락처를 가져오는 메서드
 	public String findTel(String id, String name, String tel) throws Exception {
 	    String foundTel = null;

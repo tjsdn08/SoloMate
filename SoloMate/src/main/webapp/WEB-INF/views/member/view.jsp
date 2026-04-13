@@ -153,8 +153,7 @@
 			</table>
 			
 			<div class="bottom-buttons">
-				<a href="updateForm.do?no=${param.no }&inc=0&page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
-				 class="btn-main">정보 수정</a>
+				<a href="updateForm.do?id=${vo.id}&page=${param.page}&perPageNum=${param.perPageNum}&key=${param.key}&word=${param.word}" class="btn-main">정보 수정</a>
 				<a href="list.do?page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
 				 class="btn-sub">리스트</a>
 			</div>
