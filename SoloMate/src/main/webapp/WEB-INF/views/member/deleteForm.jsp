@@ -181,18 +181,20 @@
 			</div>
 
 			<form action="delete.do" method="post">
-				
+							
+				<input type="hidden" name="id" value="${param.id}">
+							
 				<div class="form-group">
 					<label for="pw" class="form-label">비밀번호 확인</label>
 					<input type="password" class="form-input" id="pw" name="pw" placeholder="현재 비밀번호를 입력하세요" oninput="validate()" required>
 					<span class="msg-text">본인 확인을 위해 비밀번호가 필요합니다.</span>
 				</div>
-
+			
 				<div class="bottom-buttons">
 					<button type="submit" class="btn-danger-custom" onclick="return confirm('정말로 탈퇴하시겠습니까?')">탈퇴하기</button>
 					<button type="button" class="btn-sub" onclick="history.back()">취소</button>
 				</div>
-				
+							
 			</form>
 
 			<c:if test="${deleteStatus == 'fail'}">

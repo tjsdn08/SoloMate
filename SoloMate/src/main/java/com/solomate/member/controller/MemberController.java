@@ -151,12 +151,18 @@ public class MemberController implements Controller {
 				// 회원 정보 수정
 
 				case "/member/updateForm.do":
-				    request.setAttribute("vo", Execute.execute(Init.getService("/member/view.do"), loginVO.getId()));
+				    String targetId = request.getParameter("id");
+
+				    if(targetId == null || targetId.equals("")) {
+				        targetId = loginVO.getId();
+				    }
+
+				    request.setAttribute("vo", Execute.execute(Init.getService("/member/view.do"), targetId));
 				    return "member/updateForm";
 
 				case "/member/update.do":
 				    vo = new MemberVO();
-				    vo.setId(loginVO.getId()); 
+				    vo.setId(request.getParameter("id")); // <--- 폼에서 넘어온 대상 아이디 사용!
 				    vo.setPw(request.getParameter("pw")); // 본인 확인용 비번
 				    vo.setName(request.getParameter("name"));
 				    vo.setTel(request.getParameter("tel"));
@@ -179,20 +185,36 @@ public class MemberController implements Controller {
 				     return "member/deleteForm";
 
 				 case "/member/delete.do":
-				     vo = new MemberVO();
-				     vo.setId(loginVO.getId());
-				     vo.setPw(request.getParameter("pw")); // 확인용 비밀번호
-				     
-				     Integer deleteResult = (Integer) Execute.execute(Init.getService(uri), vo);
-				     
-				     if (deleteResult == 1) {
-				         session.removeAttribute("login");
-				         session.setAttribute("msg", "회원 탈퇴가 정상적으로 처리되었습니다. 그동안 이용해주셔서 감사합니다.");
-				         return "redirect:/";
-				     } else {
-				         request.setAttribute("deleteStatus", "fail");
-				         return "member/deleteForm";
-				     }
+					    vo = new MemberVO();
+					    
+					    // 1. 폼에서 넘어온 대상 아이디 확인
+					    targetId = request.getParameter("id");
+					    
+					    // 2. 파라미터가 없으면 로그인한 내 아이디로 설정
+					    if(targetId == null || targetId.equals("")) {
+					        targetId = loginVO.getId();
+					    }
+					    
+					    vo.setId(targetId); //대상 아이디로 세팅
+					    vo.setPw(request.getParameter("pw")); // 확인용 비밀번호
+					    
+					    Integer deleteResult = (Integer) Execute.execute(Init.getService(uri), vo);
+					    
+					    if (deleteResult == 1) {
+					        // 3. 탈퇴시킨 계정이 '내 계정'일 경우에만 로그아웃
+					        if(targetId.equals(loginVO.getId())) {
+					            session.removeAttribute("login");
+					            session.setAttribute("msg", "회원 탈퇴가 정상적으로 처리되었습니다. 그동안 이용해주셔서 감사합니다.");
+					            return "redirect:/";
+					        } else {
+					            // 관리자가 다른 회원을 지운 경우 로그아웃 시키지 않고 회원 목록으로 이동
+					            session.setAttribute("msg", targetId + " 회원의 탈퇴 처리가 완료되었습니다.");
+					            return "redirect:/member/list.do";
+					        }
+					    } else {
+					        request.setAttribute("deleteStatus", "fail");
+					        return "member/deleteForm";
+					    }
 				     
 				     
 				 case "/member/searchPwForm.do":

@@ -1,7 +1,6 @@
 package com.solomate.adminhotdeal.controller;
 
 import java.io.File;
-import java.util.UUID;
 
 import com.solomate.hotdeal.vo.HotDealVO;
 import com.solomate.main.controller.Controller;
@@ -161,26 +160,23 @@ public class AdminHotDealController implements Controller {
 		String imageFileName = null;
 
 		if (imagePart != null && imagePart.getSize() > 0) {
-			String originalFileName = imagePart.getSubmittedFileName();
+		    String originalFileName = imagePart.getSubmittedFileName();
 
-			if (originalFileName != null && !originalFileName.trim().equals("")) {
-				String ext = "";
-				int dotIdx = originalFileName.lastIndexOf(".");
-				if (dotIdx != -1) {
-					ext = originalFileName.substring(dotIdx);
-				}
+		    if (originalFileName != null && !originalFileName.trim().equals("")) {
 
-				String saveFileName = UUID.randomUUID().toString() + ext;
+		        // 파일명만 추출
+		        originalFileName = new File(originalFileName).getName();
 
-				String uploadPath = request.getServletContext().getRealPath("/upload/hotdeal");
-				File uploadDir = new File(uploadPath);
-				if (!uploadDir.exists()) {
-					uploadDir.mkdirs();
-				}
+		        String uploadPath = request.getServletContext().getRealPath("/upload/hotdeal");
+		        File uploadDir = new File(uploadPath);
+		        if (!uploadDir.exists()) {
+		            uploadDir.mkdirs();
+		        }
 
-				imagePart.write(uploadPath + File.separator + saveFileName);
-				imageFileName = saveFileName;
-			}
+		        // 원본 파일명 그대로 저장
+		        imagePart.write(uploadPath + File.separator + originalFileName);
+		        imageFileName = originalFileName;
+		    }
 		}
 
 		if (!isUpdate) {
