@@ -30,7 +30,7 @@ reply = {
 				
 				if(result.list.length == 0) {
 					console.log("가져온 데이터 없음");
-					tagStr+="댓글 데이터가 존재하지 않습니다";
+					tagStr+="아직 등록된 댓글이 존재하지 않습니다";
 				}
 				else {
 					console.log("가져온 데이터 있음");
