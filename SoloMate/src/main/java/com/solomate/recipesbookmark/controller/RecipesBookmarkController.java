@@ -71,7 +71,7 @@ public class RecipesBookmarkController implements Controller {
 			    query = "no=" + no + "&inc=0&page=" + pageStr + "&perPageNum=" + perPageNumStr;
 			    if (from != null && !from.isEmpty()) query += "&from=" + from;
 
-			    session.setAttribute("msg", "레시피가 북마크에 추가되었습니다. 🍯");
+			    session.setAttribute("msg", "레시피가 북마크에 추가되었습니다.");
 			    return "redirect:/recipes/view.do?" + query;
 				
 			// 3. 레시피 북마크 삭제(해제) 처리
