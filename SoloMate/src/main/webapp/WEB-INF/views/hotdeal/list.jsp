@@ -288,19 +288,20 @@
 					<c:forEach items="${list}" var="vo">
 						<div class="hotdeal-item" data-id="${vo.dealId}">
 							<div class="hotdeal-thumb">
-								<c:choose>
-									<c:when test="${!empty vo.imageUrl}">
-										<img src="${pageContext.request.contextPath}${vo.imageUrl}"
-											alt="${vo.title}"
-											onerror="this.src='${pageContext.request.contextPath}/upload/hotdeal/default.png'">
-									</c:when>
-									<c:otherwise>
-										<img
-											src="${pageContext.request.contextPath}/upload/hotdeal/default.png"
-											alt="기본 이미지">
-									</c:otherwise>
-								</c:choose>
-							</div>
+    <c:choose>
+        <c:when test="${!empty vo.imageUrl}">
+            <img src="${pageContext.request.contextPath}/upload/hotdeal/${vo.imageUrl}"
+                alt="${vo.title}"
+                onerror="this.src='${pageContext.request.contextPath}/upload/hotdeal/default.png'">
+        </c:when>
+        <c:otherwise>
+            <img
+                src="${pageContext.request.contextPath}/upload/hotdeal/default.png"
+                alt="기본 이미지">
+        </c:otherwise>
+    </c:choose>
+</div>
+
 
 							<div class="hotdeal-body">
 								<div class="hotdeal-title">${vo.title}</div>
