@@ -36,6 +36,7 @@
 		color: #111;
 		margin-bottom: 35px;
 	}
+	
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
