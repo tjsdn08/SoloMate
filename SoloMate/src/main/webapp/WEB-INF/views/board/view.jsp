@@ -110,6 +110,10 @@ $(function(){
                 <td class="no">${vo.no }</td>
             </tr>
             <tr>
+                <th>카테고리</th>
+                <td>${vo.category }</td>
+            </tr>
+            <tr>
                 <th>제목</th>
                 <td><strong>${vo.title }</strong></td>
             </tr>

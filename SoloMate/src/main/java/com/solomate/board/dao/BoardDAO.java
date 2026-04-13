@@ -141,19 +141,20 @@ public class BoardDAO extends DAO{
 	public BoardVO view(Long no) throws Exception {
 		BoardVO vo=null;
 		con=DB.getConnection();
-		String sql = "select b.no, b.title, b.content, b.writer, "
+		String sql = "select b.no, b.category, b.title, b.content, b.writer, "
 		        + " to_char(b.writeDate, 'yyyy-mm-dd') writeDate, "
 		        + " b.hit, NVL(count(m.bookmarkNo),0) bookmark "
 		        + " from board b "
 		        + " left join board_bookmark m on b.no = m.boardNo "
 		        + " where b.no = ? "
-		        + " group by b.no, b.title, b.content, b.writer, b.writeDate, b.hit";		
+		        + " group by b.no, b.category, b.title, b.content, b.writer, b.writeDate, b.hit";		
 		pstmt = con.prepareStatement(sql);
 		pstmt.setLong(1, no);
 		rs = pstmt.executeQuery();
 		if(rs != null && rs.next()) {
 			vo = new BoardVO();
 			vo.setNo(rs.getLong("no"));
+			vo.setCategory(rs.getString("category"));
 			vo.setTitle(rs.getString("title"));
 			vo.setContent(rs.getString("content"));
 			vo.setWriter(rs.getString("writer"));
