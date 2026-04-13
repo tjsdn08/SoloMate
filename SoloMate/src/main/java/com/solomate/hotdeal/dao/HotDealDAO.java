@@ -211,7 +211,8 @@ public class HotDealDAO extends DAO {
 				+ " where hd.deal_id = ? "
 				+ "   and hd.is_deleted = 'N' "
 				+ "   and c.is_deleted = 'N' "
-				+ "   and c.status = 'ACTIVE' ";
+				+ "   and c.status = 'ACTIVE' "
+				+ "   and hd.status = 'ACTIVE' ";
 
 		pstmt = con.prepareStatement(sql);
 		pstmt.setString(1, paramVO.getMemberId());

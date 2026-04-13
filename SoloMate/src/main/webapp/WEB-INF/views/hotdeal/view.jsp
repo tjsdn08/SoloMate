@@ -248,8 +248,8 @@
 									</c:otherwise>
 								</c:choose>
 
-								<a href="https://www.coupang.com/" target="_blank"
-									rel="noopener noreferrer" class="btn-main">쿠팡에서 구매하기</a>
+								<a href="${vo.dealUrl}" target="_blank"
+									rel="noopener noreferrer" class="btn-main">구매하러가기</a>
 							</div>
 
 							<div>
