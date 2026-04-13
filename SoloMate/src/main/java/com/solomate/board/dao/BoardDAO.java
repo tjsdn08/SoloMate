@@ -203,13 +203,14 @@ public class BoardDAO extends DAO{
 	public Integer update(BoardVO vo) throws Exception {
 		Integer result=0;
 		con=DB.getConnection();
-		String sql="update board set title = ?, content = ? "
-				+ " where no = ? and writer=? ";
+		String sql="update board set category = ?, title = ?, content = ? "
+		        + " where no = ? and writer=? ";
 		pstmt=con.prepareStatement(sql);
-		pstmt.setString(1, vo.getTitle());
-		pstmt.setString(2, vo.getContent());
-		pstmt.setLong(3, vo.getNo());
-		pstmt.setString(4, vo.getWriter());
+		pstmt.setString(1, vo.getCategory());
+		pstmt.setString(2, vo.getTitle());
+		pstmt.setString(3, vo.getContent());
+		pstmt.setLong(4, vo.getNo());
+		pstmt.setString(5, vo.getWriter());
 		result = pstmt.executeUpdate();
 		DB.close(con, pstmt);
 		return result;

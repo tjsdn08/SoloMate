@@ -106,11 +106,9 @@ public class BoardController implements Controller {
 				pageObject = PageObject.getInstance(request);
 				vo = new BoardVO();
 				vo.setNo(Long.parseLong(request.getParameter("no")));
+				vo.setCategory(request.getParameter("category"));
 			    vo.setTitle(request.getParameter("title"));
 			    vo.setContent(request.getParameter("content"));
-			    
-			    // 💡 [체크!] updateForm.jsp에 name="writer"인 input 태그가 있나요?
-			    // 없다면 null이 들어가서 DB가 수정 대상을 찾지 못합니다(result=0).
 			    vo.setWriter(request.getParameter("writer")); 
 			    
 			    // 안전하게 세션에서 로그인 정보를 가져와서 세팅하는 것을 추천합니다.
