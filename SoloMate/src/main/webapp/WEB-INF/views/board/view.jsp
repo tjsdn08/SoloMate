@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -85,7 +86,10 @@ $(function(){
     <div class="d-flex justify-content-end mt-4">
 
         <div>
-            <c:if test="${login.id==vo.writer }">
+            <c:set var="writerId" value="${fn:substringAfter(vo.writer, '(')}" />
+			<c:set var="writerId" value="${fn:substringBefore(writerId, ')')}" />
+			
+			<c:if test="${login.id eq writerId}">
                 <a href="updateForm.do?no=${param.no }&inc=0&page=${param.page }&perPageNum=${param.perPageNum }&key=${param.key }&word=${param.word }"
                    class="btn btn-dark">
                    수정
